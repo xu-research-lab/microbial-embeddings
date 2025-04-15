@@ -1,0 +1,18 @@
+# _*_ coding:utf-8 _*_
+description: glove on cooccurrence
+method: grid
+metric:
+  name: ave_loss
+  goal: minimize
+parameters:
+  embed_size:
+    values: [100, 300, 500, 700, 1000]
+  num_hiddens:
+    values: [100, 300, 500, 800]
+  num_layers:
+    values: [1, 2]
+  lr:
+    values: [0.001, 0.0005, 0.0001, 0.00005, 0.00001]
+early_terminate:
+  type: hyperband
+  min_iter: 3

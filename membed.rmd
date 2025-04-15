@@ -1,0 +1,445 @@
+---
+title: "membed"
+author: "dong_biao"
+date: '2023-10-10'
+output: html_document
+---
+
+<style>
+body {
+text-align: justify}
+</style>
+
+
+```{r, echo=FALSE, include=FALSE}
+library(htmlwidgets)
+library(dplyr)
+library(png)
+library(slickR)
+library(gridExtra)
+library(knitr)
+library(pander)
+```
+
+## The NLP model applies in microbiome data set
+
+### Building the microbiom embedding model
+
+In this part, we want to constract the microbiom embedding, which is same as the word embedding in NLP containing smantic information
+
+Dataset - 16S seq data  
+Train data for embedding vectors: AGP feces samples(2,453 x 20,778); all feces samples(8,770 x 11,4288)
+
+```{python eval = FALSE, python.reticulate = FALSE, echo=FALSE}
+import biom
+AGP_file = "/home/dongbiao/word_embedding_microbiome/Classification_prediction/data/AGP_Glove.biom"
+All_feces_file = "/home/dongbiao/word_embedding_microbiome/databaes/16Sdatabase/human16S_feces/human_train.biom"
+AGP_table = biom.load_table(AGP_file)
+All_feces_table = biom.load_table(All_feces_file)
+print("AGP table dimension:", AGP_table.shape)
+print("All feces table dimension:", All_feces_table.shape)
+```
+
+#### Apply the GloVe model in microbiome data to get embedding vectors.
+
+Build the co-occurrence matrix  
+Russell rao : $$ \frac{a}{n} $$
+Russell rao weight : $$ \sum_{s=1}^{n}\frac{1}{\left | sort_{i} -  sort_{j}  \right | } $$
+Jaccard : $$ \frac{a}{n-c} $$
+Faith : $$ \frac{a+c/n}{n} $$
+Abundance totalsum : $$ \frac{\sum_{s=1}^{n}min(abc_{i}, abc_{j})\times (1-\left | abc_{i}- abc_{j} \right | )}{n}  $$
+Abundance percentile : $$ \frac{\sum_{s=1}^{n}min(per_{i}, per_{j})\times (1-\left | per_{i} - per_{j} \right | )}{n}  $$
+Braycurtis totalsum : $$ \frac{2\times \sum_{s=1}^{n} min(abc_{i}, abc_{j})}{\sum_{s=1}^{n}(abc_{i}+abc_{j}])} $$
+Braycurtis percentile : $$ \frac{2\times \sum_{s=1}^{n} min(per_{i}, per_{j})}{\sum_{s=1}^{n}(per_{i}+per_{j}])} $$
+    
+n: total number of all samples; a: total number of all present in samples; c: total number of all absent in samples  
+sort: sort the abundance of OTUs in the sample from high to low and return the sorted values  
+abc: total sum normalization  
+per: percentile normalization  
+
+The Russell Rao calculation only considers whether a species appears in a sample. The Russell Rao weight takes into account the impact of abundance information on co-occurrence when species appear in a sample, i.e., the closer the abundance of species, the higher the weight should be given. Jaccard is based on the presence or absence of species to calculate co-occurrence, but when calculating the co-occurrence value of two species, the total number of samples is subtracted by the number of samples where both species are absent. This approach captures information effectively when two species only appear in a subset of samples but have a high co-occurrence. Faith is also based on the presence or absence of species to calculate co-occurrence, but for species that do not co-occur in some samples, possibly due to technical factors, it increases the count of co-occurrence by $\frac{c}{n}$. Abundance totalsum is designed based on the relative abundance of species. Species with similar abundance is more closely related in a sample, especially when their abundance is higher, so we calculated $1-\left|abc_i-abc_j\right|$ to measure the degree of similarity for abundance of two species and $min\left(abc_i,abc_j\right)$ for higher abundance similarity being given higher weight. Abundance percentile replaces the relative abundance of species with percentile-normalized values on the basis of the Abundance totalsum formula, aiming to enhance the robustness of co-occurrence value calculation. Braycurtis totalsum is also calculated based on the relative abundance of species. This formula effectively reflects the differences in the relative abundance of species in the samples. If the abundance of two species does not differ significantly across all samples, then these two species will have a high co-occurrence value. Braycurtis percentile similarly replaces the relative abundance with percentile-normalized values.
+
+[GloVe](https://nlp.stanford.edu/projects/glove/) model to train embedding for microbiome. 
+
+```{bash, eval = FALSE, engine.opts='-l', echo=FALSE}
+# caculate co-occurrence and embedding
+sbatch script/run_cooccurrence.sh # AGP dataset
+sbatch script/run_cooccurrence_all_feces.sh # All feces dataset
+```
+
+#### phylogeny embedding. 
+Caculate the phylogeny tree of otu. 
+
+```{bash eval = FALSE, echo=FALSE}
+module load miniconda/4.9.2
+source activate qiime2-2022.8
+biom_file="/home/dongbiao/word_embedding_microbiome/databaes/16Sdatabase/human16S_feces/human_train.biom"
+fasta_file="/home/dongbiao/word_embedding_microbiome/databaes/16Sdatabase/glove_1/PCA/get_tree/"
+# the path is used to store the intermediate file
+temp_path="/home/dongbiao/word_embedding_microbiome/databaes/16Sdatabase/glove_1/PCA/get_tree/" 
+tree_path="/home/dongbiao/word_embedding_microbiome/databaes/16Sdatabase/glove_1/PCA/get_tree/export_tree/"
+python script/get_phylogeny_tree.py $biom_file $fasta_file $temp_path $tree_path
+```
+
+PCA: apply the PCA in phylogeny of otu distance matrix
+
+```{bash eval = FALSE, echo=FALSE}
+module load miniconda/4.9.2
+source activate jupyter_notebook
+
+tree_file=""
+n_dims=100
+embedding_file=""
+python script/PCA.py $tree_file $n_dims $embedding_file
+```
+
+glove: convert the phylogeny of otu distance matrix to similarity distance, then GloVe was applyied to acculae the embedding
+phylogeny: $$ 1-\frac{PD_{ij}}{max(PD)} $$
+PD: phylogenetic distances matrix
+
+```{bash eval = FALSE, echo=FALSE}
+module load miniconda/4.9.2
+source activate jupyter_notebook
+
+# caculate similarity distance
+tree_file="/home/dongbiao/word_embedding_microbiome/databaes/16Sdatabase/glove_1/PCA/get_tree/export_tree/tree.nwk"
+biom_file="/home/dongbiao/word_embedding_microbiome/databaes/16Sdatabase/human16S_feces/human_train.biom"
+feature_dict_file="/home/dongbiao/word_embedding_microbiome/databaes/16Sdatabase/glove_1/feature_dict_train.txt"
+sim_distance_file="/home/dongbiao/word_embedding_microbiome/databaes/16Sdatabase/glove_1/phylogeny/phylogeny.bin"
+python script/tree_distance.py $tree_file $biom_file $feature_dict_file $sim_distance_file
+# caculate embedding, the feature dict must match the co-distance
+sbash script/run_cooccurrence.sh
+```
+
+
+```{bash eval = FALSE, echo=FALSE}
+# *Selecting hyperparameters for the GloVe model
+# co-occurrence train on AGP data set
+module load miniconda/4.9.2
+source activate jupyter_notebook
+
+python script/selecting_hyperparameters.py
+```
+
+
+```{r, eval = FALSE, echo=FALSE}
+library(knitr)
+include_graphics("/home/dongbiao/word_embedding_microbiome/programe_test/glove/select_x_max.png")
+```
+
+*Loss curve of the GloVe model
+```{bash, eval=FALSE, echo=FALSE}
+file_diir="/home/dongbiao/word_embedding_microbiome/programe_test/x-lang/membed/script"
+
+Rscript $file_diir/glove_model_learning_rate.R
+```
+
+
+```{r, echo=FALSE}
+imgs <- list("/home/dongbiao/word_embedding_microbiome/programe_test/glove/loss.png",
+             "/home/dongbiao/word_embedding_microbiome/programe_test/glove/loss_all_feces.png")
+slickR(imgs, height = 400, width = "95%") %synch%
+    ( slickR(c("AGP", "All feces"), slideType = 'p') + settings(arrows = FALSE) )
+```
+
+### Sample classification
+#### **Pipeline**
+* Current version: Attention for structured data  
+```{r, echo=FALSE}
+include_graphics("/home/dongbiao/word_embedding_microbiome/programe_test/x-lang/membed/method/技术路线.png")
+```
+
+Five-fold cross-validation in AGP(Healthy-IBD) data  
+预训练向量基于全部粪便样本进行训练得到：all feces samples(8,770 x 11,4288)  
+挑选AGP数据集中的健康样本和IBD样本，进行五折交叉检验验证来评估模型性能。MLP和RF
+作为基线为了与我们构建的模型进行比较。在MLP和RF中预训练向量降低模型性能，原始的丰度
+数据表现的性能更好，Attention模型中基于预训练向量的模型性能表现会更好相比于随机初始化向量。
+其中MLP的OTU模型性能表现是最好的，Attention中的模型没有比其表现更好。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/AGP_run_20220702/results/AGP_AUC_all_feces.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/AGP_run_20220702/results/AGP_F1_all_feces.png"
+slickR(benchmark, height = 400)
+```
+Leave-one-out in IBD cross-dataset  
+跨数据集分类模型表现性能评估  
+RF中预训练向量降低模型性能，基于丰度的模型表现最好。MLP中有4个预训练向量的模型
+性能稍微好于基于原始丰度的模型。在Attention模型中排名靠前的2个模型性能相较与RF和MLP
+有很明显的提升。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/IBD/results/AUC_cross_data_all_feces.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/IBD/results/F1_cross_data_all_feces.png"
+slickR(benchmark, height = 400)
+```
+Leave-one-out in CRC cross-dataset  
+CRC中删除了PRJNA763872数据集，之前表现很差，模型预测始终将健康样本预测成CRC样本，
+查阅文献该健康样本确实明确指出是健康的，不知道是否是其他原因导致，在这里先删除该数据集。 
+RF中预训练向量降低模型性能，基于丰度的模型表现最好。MLP中有1个预训练向量的模型
+性能稍微好于基于原始丰度的模型。在Attention模型中排名靠前的7个模型的性能相之间性能
+较为相似，并且与RF和MLP相比性能有很明显的提升。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/CRC/results/AUC_cross_data_add_study_all_feces.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/CRC/results/F1_cross_data_add_study_all_feces.png"
+slickR(benchmark, height = 400)
+```
+
+Leave-one-out in dietary fiber cross-dataset  
+因为，有的人群进食膳食纤维后，菌群不会对其有反应。为了更好研究
+膳食纤维干预前后肠道菌群的变化，在这里我们过滤掉对膳食纤维干预不太敏感的人群。
+过滤方法：分别计算个体在干预前后的组内样本距离和组间样本距离（braycurtis），然后计算
+组间距离均值和组内样本均值的比值，最后保留比值大于1.2的个体用于后续分析。  
+RF中预训练向量降低模型性能，基于丰度的模型表现最好。MLP中各模型之间变现差异不大。
+在Attention模型中排名靠前的7个模型的性能与RF和MLP相比有很明显的提升。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/dietary_fber/results/AUC_cross_data_all_feces.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/dietary_fber/results/F1_cross_data_all_feces.png"
+slickR(benchmark, height = 400)
+```
+
+The impact of dataset size on the model. 
+Train data on AGP samples : 2453 x 20778  
+Train data on all feces samples : 8770 x 114288  
+在AGP数据集上进行预训练的向量与全部粪便训练的预训练向量比较，观察数据集大小对模型
+性能的影响。在AGP的IBD数据集中，模型在AGP的预训练向量表现稍好。在其它跨数据集的比较
+中增大数据集普遍可以增强模型的表现性能，其中Abundance percentile的表现最好，测试集的性能
+都表现出不同程度的提升，当增大数据集后。因此，后续分析均是基于Abundance percentile这个公式。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/AGP_IBD_AUC_diff_datasets.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/IBD_AUC_diff_datasets.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/CRC_AUC_diff_datasets.png"
+benchmark[[4]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/dietary_AUC_diff_datasets.png"
+slickR(benchmark, height = 400) %synch%
+    ( slickR(c("AGP-IBD","IBD", "CRC", "Dietary fiber"), slideType = 'p') + settings(arrows = FALSE) )
+```
+
+对全部粪便样本进行取子集，观察随着GloVe预训练数据集数量的不断增加对下游Attention模型
+性能的影响。预训练向量选用Abundance percentile这个计算方法。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/AGP_cross/AGP_AUC_diff_size.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/IBD_cross/AUC_diff_size.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/CRC_cross/AUC_diff_size.png"
+benchmark[[4]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/dietary_cross/AUC_diff_size.png"
+slickR(benchmark, height = 400) %synch%
+    ( slickR(c("AGP_IBD","IBD", "CRC", "Dietary_fiber"), slideType = 'p') + settings(arrows = FALSE) )
+```
+
+### model explain
+IBD  
+提取Attention模型中的CLS向量，该向量能表征我们的样本，现在评估该向量是否捕获到我们
+的分类分析。t-SNE降维图中CLS向量能更好的区分开疾病和健康的样本。并且通过PVCA分析也证明，
+CLS向量增加了疾病类别的信息含量，减少了数据集之间的批次效应。在热图中
+能明显看到部分维度的数值和样本分组有明显关联。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/IBD/explain/T-SNE.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/IBD/explain/PVCA.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/IBD/explain/heatmap.png"
+slickR(benchmark, height = 400) 
+```
+
+
+CRC  
+t-SNE降维图中CLS向量能更好的区分开疾病和健康的样本。并且通过PVCA分析也证明，
+CLS向量增加了疾病类别的信息含量，减少了数据集之间的批次效应。在热图中
+能明显看到部分维度的数值和样本分组有明显关联。
+```{r, echo=FALSE}
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/CRC/explain_model/T-SNE.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/CRC/explain_model/PVCA.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/CRC/explain_model/heatmap.png"
+slickR(benchmark, height = 400) 
+```
+
+
+dietary fiber  
+t-SNE降维图中CLS向量依然无法更好的区分开膳食纤维干预和对照的样本。通过PVCA分析也证明，
+CLS向量明显增加了数据集相关的信息含量。在热图中也无法观测出哪些维度的数值和样本分组有明显关联。
+```{r, echo=FALSE}
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/dietary_fber/explain_model/T-SNE.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/dietary_fber/explain_model/PVCA.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/dietary_fber/explain_model/heatmap.png"
+slickR(benchmark, height = 400) 
+```
+
+### SHAP  
+SHAP值有正有负，在二分类样本中正值表示对正例样本有正向作用，负值表示对正例样本有反向作用。
+数值的绝对值越大表明对样本分类越重要。以下结果根据SHAP值绝对值的大小从大到小排序。  
+IBD: g__Oscillospira 多项研究表明炎症与颤螺菌密切相关，且大多呈负相关  
+     s__gnavus 研究人员发现IBS-D患者粪便中活泼瘤胃球菌（R. gnavus）增加  
+CRC: g__Peptostreptococcus : 与CRC的发生发展有关  
+     g__Fusobacterium, s__anaerobius : 报道和CRC相关  
+dietary_fiber: g__Bifidobacterium; s__longum有很强的信号在  
+
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/IBD/shap/importance_fid.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/CRC/shap/importance_fid.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/dietary_fber/shap/importance_fid.png"
+slickR(benchmark, height = 400) %synch% 
+    ( slickR(c("IBD","CRC", "Fiber"), slideType = 'p') + settings(arrows = FALSE) )
+```
+
+### Oral sample classification  
+Train data : 2,657 fids, 24.542 samples  
+预训练使用的方法是：Abundance percentile  
+OSCC  
+MLP基于丰度的模型表现最好，Attention的Abundance percentile模型稍差。t-SNE降维图中CLS向量能更好的区分开疾病和健康的样本。并且通过PVCA分析也证明，
+CLS向量增加了疾病类别的信息含量，减少了数据集之间的批次效应。在热图中
+能明显看到部分维度的数值和样本分组有明显关联。  
+SHAP : g__Fusobacterium：
+       g__Streptococcus:
+
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/OSCC/results/AUC_cross_data.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/OSCC/results/F1_cross_data.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/OSCC/explain_model/T-SNE.png"
+benchmark[[4]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/OSCC/explain_model/PVCA.png"
+benchmark[[5]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/OSCC/explain_model/heatmap.png"
+benchmark[[6]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/OSCC/shap/importance_fid.png"
+slickR(benchmark, height = 400)
+```
+
+Caries  
+Attention的Abundance percentile的模型表现最。
+t-SNE降维图中CLS向量能更好的区分开疾病和健康的样本。并且通过PVCA分析也证明，
+CLS向量增加了疾病类别的信息含量，但没有减少了数据集之间的批次效应。
+在热图中也无法观测出哪些维度的数值和样本分组有明显关联。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/caries/results/AUC_cross_data.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/caries/results/F1_cross_data.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/caries/explain_model/T-SNE.png"
+benchmark[[4]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/caries/explain_model/PVCA.png"
+benchmark[[5]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/caries/explain_model/heatmap.png"
+benchmark[[6]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/caries/shap/importance_fid.png"
+slickR(benchmark, height = 400)
+```
+
+periodontitis  
+Attention的Abundance percentile的模型表现最。
+t-SNE降维图中CLS向量能更好的区分开疾病和健康的样本。并且通过PVCA分析也证明，
+CLS向量增加了疾病类别的信息含量，减少了数据集之间的批次效应。在热图中
+能明显看到部分维度的数值和样本分组有明显关联。 
+SHAP: g__Porphyromonas
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/paradentities/results/AUC_cross_data.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/paradentities/results/F1_cross_data.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/paradentities/explain_model/T-SNE.png"
+benchmark[[4]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/paradentities/explain_model/PVCA.png"
+benchmark[[5]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/paradentities/explain_model/heatmap.png"
+benchmark[[6]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/paradentities/shap/importance_fid.png"
+slickR(benchmark, height = 400)
+```
+
+The impact of dataset size on the model. 
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/oscc_cross/AUC_diff_size.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/caries_cross/AUC_diff_size.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/diff_datasize/periodontitis_cross/AUC_diff_size.png"
+slickR(benchmark, height = 400) %synch%
+    ( slickR(c("OSCC", "caries", "periodontitis"), slideType = 'p') + settings(arrows = FALSE) )
+```
+
+
+### age predict  
+年龄预测使用leave one out进行评估模型，RF作为基线，结果表明我们模型性能要差与RF模型。
+
+### Biological information of embedding vector
+Taxonomy
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/GloVe/tax_plot/tsne_abundance-percentile_Phylum.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/GloVe/tax_plot/tsne_abundance-percentile_Genus.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/GloVe/tax_plot/tsne_abundance-percentile_Phylum_oral.png"
+benchmark[[4]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/filter_prevalence/GloVe/tax_plot/tsne_abundance-percentile_Genus_oral.png"
+slickR(benchmark, height = 400) %synch%
+    ( slickR(c("Phylum_feces", "Genus_feces", "Phylum_oral", "Genus_oral"), slideType = 'p') + settings(arrows = FALSE) )
+```
+基于丰度表学习的向量能学习到进化的信息，但学习到的信息较少，通过t-SNE发现在门水平能观察到部分门的微生物是聚类的，到了属水平几乎观察不到同一属的物种聚类的现象，并且在Abundance percentile的图中不同物种会聚类到一起。相对的在PCA的embedding的能更好的学习到进化的信息。但在下游任务中PCA的embedding表现却没有基于丰度得到的向量好。
+
+Bugbase  
+feces
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/BugBase/Aerobic_Anaerobic_Facultatively_Anaerobic.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/BugBase/Gram_Negative_Gram_Positive.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/BugBase/Forms_Biofilms.png"
+benchmark[[4]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/BugBase/Contains_Mobile_Elements.png"
+slickR(benchmark, height = 400) %synch%
+    ( slickR(c("Aerobic Anaerobic Facultatively_Anaerobic", 
+               "Gram_Negative Gram_Positive",
+               "Forms_Biofilms",
+               "Contains_Mobile_Elements"), slideType = 'p') + settings(arrows = FALSE) )
+```
+
+oral  
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/BugBase/Aerobic_Anaerobic_Facultatively_Anaerobic_oral.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/BugBase/Gram_Negative_Gram_Positive_oral.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/BugBase/Forms_Biofilms_oral.png"
+benchmark[[4]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/BugBase/Contains_Mobile_Elements_oral.png"
+slickR(benchmark, height = 400) %synch%
+    ( slickR(c("Aerobic Anaerobic Facultatively_Anaerobic", 
+               "Gram_Negative Gram_Positive",
+               "Forms_Biofilms",
+               "Contains_Mobile_Elements"), slideType = 'p') + settings(arrows = FALSE) )
+```
+
+co-occurrence microbiom  
+在肠道中，通过文献调研发现g_Faecalibacterium和g__Roseburia这两个属在肠道样本中会经常共现（In vitro co-cultures of human gut bacterial species as predicted from co-occurrence network analysis）It has been shown that butyrate producers like F. prausnitzii and R. inulinivorans can utilize acetate as a co-substrate from other acetate producing gut bacteria，g__Streptococcus和g__Veillonella这两个属在肠道也经常共现。在对这些物种的embedding向量进行t-SNE降维分析发现g_Faecalibacterium和g__Roseburia的大部分物种都较为相似，同理在g__Streptococcus和g__Veillonella物种也能观察到类似的结果。并且g_Faecalibacterium和g__Roseburia这两个物种与g__Streptococcus和g__Veillonella这两个物种向量相似性较差，在图中也能看出这些物种之间有较为明显的界限。因此，基于共现模型学习到的向量，能学习到物种共现信息，这些经常共现的物种会有较为相似的向量，虽然这些物种处在不同的进化分支中。  
+在口腔中，Porphyromonas gingivalis, Treponema denticola, Tannerella forsythia这三个物种常在群落中共同出现，且与牙周炎疾病密切相关，但在预训练向量中没有发现在种水平有这些物种，因此在属水平进行研究，通过t-SNE降维分析发现这三个不同属中部分物种向量的相似性很高，图中相似性高的物种向量可能是经常共现的物种。Haemophilus parainfluenzae和Streptococcus mitis也是在口腔中经常共现的物种，在这里也是对属水平的物种进行研究，发现这些物种几乎都混杂在一起，说明学习到的向量具有很高相似性。并且文献并未报道共现的物种之间的向量相似性普遍较差。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/cooccurrence/co_occur_feces.png"
+slickR(benchmark, height = 400) 
+```
+
+The bacteria associated with IBD  
+预训练向量的下游分类任务中发现基于丰度计算的向量比进化的好，在这里找出例子解释为什么好。文献调研发现Ruminococcus gnavus在IBD患者丰度增加，Fusobacterium varium是IBD的致病因素之一，这两株菌和IBD发生都是正相关，在这里我们在属水平研究这些物种。通过物种丰度表学习到的这两个物种的相似性要高于基于进化的方法。基于共现的方法学到这两个不同属的一些相似的特征，并且这些特征通过进化是无法捕获的。
+```{r, echo=FALSE}
+# 图片路径列表
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/IBD/results/relative_bacteria.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/IBD/results/relative_bacteria_boxplot.png"
+benchmark[[3]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/IBD/results/relative_bacteria_heatmap.png"
+slickR(benchmark, height = 400)
+```
+
+King - man + woman = queen  
+Facultatively_Anaerobic - Anaerobic = Aerobic  
+对肠道训练的embedding向量进行分析，发现g__Corynebacterium这个属下的物种存在Facultatively_Anaerobic，Anaerobic和Aerobic这三个不同属性。将g__Corynebacterium中属于Facultatively_Anaerobic物种的向量与属于Anaerobic物种的向量之间两两进行相减得到一条新的向量，将得到的新向量与其它所有向量计算余弦相似度，每个物种对应的余弦相似度取所有相减出来的向量与其计算余弦值的均值。同样在o__Actinomycetales这一水平下重复上诉操作。
+```{r, echo=FALSE}
+benchmark <- list()
+benchmark[[1]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/g__Corynebacterium_fa_an_ae.png"
+benchmark[[2]] <- "/home/dongbiao/word_embedding_microbiome/programe_test/glove/o__Actinomycetales.png"
+slickR(benchmark, height = 400) %synch%
+    ( slickR(c("g__Corynebacterium", "o__Actinomycetales"), slideType = 'p') + settings(arrows = FALSE) )
+```
+
+
