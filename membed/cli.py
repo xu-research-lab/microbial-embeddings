@@ -11,7 +11,7 @@ import yaml
 
 import click
 
-from .glove import get_feature_dict, cooccur_workflow, train_glove_model
+from .glove import get_feature_dict, cooccur_workflow, train_glove_model, build_x_max_file_workflow
 from .util import set_log_level
 from .MLP import mlp
 from .Attention_embedding import Attention_biom
@@ -101,15 +101,7 @@ def dict(**kwargs):
               type=click.STRING,
               required=True,
               help='Output co-occurrence matrix file path (format depends on metric).')
-@click.option('-x',
-              '--x-max-file',
-              type=click.STRING,
-              required=True,
-              help='Output x_max value file path (used for GloVe training weight truncation).')
-@click.option('--normalize', is_flag=True, default=False)
-@click.option('--percentile', is_flag=True, default=False)
-@click.option('--dense', is_flag=True, default=False,
-              help='Use dense matrix computation (recommended for small datasets; sparse by default).')
+
 @click.option('--metric', type=click.STRING, default='russell_rao',
                             help='''Similarity/distance metric (default: russell_rao):
 1. **russell_rao** - Binary presence/absence similarity
@@ -176,18 +168,39 @@ def cooccur(**kwargs):
     """Compute pairwise cooccurrence of microbes in a biom table.
 
     Example:
-    $ membed cooccur -b table.biom -c table.co -x xmax_file --metric russell_rao
-    $ membed cooccur -b table.biom -c table.co -x xmax_file --metric russell_rao --dense
-    $ membed cooccur -b table.biom -c table.co -x xmax_file --metric jaccard --dense
-    $ membed cooccur -b table.biom -c table.co -x xmax_file --metric abundance --dense --percentile
+    $ membed cooccur -b table.biom -c table.co  --metric russell_rao
+    $ membed cooccur -b table.biom -c table.co  --metric abundance_percentile --cpus 20
     """
     set_log_level(kwargs['log'])
     params = {
         key: kwargs[key]
-        for key in ('biom_file', 'cooccur_file', 'x_max_file', 'normalize',
-                    'percentile', 'dense', 'metric', 'cpus')
+        for key in ('biom_file', 'cooccur_file',  'metric', 'cpus' )
     }
     cooccur_workflow(**params)
+
+
+@main.command()
+@click.option('-c',
+              '--cooccur-file',
+              type=click.STRING,
+              required=True,
+              help='Output co-occurrence matrix file path (format depends on metric).')
+@click.option('-x',
+              '--x-max-file',
+              type=click.STRING,
+              required=True,
+              help='Output x_max value file path (used for GloVe training weight truncation).')
+@click.option('--percentile_num', type=click.FLOAT, default=1)
+@_common_parameters
+def build_x_max_file(**kwargs):
+    set_log_level(kwargs['log'])
+
+    params = {
+        key: kwargs[key]
+        for key in ('cooccur_file', 'x_max_file', 'percentile_num' )
+    }
+
+    build_x_max_file_workflow(**params)
 
 
 @main.command()
@@ -231,66 +244,118 @@ def glove_train(**kwargs):
     }
     train_glove_model(**params)
 
-
 @main.command()
 @click.option('-tra_otu',
               '--train-biom',
               type=click.STRING,
               required=True,
-              help='file to store or load otu test.')
+              help='Path to training dataset in BIOM format')
 @click.option('-tes_otu',
               '--test-biom',
               type=click.STRING,
               required=True,
-              help='file to store or load otu test.')
+              help='Path to testing dataset in BIOM format')
 @click.option('-m',
               '--metadata',
               type=click.STRING,
               required=True,
-              help='file to store or load glove embeding.')
-@click.option('--labels_col', type=click.STRING, required=True)
-@click.option('--sample_id_col', type=click.STRING, required=True)
+              help='Path to metadata file (CSV/TSV format)')
+@click.option('--labels_col', 
+              type=click.STRING, 
+              required=True,
+              help='Column name in metadata containing class labels (e.g., [0.0, 1.0])')
+@click.option('--sample_id_col', 
+              type=click.STRING, 
+              required=True,
+              help="Unique sample ID column name matching BIOM sample IDs")
 @click.option('-e',
               '--embedding-birnn',
               type=click.STRING,
               required=True,
-              help='file to store embedding_birnn.')
+              help='Output path for BiRNN embeddings')
 @click.option('-ploss',
               '--plotfile-loss',
               type=click.STRING,
               required=True,
-              help='file to store loss plot.')
+              help='Output path for training loss plot')
 @click.option('-pauc',
               '--plotfile-auc',
               type=click.STRING,
               required=True,
-              help='file to store auc plot.')
-@click.option('--num-steps', type=click.INT, default=400)
-@click.option('--p-drop', type=click.FLOAT, default=0.0)
-@click.option('--d-ff', type=click.INT, default=64)
-@click.option('--batch-size', type=click.INT, default=64)
-@click.option('--d-model', type=click.INT, default=100)
-@click.option('--n-layers', type=click.INT, default=2)
-@click.option('--n-heads', type=click.INT, default=2)
-@click.option('--numb', type=click.INT, default=1)
-@click.option('--lr', type=click.FLOAT, default=0.0005)
-@click.option('--weight-decay', type=click.FLOAT, default=0.0)
-@click.option('--num-epochs', type=click.INT, default=1)
-@click.option('--loss', type=click.STRING, default=None, help='balance loss.')
-@click.option('--alpha', type=click.FLOAT, default=0.6, help='balance loss, alpha.')
+              help='Output path for ROC-AUC curve plot')
+@click.option('--num-steps', 
+              type=click.INT, 
+              default=400,
+              help='Number of training steps per epoch')
+@click.option('--p-drop', 
+              type=click.FLOAT, 
+              default=0.0,
+              help='Dropout probability')
+@click.option('--d-ff', 
+              type=click.INT, 
+              default=64,
+              help='Feed-forward layer dimension')
+@click.option('--batch-size', 
+              type=click.INT, 
+              default=64,
+              help='Training batch size')
+@click.option('--d-model', 
+              type=click.INT, 
+              default=100,
+              help='Model embedding dimension')
+@click.option('--n-layers', 
+              type=click.INT, 
+              default=2,
+              help='Number of transformer layers')
+@click.option('--n-heads', 
+              type=click.INT, 
+              default=2,
+              help='Number of attention heads')
+@click.option('--numb', 
+              type=click.INT, 
+              default=1,
+              help='Number of parallel workers')
+@click.option('--lr', 
+              type=click.FLOAT, 
+              default=0.0005,
+              help='Learning rate')
+@click.option('--weight-decay', 
+              type=click.FLOAT, 
+              default=0.0,
+              help='L2 regularization weight')
+@click.option('--num-epochs', 
+              type=click.INT, 
+              default=1,
+              help='Number of training epochs')
+@click.option('--loss', 
+              type=click.STRING, 
+              default=None,
+              help='Loss function type for class balancing (e.g., focal, weighted)')
+@click.option('--alpha', 
+              type=click.FLOAT, 
+              default=0.6,
+              help='Alpha parameter for balanced loss')
 @click.option('-g',
               '--glove-embedding',
               type=click.STRING,
               default=None,
-              help='file to store or load glove embeding.')
+              help='Path to pretrained GloVe embeddings')
 @_common_parameters
 def class_attention(**kwargs):
-    """Run attention model.
-
+    """Run attention-based classification model with specified parameters.
+    
     Example:
+        membed class-attention \\
+            --train-biom train.biom \\
+            --test-biom test.biom \\
+            --metadata metadata.csv \\
+            --labels_col group \\
+            --sample_id_col sample_id \\
+            --embedding-birnn embeddings.npy \\
+            --plotfile-loss loss.png \\
+            --plotfile-auc auc.png
     """
     set_log_level(kwargs['log'])
-
     # with open(kwargs['config_file']) as f:
     #     sweep_config = yaml.load(f.read(), Loader=yaml.FullLoader)
     # sweep_id = wandb.sweep(sweep_config,
@@ -304,7 +369,6 @@ def class_attention(**kwargs):
     #                 kwargs['p_drop'], kwargs['d_ff'],
     #                 kwargs['num_epochs'], kwargs['loss'],
     #                 kwargs['glove_embedding']))
-
     params = {
         key: kwargs[key]
         for key in ('metadata', 'labels_col','sample_id_col', 'train_biom', 'test_biom',

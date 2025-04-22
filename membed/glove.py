@@ -40,16 +40,13 @@ def try_all_gpus(numb):
     return [gpu(i) for i in [numb]]
 
 
-def read_biom(biom_file, *, normalize=False):
+def read_biom(biom_file):
     """Read BIOM format file and return sample and feature data.
 
     Parameters
     ----------
     biom_file : str or file-like object
         Path to the BIOM file or an already opened file handle.
-    normalize : bool, optional (default: False)
-        If True, normalize the data matrix by dividing each sample by its total sum.
-        Ensures each sample's values sum to 1. Mutually exclusive with percentile.
 
     Returns
     -------
@@ -70,17 +67,13 @@ def read_biom(biom_file, *, normalize=False):
     except Exception as e:
         raise ValueError(f"Failed to load BIOM data: {str(e)}") from e
 
-
     logger.info('Loaded %d features, %d samples' % table.shape)
+
     sid = table.ids(axis='sample')
     fid = table.ids(axis='observation')
 
-    if normalize:
-        table.norm(axis='sample', inplace=True)
 
-    data = table.matrix_data
-
-    return sid, fid, data.toarray(), table
+    return sid, fid, table
 
 
 def read_fasta_ids(fasta_file):
@@ -113,7 +106,7 @@ def cooccur_jaccard_dense(u, v):
     """
     union = (u | v)
     intersect = (u & v)
-    return intersect.sum() / union.sum()
+    return intersect.sum() / union.sum() 
 
 
 def cooccur_dice_dense(u, v):
@@ -157,16 +150,8 @@ def cooccur_abundance_dense(u, v):
     """
     m = u - v
     min_uv = u - np.maximum(m, 0)
-    return (np.sum(min_uv - np.abs(m) * min_uv))  / len(u)
-    # return (np.sum(min_uv - np.abs(m) * min_uv)) + 1
-
-# def cooccur_abundance_dense_len(u, v):
-#     """Calculate co-occurrence strength based on abundance.
-#     """
-#     m = u - v
-#     min_uv = u - np.maximum(m, 0)
-#     return (np.sum(min_uv - np.abs(m) * min_uv))  / len(u)
-#     # return (np.sum(min_uv - np.abs(m) * min_uv)) + 1
+    return (np.sum(min_uv - np.abs(m) * min_uv))  / len(u) 
+    # return (np.sum(min_uv - np.abs(m) * min_uv))
 
 
 def cooccur_effect_size(n, N, M, cooccur):
@@ -271,11 +256,10 @@ def build_cooccur_matrix(X, metric, cpus=1):
     return cooccur
 
 
-def glove_input(data, cooccur_file, x_max_file, percentile_num=10):
-    """Prepare GloVe input from co-occurrence data.
+def build_x_max_file_workflow(cooccur_file, x_max_file, percentile_num=10):
+    """Calculate and save x_max value for GloVe training from co-occurrence data.
 
     Parameters:
-        data (coo_array): Co-occurrence matrix.
         cooccur_file (str):
             Output path for co-occurrence pairs. Stores all non-zero co-occurrence pairs (word1, word2, value)
             with symmetric expansion (both (i,j) and (j,i) are stored). File format: binary packed array of
@@ -285,20 +269,17 @@ def glove_input(data, cooccur_file, x_max_file, percentile_num=10):
             - The x_max hyperparameter caps the weighting function's upper bound
             - When co-occurrence value x exceeds x_max, weight w(x) is fixed at 1.0
             - This prevents high-frequency pairs from dominating training and mitigates outlier effects.
+        percentile_num : float, optional
+            Percentile value (0-100) to use for x_max calculation. Default is 10 (10th percentile).
+            Typical GloVe usage recommends 99th percentile (set percentile_num=99).
     """
-    dt = np.dtype([('word1', 'int32'), ('word2', 'int32'), ('value', 'float64')])
-    row = np.append(data.row, data.col)
-    col = np.append(data.col, data.row)
-    value = np.append(data.data, data.data)
 
-    temp = np.empty((len(row), ), dt)
-    for i in range(len(row)):
-        temp[i] = (row[i] + 1, col[i] + 1, value[i])
+    # 读取二进制文件
+    dt = np.dtype([('word1', 'i4'), ('word2', 'i4'), ('value', 'f8')])
+    data = np.fromfile(cooccur_file, dtype=dt)
 
-    temp.tofile(cooccur_file)
-
-    percentile_90 = np.percentile(data.data, percentile_num)
-    np.save(x_max_file, percentile_90)
+    percentile_val = np.percentile(data['value'], percentile_num)
+    np.save(x_max_file, percentile_val)
 
 
 def get_feature_dict(biom_file, feature_dict):
@@ -352,13 +333,8 @@ def buildCooccuranceMatrix(biom_file):
 
 def cooccur_workflow(biom_file,
                      cooccur_file,
-                     x_max_file,
-                     normalize=False,
-                     percentile=False,
-                     dense=True,
                      metric='russell_rao',
-                     cpus=1,
-                     percentile_num=1):
+                     cpus=1,):
     """Workflow for co-occurrence analysis with multiple similarity metrics.
 
     Parameters:
@@ -373,79 +349,70 @@ def cooccur_workflow(biom_file,
 
     Generates table.co and xmax_file.npy for GloVe model training.
     """
-    logger.info(
-        f'Set normalize={normalize}, percentile={percentile}, dense={dense} for biom table.'
-    )
-    if metric == 'russellrao':
-        if normalize or percentile:
-            raise ValueError(
-                'You do NOT need to normalize or percentile transform the biom table!'
-            )
-        if dense:
-            logger.warning(
-                'Are you sure to convert sparse array to dense?! Sparse array is much faster for russellrao metric.'
-            )
 
-    sid, fid, data,table = read_biom(biom_file,
-                               normalize=normalize,)
+    sid, fid, table = read_biom(biom_file)
     
     logger.info('Compute cooccur matrix using %r...' % metric)
 
     if metric == 'russell_rao': 
         data = table.matrix_data.toarray()
         data = data.astype(bool).astype('int')
-        cooccur = tril(np.dot(data, data.T), k=-1) / len(sid)
         logger.debug('Done computing cooccurence.')
 
     elif metric == 'abundance_percentile':
-
         table.rankdata(axis='sample', inplace=True)
         data = table.matrix_data.multiply(1 / table.max(axis='sample')).toarray()
         metric = cooccur_abundance_dense 
+    
+    elif metric == 'abundance_totalsum':
+        table.norm(axis='sample', inplace=True)
+        data = table.matrix_data.toarray()
+        metric = cooccur_abundance_dense 
 
-    elif metric == 'braycurtis':
-        if not dense:
-            raise ValueError(f'{metric} is not supported for sparse array.')
+    elif metric == 'braycurtis_percentile':
+        table.rankdata(axis='sample', inplace=True)
+        data = table.matrix_data.multiply(1 / table.max(axis='sample')).toarray()
+        metric = cooccur_braycurtis_dense
+
+    elif metric == 'braycurtis_totalsum':
+        table.norm(axis='sample', inplace=True)
+        data = table.matrix_data.toarray()
         metric = cooccur_braycurtis_dense
 
     elif metric == 'jaccard':
+        data = table.matrix_data.toarray()
         data = data.astype(bool)
-        if not dense:
-            raise ValueError(f'{metric} is not supported for sparse array.')
         metric = cooccur_jaccard_dense
 
     elif metric == 'dice':
+        data = table.matrix_data.toarray()
         data = data.astype(bool)
-        if not dense:
-            raise ValueError(f'{metric} is not supported for sparse array.')
         metric = cooccur_dice_dense
 
     elif metric == 'faith':
+        data = table.matrix_data.toarray()
         data = data.astype(bool)
-        if not dense:
-            raise ValueError(f'{metric} is not supported for sparse array.')
         metric = cooccur_faith_dense
 
     elif metric == 'phi':
+        data = table.matrix_data.toarray()
         data = data.astype(bool)
-        if not dense:
-            raise ValueError(f'{metric} is not supported for sparse array.')
         metric = cooccur_phi_dense
 
     elif metric == 'effect_size':
+        data = table.matrix_data.toarray()
         data = data.astype(bool).astype('int')
-        if not dense:
-            raise ValueError(f'{metric} is not supported for sparse array.')
         metric = cooccur_effect_size
 
     elif callable(metric):
         pass
-
     else:
         metric = getattr(distance, metric)
 
     if metric == 'glove':
         cooccur = buildCooccuranceMatrix(biom_file)
+    elif metric == 'russell_rao':
+        cooccur = tril(np.dot(data, data.T), k=-1) / len(sid)
     else:
         cooccur = build_cooccur_matrix(data, metric=metric, cpus=cpus)
 
@@ -455,8 +422,22 @@ def cooccur_workflow(biom_file,
     if cooccur_file is None:
         cooccur_file = f'{biom_file}.cooccur'
     
+
+    # 存储共现矩阵
+    cooccur = cooccur * len(sid) # 添加缩放因子 
     cooccur = coo_array(cooccur)
-    glove_input(cooccur, cooccur_file, x_max_file, percentile_num)
+
+    # 将上三角，变成完整的，对称拷贝
+    dt = np.dtype([('word1', 'int32'), ('word2', 'int32'), ('value', 'float64')])
+    row = np.append(cooccur.row, cooccur.col)
+    col = np.append(cooccur.col, cooccur.row)
+    value = np.append(cooccur.data, cooccur.data)
+
+    temp = np.empty((len(row), ), dt)
+    for i in range(len(row)):
+        temp[i] = (row[i] + 1, col[i] + 1, value[i])
+
+    temp.tofile(cooccur_file)
 
 def train_glove_model(cooccur_file,
                       x_max_file,
@@ -496,12 +477,19 @@ def train_glove_model(cooccur_file,
     glove_dir = os.path.dirname(__file__)
     result = f"{result}/embeddings"
     subprocess.call("echo Cooccurent shuffle", shell=True)
-    subprocess.call(f"{glove_dir}/glove_build/shuffle -verbose 2 -memory 20 \
-                    < {cooccur_file} > {result}_temp.shuf.bin",
-                    shell=True)
+    # subprocess.call(f"{glove_dir}/glove_build/shuffle -verbose 2 -memory 20 \
+    #                 < {cooccur_file} > {result}_temp.shuf.bin",
+    #                 shell=True)
+    subprocess.call(f"{glove_dir}/glove_build/shuffle -verbose 2 -memory 40 \
+                < {cooccur_file} > {result}_temp.shuf.bin",
+                shell=True)
     subprocess.call(f"{glove_dir}/glove_build/glove -input-file {result}_temp.shuf.bin \
-                    -vocab-file {feature_dict} -save-file {result} \
+                    -vocab-file {feature_dict} -save-file {result}_{embedding_size} \
                     -gradsq-file {result}_gradsq -verbose 2 \
                     -vector-size {embedding_size} -threads {cpus} \
                     -iter {iter}  -eta {lr} -x-max {x_max}",
                     shell=True)
+
+# cooccur_workflow('/home/cjj/projects/membed_local/membed/train_dataset/train_loo.biom',
+#                  '/home/cjj/projects/membed_local/membed/train_dataset/table.co',
+#                 "abundance_percentile",1)

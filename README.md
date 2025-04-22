@@ -48,22 +48,28 @@ This workflow generates the core co-occurrence-based embeddings from a large mic
 
 * **Prerequisite:** Your input `biom` table (`table.biom`) should contain OTU/ASV abundance data across many samples. Feature IDs should ideally be consistent (e.g., mapped to a reference database like Greengenes or SILVA if comparing across datasets later).
 
-* **Step 1: Create Feature Dictionary:** (Optional but recommended for tracking) Generate a mapping of feature IDs to indices.
-    
+* **Step 1: Create Feature Dictionary:** (Optional but recommended for tracking) Generate a mapping of feature IDs to indices. 生成的是数据集中每个OTU在所有样本的数量统计值
+  
     ```bash
     membed dict -b table.biom -d feature-dict.csv
     ```
     
 * **Step 2: Calculate Co-occurrence Matrix:** Compute the pairwise microbial co-occurrence matrix using the specified metric (e.g., `russell_rao`, or the manuscript's `abundance_percentile` if implemented). This step also determines the `xmax` scaling factor for GloVe.
-    
+  
     ```bash
     # Example using russell_rao metric (adjust --metric as needed)
     membed cooccur -b table.biom -c table.co -x xmax_file.npy --metric russell_rao
     ```
     *Note: Refer to `membed cooccur --help` for available metrics and options. The manuscript primarily uses the "abundance-percentile" method.*
     
-* **Step 3: Train GloVe Model:** Train the GloVe model using the co-occurrence matrix to generate the final embedding vectors.
-    
+* **Step 3: Calculate x-max value hyperparameter**: `xmax` is a critical hyperparameter. Its core function is to control the upper bound of the weighting function, thereby balancing the impact of high-frequency and low-frequency co-occurrence pairs on model training.
+  
+    ```bash
+  membed build-x-max-file -c table.co -x xmax_file.npy --percentile_num 80
+  ```
+  
+* **Step 4: Train GloVe Model:** Train the GloVe model using the co-occurrence matrix to generate the final embedding vectors.
+  
     ```bash
     membed glove-train -d feature-dict.csv \
                        -c table.co \
@@ -84,28 +90,42 @@ This workflow generates the core co-occurrence-based embeddings from a large mic
 Once you have the pre-trained embeddings (`embeddings.txt`), you can use them as input features for downstream machine learning tasks, such as disease classification.
 
 * **Prerequisites:**
-    
+  
     * Training data (`train.biom`, `train_metadata.csv`)
     * Testing data (`test.biom`, `test_metadata.csv`)
     * Pre-trained embedding file (`embeddings.txt` from Step 1).
     * Metadata file should contain the target variable (e.g., disease status) specified by the `--group` parameter.
     
 * **Example: Training an Attention-based Classifier:**
-    
+  
     ```bash
     membed class-attention \
-        --train-biom path/to/train.biom \
-        --test-biom path/to/test.biom \
-        -m path/to/metadata.csv \
-        --group <column_name_for_classification_target> \
-        -e path/to/embeddings.txt \
-        -ploss path/to/attention_loss.png \
-        -pauc path/to/attention_auc.png \
-        -g path/to/output_results/ # Output directory
+        --train-biom train.biom \
+        --test-biom test.biom \
+        -m metadata.csv \
+        --labels_col group \
+        --sample_id_col sample_id \
+        -e embeddings.txt \
+        -ploss attention_loss.png \
+        -pauc attention_auc.png \
+        --num-steps 400 \
+        --p-drop 0.1 \
+        --d-ff 64 \
+        --batch-size 64 \
+        --d-model 100 \
+        --n-layers 2 \
+        --n-heads 2 \
+        --numb 1 \
+        --lr 0.0005 \
+        --weight-decay 0.1 \
+        --num-epochs 100 \
+        --loss BCE_loss \
+        --alpha 0.6 \
+        -g output_results/ # Output directory
     ```
     
 * **Example: Training an MLP Classifier:**
-    
+  
     ```bash
     membed class-mlp \
         --train-biom path/to/train.biom \
@@ -132,7 +152,7 @@ The generated embeddings can be used for various microbiome analyses:
 
 * **Environment Setup:** Use the `requirements_dev.yml` file with Conda as described in the Installation section.
 * **Running Tests (pytest):**
-    
+  
     ```bash
     # Run all tests with verbose output
     pytest -vv -rA --doctest-modules --doctest-continue-on-failure
