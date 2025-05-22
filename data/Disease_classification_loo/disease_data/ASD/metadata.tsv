@@ -1,0 +1,401 @@
+sample	study	diagnosis	group	age	sex	bmi	country	region	pcr_primers	platform	disease_name	title	disease_name_ab	host_body_mass_index
+SRR23368042	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder	Altered Gut Microbiota and Short-chain Fatty Acids in Chinese Children with Constipated Autism Spectrum Disorder	ASD	
+SRR23368043	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368044	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368045	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368046	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368047	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368048	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368049	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368050	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368051	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368052	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368053	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368054	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368055	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368056	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368057	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368058	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368059	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368060	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368061	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368062	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368063	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368064	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368065	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368066	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368067	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368068	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368069	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368070	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368071	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368072	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368073	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368074	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368075	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368076	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368077	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368078	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368079	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368080	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368081	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368082	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368083	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368084	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368085	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368086	PRJNA932561	Healthy	0.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368087	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368088	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368089	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368090	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368091	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368092	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368093	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368094	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368095	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368096	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368097	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368098	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368099	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368100	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368101	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368102	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368103	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368104	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368105	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368106	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368107	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368108	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368109	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368110	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368111	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368112	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368113	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368114	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368115	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368116	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368117	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368118	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368119	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368120	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR23368121	PRJNA932561	ASD	1.0				China:Xiamen	V3-V4	(338?F: 5��-ACTCCTACGGGAGGCAGCAG-3�� and 806?R: 5��-GGACTACHVGGGTWTCTAAT-3��)	Illumina MiniSeq	Autism Spectrum Disorder		ASD	
+SRR28782240	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder	Comprehensive Analysis of Gut Microbiota Composition and Functional Metabolism in Children with Autism Spectrum Disorder and Neurotypical Children: Implications for Sex-Based Differences and Metabolic Dysregulation	ASD	
+SRR28782241	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782242	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782243	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782244	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782245	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782246	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782247	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782248	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782249	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782250	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782251	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782252	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782253	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782254	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782255	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782256	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782257	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782198	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782199	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782200	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782201	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782202	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782203	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782204	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782205	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782206	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782207	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782208	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782209	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782210	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782211	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782212	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782213	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782214	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782215	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782216	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782217	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782218	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782219	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782220	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782221	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782222	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782223	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782224	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782225	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782226	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782227	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782228	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782229	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782230	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782231	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782232	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782233	PRJNA1103839	ASD	1.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782234	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782235	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782236	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782237	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782238	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782239	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR28782258	PRJNA1103839	Healthy	0.0				Mexico: Mexico City	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305328	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305329	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305330	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305331	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305332	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305333	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305334	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305335	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305336	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305337	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305338	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305339	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305340	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305341	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305342	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305343	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305344	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305345	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305346	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305347	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305348	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305349	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305350	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305351	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305352	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305353	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305354	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305355	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305356	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305357	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305358	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305359	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305360	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305361	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305362	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305363	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305364	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305365	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305366	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305367	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305368	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305369	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305370	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305371	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305372	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305373	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305374	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305375	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305376	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305377	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305378	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305379	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305380	PRJNA578223	ASD	1.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305381	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305382	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305383	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305384	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305385	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305386	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305387	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305388	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305389	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305390	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305391	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305392	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305393	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305394	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305395	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305396	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305397	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305398	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305399	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305400	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305401	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305402	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305403	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305404	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305405	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305406	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305407	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305408	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305409	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305410	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305411	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305412	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305413	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305414	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305415	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305416	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305417	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305418	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305419	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305420	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305421	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305422	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+SRR10305423	PRJNA578223	Healthy	0.0				China:Shanghai	V3-V4		Illumina MiSeq	Autism Spectrum Disorder		ASD	
+ERR2308681	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2308682	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2308704	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2309225	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2309347	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2314092	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2314108	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2404952	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR2405007	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2405087	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR1597016	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR1597037	PRJEB11419	Austim	1.0		female		United Kingdom				Austim		ASD	
+ERR1597088	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2032138	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR2032162	PRJEB11419	Austim	1.0		male		Canada				Austim		ASD	
+ERR2032286	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERR2032331	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR2032755	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERR2032772	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2032774	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2032775	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2032776	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2032928	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2032929	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2032949	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR1841765	PRJEB11419	Austim	1.0		male		Canada				Austim		ASD	
+ERR1841768	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR1842881	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR1845953	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR1845983	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR1846197	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR1846207	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2523887	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR2523896	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR1854684	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR1854742	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR1854744	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR1854806	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR1854816	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR1316027	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR1316096	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR1316232	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERR2056831	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2056887	PRJEB11419	Austim	1.0		female		United Kingdom				Austim		ASD	
+ERR2056949	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERR2057000	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2057017	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERR2057058	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2057069	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2057154	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR1458900	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR1458992	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERR2092151	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2092334	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR2092387	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERR1545992	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR1546020	PRJEB11419	Austim	1.0		male		Canada				Austim		ASD	
+ERR2091911	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR1843733	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR1843768	PRJEB11419	Austim	1.0		male		Canada				Austim		ASD	
+ERR1843812	PRJEB11419	control	0.0		female		Sweden				Austim		ASD	
+ERR2318124	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2318158	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR2318218	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2318268	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2318294	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2306096	PRJEB11419	control	0.0		male		Ireland				Austim		ASD	
+ERR2306117	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR2306140	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR2303900	PRJEB11419	Austim	1.0		male		Australia				Austim		ASD	
+ERR2303916	PRJEB11419	control	0.0		female		Australia				Austim		ASD	
+ERR2304005	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR2304033	PRJEB11419	control	0.0		male		Guernsey				Austim		ASD	
+ERR1417440	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR1417526	PRJEB11419	control	0.0		male		Austria				Austim		ASD	
+ERR1417653	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR2579381	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERR2579382	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR2579407	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR2579490	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2579722	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2579791	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERR2579898	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR2579973	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2580016	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2580026	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2580039	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR1389696	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR1389874	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR2696579	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERR2696698	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2696976	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR2697070	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR1389987	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR2697791	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2697856	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERR2697863	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERR2697922	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERR4019043	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR4019400	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR4019577	PRJEB11419	Austim	1.0		female		United Kingdom				Austim		ASD	
+ERR4019703	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR4019768	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR4020652	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR4020656	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR4020664	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR4020668	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR4020689	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR4020698	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR4020718	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERR4018920	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERR4019096	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERR9744241	PRJEB11419	control	0.0		female		Mexico				Austim		ASD	
+ERR9735018	PRJEB11419	control	0.0		male		Mexico				Austim		ASD	
+ERR9735068	PRJEB11419	control	0.0		female		Mexico				Austim		ASD	
+ERR6361100	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERR5321029	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERS6283599	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERS6283692	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERS6283715	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERS5790630	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERS5790655	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERS5790830	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERS5796681	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERS5796778	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERS5802195	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERS5802224	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERS5802289	PRJEB11419	Austim	1.0		male		Canada				Austim		ASD	
+ERS5802354	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERS5802406	PRJEB11419	control	0.0		male		Netherlands				Austim		ASD	
+ERS5806578	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERS5806599	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERS5806609	PRJEB11419	Austim	1.0		female		United Kingdom				Austim		ASD	
+ERS5806655	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERS5806784	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERS5794250	PRJEB11419	control	0.0		female		India				Austim		ASD	
+ERS5794289	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERS5794696	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERS5794722	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERS5794861	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERS5795452	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERS5796480	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERS5796700	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERS5795216	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERS5795246	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERS5795253	PRJEB11419	control	0.0		male		United Kingdom				Austim		ASD	
+ERS5795311	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERS5795402	PRJEB11419	control	0.0		male		not provided				Austim		ASD	
+ERS5795541	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERS5796485	PRJEB11419	control	0.0		female		Germany				Austim		ASD	
+ERS5796501	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERS5796786	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
+ERS5801507	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERS5801593	PRJEB11419	control	0.0		female		United Kingdom				Austim		ASD	
+ERS5802034	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERS5802419	PRJEB11419	Austim	1.0		male		United Kingdom				Austim		ASD	
+ERS7061517	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERS6630039	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERS6630200	PRJEB11419	Austim	1.0		male		United States				Austim		ASD	
+ERS6630225	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERS6630226	PRJEB11419	control	0.0		male		United States				Austim		ASD	
+ERS6630495	PRJEB11419	control	0.0		female		United States				Austim		ASD	
+ERS5442591	PRJEB11419	Austim	1.0		female		United States				Austim		ASD	
