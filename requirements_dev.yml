@@ -25,7 +25,8 @@ dependencies:
   - sphinx
   - pytest
   - line_profiler
-
+  
+  - seaborn
   - trimap
 
   - hdf5=1.12.2
