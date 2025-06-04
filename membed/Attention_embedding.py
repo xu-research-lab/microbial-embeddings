@@ -952,9 +952,9 @@ def train_regression(net, train_iter, test_iter, loss,trainer, scheduler, num_ep
     
     for epoch in range(num_epochs):
         train_loss = 0
-        for i, (features, abundance, labels) in enumerate(train_iter):
+        for i, (features, abundance, labels, mask) in enumerate(train_iter):
             l, pred = train_batch_ch13(
-                net, features, labels, abundance, loss, trainer, devices)
+                net, features, labels, abundance, loss, mask,trainer, devices)
             train_loss = train_loss + l
             if i == 0:
                 prob1 = pred
@@ -973,14 +973,17 @@ def train_regression(net, train_iter, test_iter, loss,trainer, scheduler, num_ep
         with torch.no_grad():
             net.eval()
             test_loss = 0
-            for i, (features, abundance, labels) in enumerate(test_iter):
+            for i, (features, abundance, labels, mask) in enumerate(test_iter):
                 X = features.to(devices[0])
                 abundance = abundance.to(devices[0])
-                pred, _ = net(X, abundance, classification=False)
+                mask = mask.to(devices[0])
+                pred, _ = net(X, abundance, mask, classification=False)
                 pred = torch.squeeze(pred, dim=1)
                 y = labels.to(devices[0], dtype=torch.int64)
-                true_age_test.append(labels.detach().cpu().numpy())
-                pred_age_test.append(pred.detach().cpu().numpy())
+                
+                # true_age_test.append(labels.detach().cpu().numpy())
+                # pred_age_test.append(pred.detach().cpu().numpy())
+                
                 l = loss(pred.float(), y.float())
                 test_loss += l
                 if i == 0:
@@ -990,10 +993,10 @@ def train_regression(net, train_iter, test_iter, loss,trainer, scheduler, num_ep
                     prob2 = torch.cat((prob2, pred), dim=0)
                     Label = torch.cat((Label, labels), dim=0)
                     
-            true_age_test=np.concatenate(true_age_test)
-            pred_age_test=np.concatenate(pred_age_test)
-            true_age.append(true_age_test)
-            pred_age.append(pred_age_test)
+            # true_age_test=np.concatenate(true_age_test)
+            # pred_age_test=np.concatenate(pred_age_test)
+            # true_age.append(true_age_test)
+            # pred_age.append(pred_age_test)
             test_loss /= (i + 1)
             
         animator_1.add(epoch + 1, (None, test_loss.cpu().detach().numpy()), plotfile_loss)
