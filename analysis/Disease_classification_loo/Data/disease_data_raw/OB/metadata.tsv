@@ -1,0 +1,1209 @@
+sample	study	diagnosis	group	age	sex	bmi	country	region	pcr_primers	platform	disease_name	title	disease_name_ab	host_body_mass_index
+ERR2836373	PRJEB28687	Overweight	0.0			28.15	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836366	PRJEB28687	Normal	0.0			21.2	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836367	PRJEB28687	Normal	0.0			19.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836368	PRJEB28687	Normal	0.0			20.1	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836369	PRJEB28687	Overweight	0.0			25.13	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836370	PRJEB28687	Normal	0.0			22.03	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836371	PRJEB28687	Obese	1.0			30.84	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836372	PRJEB28687	Normal	0.0			22.07	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836374	PRJEB28687	Normal	0.0			23.12	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836376	PRJEB28687	Normal	0.0			23.86	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836377	PRJEB28687	Overweight	0.0			27.81	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836378	PRJEB28687	Overweight	0.0			26.5	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836379	PRJEB28687	Overweight	0.0			27.49	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836380	PRJEB28687	Obese	1.0			30.16	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836381	PRJEB28687	Normal	0.0			19.78	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836382	PRJEB28687	Normal	0.0			19.42	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836383	PRJEB28687	Overweight	0.0			26.53	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836384	PRJEB28687	Normal	0.0			24.6	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836385	PRJEB28687	Overweight	0.0			26.43	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836386	PRJEB28687	Normal	0.0			24.2	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836387	PRJEB28687	Normal	0.0			22.06	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836388	PRJEB28687	Overweight	0.0			27.22	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836389	PRJEB28687	Overweight	0.0			27.85	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836390	PRJEB28687	Overweight	0.0			28.78	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836391	PRJEB28687	Overweight	0.0			27.58	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836392	PRJEB28687	Overweight	0.0			25.61	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836393	PRJEB28687	Normal	0.0			23.01	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836394	PRJEB28687	Overweight	0.0			28.21	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836395	PRJEB28687	Overweight	0.0			27.62	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836396	PRJEB28687	Overweight	0.0			28.59	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836397	PRJEB28687	Overweight	0.0			29.92	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836398	PRJEB28687	Overweight	0.0			28.51	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836399	PRJEB28687	Normal	0.0			24.84	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836400	PRJEB28687	Normal	0.0			20.54	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836401	PRJEB28687	Normal	0.0			23.22	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836402	PRJEB28687	Normal	0.0			18.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836404	PRJEB28687	Normal	0.0			24.3	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836405	PRJEB28687	Normal	0.0			21.07	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836406	PRJEB28687	Normal	0.0			24.41	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836407	PRJEB28687	Normal	0.0			24.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836408	PRJEB28687	Obese	1.0			31.08	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836409	PRJEB28687	Overweight	0.0			27.73	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836411	PRJEB28687	Overweight	0.0			25.96	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836412	PRJEB28687	Overweight	0.0			25.06	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836413	PRJEB28687	Normal	0.0			23.43	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836414	PRJEB28687	Overweight	0.0			25.43	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836415	PRJEB28687	Overweight	0.0			25.32	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836416	PRJEB28687	Overweight	0.0			25.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836417	PRJEB28687	Overweight	0.0			27.11	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836418	PRJEB28687	Normal	0.0			21.82	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836419	PRJEB28687	Overweight	0.0			29.99	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836420	PRJEB28687	Normal	0.0			23.63	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836421	PRJEB28687	Normal	0.0			19.57	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836422	PRJEB28687	Normal	0.0			23.77	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836423	PRJEB28687	Overweight	0.0			25.39	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836424	PRJEB28687	Normal	0.0			19.79	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836425	PRJEB28687	Normal	0.0			21.04	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836426	PRJEB28687	Normal	0.0			22.62	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836427	PRJEB28687	Normal	0.0			17.98	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836428	PRJEB28687	Normal	0.0			17.95	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836429	PRJEB28687	Normal	0.0			20.56	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836430	PRJEB28687	Overweight	0.0			26.6	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836431	PRJEB28687	Overweight	0.0			29.97	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836432	PRJEB28687	Overweight	0.0			25.46	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836433	PRJEB28687	Normal	0.0			23.03	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836435	PRJEB28687	Overweight	0.0			28.51	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836436	PRJEB28687	Overweight	0.0			28.0	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836437	PRJEB28687	Normal	0.0			24.53	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836438	PRJEB28687	Normal	0.0			18.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836439	PRJEB28687	Obese	1.0			40.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836440	PRJEB28687	Overweight	0.0			28.94	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836441	PRJEB28687	Obese	1.0			33.92	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836442	PRJEB28687	Obese	1.0			30.9	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836443	PRJEB28687	Overweight	0.0			25.52	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836444	PRJEB28687	Normal	0.0			23.21	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836445	PRJEB28687	Obese	1.0			32.23	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836446	PRJEB28687	Normal	0.0			23.38	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836447	PRJEB28687	Obese	1.0			39.2	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836448	PRJEB28687	Obese	1.0			30.61	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836449	PRJEB28687	Overweight	0.0			25.37	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836450	PRJEB28687	Overweight	0.0			29.74	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836451	PRJEB28687	Normal	0.0			22.39	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836452	PRJEB28687	Normal	0.0			22.48	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836453	PRJEB28687	Normal	0.0			24.49	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836454	PRJEB28687	Normal	0.0			22.56	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836455	PRJEB28687	Overweight	0.0			28.0	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836456	PRJEB28687	Overweight	0.0			27.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836457	PRJEB28687	Overweight	0.0			29.49	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836458	PRJEB28687	Normal	0.0			22.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836459	PRJEB28687	Normal	0.0			19.61	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836460	PRJEB28687	Normal	0.0			24.33	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836461	PRJEB28687	Overweight	0.0			26.77	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836462	PRJEB28687	Obese	1.0			33.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836463	PRJEB28687	Normal	0.0			21.07	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836464	PRJEB28687	Normal	0.0			18.18	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836465	PRJEB28687	Normal	0.0			22.43	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836466	PRJEB28687	Normal	0.0			18.54	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836467	PRJEB28687	Overweight	0.0			28.42	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836468	PRJEB28687	Obese	1.0			30.28	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836469	PRJEB28687	Overweight	0.0			26.95	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836470	PRJEB28687	Obese	1.0			35.37	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836471	PRJEB28687	Obese	1.0			34.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836472	PRJEB28687	Overweight	0.0			27.14	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836473	PRJEB28687	Normal	0.0			17.37	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836474	PRJEB28687	Overweight	0.0			27.96	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836475	PRJEB28687	Normal	0.0			21.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836476	PRJEB28687	Normal	0.0			21.96	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836477	PRJEB28687	Overweight	0.0			25.6	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836478	PRJEB28687	Overweight	0.0			29.37	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836479	PRJEB28687	Normal	0.0			24.92	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836480	PRJEB28687	Overweight	0.0			28.32	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836481	PRJEB28687	Overweight	0.0			25.47	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836482	PRJEB28687	Normal	0.0			20.18	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836483	PRJEB28687	Normal	0.0			24.94	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836484	PRJEB28687	Normal	0.0			22.39	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836486	PRJEB28687	Normal	0.0			20.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836487	PRJEB28687	Overweight	0.0			27.18	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836488	PRJEB28687	Overweight	0.0			28.89	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836489	PRJEB28687	Overweight	0.0			28.59	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836490	PRJEB28687	Overweight	0.0			27.99	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836491	PRJEB28687	Overweight	0.0			29.42	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836492	PRJEB28687	Normal	0.0			21.0	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836493	PRJEB28687	Normal	0.0			23.75	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836496	PRJEB28687	Overweight	0.0			29.87	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836499	PRJEB28687	Normal	0.0			24.66	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836500	PRJEB28687	Obese	1.0			33.16	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836502	PRJEB28687	Normal	0.0			24.97	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836503	PRJEB28687	Normal	0.0			20.5	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836504	PRJEB28687	Normal	0.0			22.48	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836505	PRJEB28687	Obese	1.0			31.05	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836507	PRJEB28687	Obese	1.0			33.06	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836508	PRJEB28687	Normal	0.0			23.23	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836509	PRJEB28687	Normal	0.0			22.82	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836510	PRJEB28687	Normal	0.0			24.57	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836511	PRJEB28687	Overweight	0.0			28.89	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836513	PRJEB28687	Obese	1.0			30.54	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836515	PRJEB28687	Overweight	0.0			25.86	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836516	PRJEB28687	Normal	0.0			23.19	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836517	PRJEB28687	Obese	1.0			38.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836518	PRJEB28687	Obese	1.0			33.63	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836519	PRJEB28687	Obese	1.0			36.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836520	PRJEB28687	Normal	0.0			21.69	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836521	PRJEB28687	Overweight	0.0			25.35	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836522	PRJEB28687	Overweight	0.0			29.47	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836523	PRJEB28687	Overweight	0.0			25.28	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836524	PRJEB28687	Overweight	0.0			26.62	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836525	PRJEB28687	Normal	0.0			22.17	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836526	PRJEB28687	Normal	0.0			24.02	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836527	PRJEB28687	Overweight	0.0			28.31	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836529	PRJEB28687	Overweight	0.0			25.56	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836530	PRJEB28687	Normal	0.0			21.92	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836531	PRJEB28687	Normal	0.0			21.14	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836532	PRJEB28687	Normal	0.0			20.52	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836533	PRJEB28687	Normal	0.0			21.11	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836534	PRJEB28687	Normal	0.0			24.07	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836535	PRJEB28687	Normal	0.0			19.92	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836536	PRJEB28687	Overweight	0.0			27.75	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836537	PRJEB28687	Normal	0.0			24.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836538	PRJEB28687	Obese	1.0			34.29	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836539	PRJEB28687	Obese	1.0			30.34	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836540	PRJEB28687	Obese	1.0			31.95	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836541	PRJEB28687	Overweight	0.0			25.81	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836542	PRJEB28687	Obese	1.0			37.18	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836544	PRJEB28687	Obese	1.0			38.41	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836545	PRJEB28687	Overweight	0.0			29.15	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836546	PRJEB28687	Overweight	0.0			28.86	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836547	PRJEB28687	Overweight	0.0			28.55	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836548	PRJEB28687	Normal	0.0			19.46	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836549	PRJEB28687	Overweight	0.0			25.18	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836551	PRJEB28687	Normal	0.0			24.03	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836552	PRJEB28687	Overweight	0.0			27.67	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836554	PRJEB28687	Overweight	0.0			27.34	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836555	PRJEB28687	Obese	1.0			31.3	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836556	PRJEB28687	Overweight	0.0			28.34	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836557	PRJEB28687	Overweight	0.0			29.86	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836558	PRJEB28687	Obese	1.0			31.84	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836560	PRJEB28687	Normal	0.0			20.68	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836561	PRJEB28687	Overweight	0.0			29.3	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836562	PRJEB28687	Overweight	0.0			26.63	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836563	PRJEB28687	Normal	0.0			23.54	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836564	PRJEB28687	Overweight	0.0			26.9	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836565	PRJEB28687	Normal	0.0			22.61	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836566	PRJEB28687	Overweight	0.0			28.35	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836567	PRJEB28687	Overweight	0.0			28.02	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836568	PRJEB28687	Obese	1.0			34.01	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836570	PRJEB28687	Obese	1.0			32.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836571	PRJEB28687	Obese	1.0			34.92	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836572	PRJEB28687	Normal	0.0			23.81	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836574	PRJEB28687	Overweight	0.0			26.17	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836575	PRJEB28687	Normal	0.0			24.95	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836576	PRJEB28687	Obese	1.0			34.18	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836577	PRJEB28687	Obese	1.0			33.28	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836578	PRJEB28687	Overweight	0.0			28.43	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836579	PRJEB28687	Normal	0.0			21.64	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836580	PRJEB28687	Obese	1.0			34.39	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836581	PRJEB28687	Obese	1.0			33.21	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836582	PRJEB28687	Overweight	0.0			27.96	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836583	PRJEB28687	Overweight	0.0			27.47	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836584	PRJEB28687	Obese	1.0			30.15	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836585	PRJEB28687	Obese	1.0			35.13	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836586	PRJEB28687	Normal	0.0			18.59	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836588	PRJEB28687	Normal	0.0			21.81	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836589	PRJEB28687	Obese	1.0			33.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836590	PRJEB28687	Overweight	0.0			26.31	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836591	PRJEB28687	Normal	0.0			21.32	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836592	PRJEB28687	Overweight	0.0			27.07	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836593	PRJEB28687	Overweight	0.0			29.05	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836594	PRJEB28687	Overweight	0.0			29.49	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836595	PRJEB28687	Obese	1.0			32.87	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836596	PRJEB28687	Normal	0.0			21.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836597	PRJEB28687	Obese	1.0			30.86	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836598	PRJEB28687	Normal	0.0			23.29	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836600	PRJEB28687	Overweight	0.0			28.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836601	PRJEB28687	Normal	0.0			24.49	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836603	PRJEB28687	Normal	0.0			22.42	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836605	PRJEB28687	Normal	0.0			24.46	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836606	PRJEB28687	Normal	0.0			18.18	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836607	PRJEB28687	Normal	0.0			18.44	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836608	PRJEB28687	Overweight	0.0			28.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836609	PRJEB28687	Normal	0.0			20.85	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836610	PRJEB28687	Normal	0.0			23.6	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836611	PRJEB28687	Obese	1.0			43.35	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836612	PRJEB28687	Overweight	0.0			28.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836614	PRJEB28687	Overweight	0.0			27.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836615	PRJEB28687	Overweight	0.0			28.16	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836616	PRJEB28687	Normal	0.0			23.77	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836617	PRJEB28687	Overweight	0.0			27.86	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836618	PRJEB28687	Normal	0.0			21.56	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836619	PRJEB28687	Normal	0.0			21.62	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836620	PRJEB28687	Normal	0.0			19.17	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836622	PRJEB28687	Overweight	0.0			29.68	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836623	PRJEB28687	Obese	1.0			32.33	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836624	PRJEB28687	Overweight	0.0			26.82	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836625	PRJEB28687	Normal	0.0			23.84	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836626	PRJEB28687	Overweight	0.0			26.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836628	PRJEB28687	Normal	0.0			21.17	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836629	PRJEB28687	Normal	0.0			22.17	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836631	PRJEB28687	Normal	0.0			19.02	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836633	PRJEB28687	Normal	0.0			18.47	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836634	PRJEB28687	Overweight	0.0			29.08	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836635	PRJEB28687	Overweight	0.0			28.47	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836637	PRJEB28687	Normal	0.0			21.03	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836638	PRJEB28687	Overweight	0.0			25.3	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836640	PRJEB28687	Normal	0.0			20.03	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836641	PRJEB28687	Overweight	0.0			25.08	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836642	PRJEB28687	Overweight	0.0			28.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836643	PRJEB28687	Obese	1.0			43.14	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836644	PRJEB28687	Overweight	0.0			26.85	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836645	PRJEB28687	Obese	1.0			30.19	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836646	PRJEB28687	Overweight	0.0			26.5	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836647	PRJEB28687	Normal	0.0			24.45	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836648	PRJEB28687	Normal	0.0			23.2	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836649	PRJEB28687	Overweight	0.0			25.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836650	PRJEB28687	Obese	1.0			30.77	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836651	PRJEB28687	Obese	1.0			36.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836652	PRJEB28687	Obese	1.0			31.21	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836655	PRJEB28687	Normal	0.0			24.33	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836656	PRJEB28687	Obese	1.0			34.11	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836657	PRJEB28687	Obese	1.0			33.64	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836660	PRJEB28687	Overweight	0.0			27.94	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836661	PRJEB28687	Obese	1.0			32.95	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836662	PRJEB28687	Obese	1.0			30.49	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836663	PRJEB28687	Overweight	0.0			28.48	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836664	PRJEB28687	Overweight	0.0			27.52	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836665	PRJEB28687	Normal	0.0			23.82	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836666	PRJEB28687	Normal	0.0			20.2	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836667	PRJEB28687	Obese	1.0			41.8	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836668	PRJEB28687	Overweight	0.0			25.78	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836669	PRJEB28687	Obese	1.0			30.3	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836671	PRJEB28687	Normal	0.0			21.63	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836672	PRJEB28687	Obese	1.0			34.63	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836673	PRJEB28687	Overweight	0.0			29.64	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836674	PRJEB28687	Obese	1.0			35.56	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836675	PRJEB28687	Obese	1.0			31.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836676	PRJEB28687	Obese	1.0			31.83	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836677	PRJEB28687	Normal	0.0			16.47	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836678	PRJEB28687	Normal	0.0			19.62	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836680	PRJEB28687	Overweight	0.0			29.59	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836682	PRJEB28687	Obese	1.0			34.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836683	PRJEB28687	Normal	0.0			24.97	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836684	PRJEB28687	Obese	1.0			30.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836685	PRJEB28687	Normal	0.0			18.95	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836688	PRJEB28687	Overweight	0.0			29.78	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836689	PRJEB28687	Obese	1.0			33.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836690	PRJEB28687	Obese	1.0			33.06	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836693	PRJEB28687	Normal	0.0			20.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836694	PRJEB28687	Normal	0.0			23.43	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836695	PRJEB28687	Normal	0.0			21.3	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836696	PRJEB28687	Obese	1.0			32.75	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836697	PRJEB28687	Normal	0.0			19.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836698	PRJEB28687	Normal	0.0			21.45	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836699	PRJEB28687	Normal	0.0			24.62	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836701	PRJEB28687	Normal	0.0			23.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836702	PRJEB28687	Normal	0.0			23.77	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836703	PRJEB28687	Normal	0.0			22.82	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836704	PRJEB28687	Normal	0.0			20.55	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836705	PRJEB28687	Overweight	0.0			29.28	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836706	PRJEB28687	Normal	0.0			22.67	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836707	PRJEB28687	Normal	0.0			22.85	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836708	PRJEB28687	Normal	0.0			21.56	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836709	PRJEB28687	Normal	0.0			18.01	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836710	PRJEB28687	Normal	0.0			20.61	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836711	PRJEB28687	Obese	1.0			38.92	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836712	PRJEB28687	Normal	0.0			24.23	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836713	PRJEB28687	Normal	0.0			19.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836714	PRJEB28687	Obese	1.0			50.9	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836715	PRJEB28687	Overweight	0.0			28.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836717	PRJEB28687	Normal	0.0			22.06	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836718	PRJEB28687	Overweight	0.0			25.5	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836719	PRJEB28687	Normal	0.0			22.22	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836720	PRJEB28687	Normal	0.0			22.22	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836722	PRJEB28687	Normal	0.0			22.22	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836725	PRJEB28687	Normal	0.0			17.1	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836726	PRJEB28687	Normal	0.0			17.1	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836730	PRJEB28687	Normal	0.0			17.1	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836733	PRJEB28687	Overweight	0.0			25.63	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836734	PRJEB28687	Overweight	0.0			25.63	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836735	PRJEB28687	Overweight	0.0			25.63	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836736	PRJEB28687	Overweight	0.0			25.63	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836740	PRJEB28687	Normal	0.0			24.32	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836741	PRJEB28687	Normal	0.0			24.32	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836742	PRJEB28687	Normal	0.0			24.32	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836743	PRJEB28687	Normal	0.0			21.51	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836744	PRJEB28687	Normal	0.0			21.51	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836746	PRJEB28687	Normal	0.0			21.51	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836752	PRJEB28687	Normal	0.0			21.29	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836753	PRJEB28687	Normal	0.0			21.29	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836754	PRJEB28687	Normal	0.0			21.29	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836755	PRJEB28687	Normal	0.0			22.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836756	PRJEB28687	Normal	0.0			22.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836758	PRJEB28687	Normal	0.0			22.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836759	PRJEB28687	Normal	0.0			22.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836766	PRJEB28687	Normal	0.0			19.03	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836773	PRJEB28687	Normal	0.0			23.12	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836774	PRJEB28687	Normal	0.0			23.12	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836777	PRJEB28687	Normal	0.0			23.12	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836778	PRJEB28687	Normal	0.0			23.12	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836779	PRJEB28687	Obese	1.0			34.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836780	PRJEB28687	Obese	1.0			34.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836781	PRJEB28687	Obese	1.0			34.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836782	PRJEB28687	Obese	1.0			34.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836787	PRJEB28687	Normal	0.0			20.97	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836790	PRJEB28687	Normal	0.0			18.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836791	PRJEB28687	Normal	0.0			18.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836792	PRJEB28687	Normal	0.0			18.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836793	PRJEB28687	Normal	0.0			18.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836794	PRJEB28687	Normal	0.0			18.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836796	PRJEB28687	Overweight	0.0			26.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836797	PRJEB28687	Overweight	0.0			26.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836798	PRJEB28687	Overweight	0.0			26.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836799	PRJEB28687	Overweight	0.0			26.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836800	PRJEB28687	Overweight	0.0			26.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836801	PRJEB28687	Overweight	0.0			26.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836802	PRJEB28687	Overweight	0.0			26.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836805	PRJEB28687	Normal	0.0			22.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836806	PRJEB28687	Normal	0.0			22.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836807	PRJEB28687	Normal	0.0			22.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836808	PRJEB28687	Normal	0.0			22.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836809	PRJEB28687	Normal	0.0			22.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836810	PRJEB28687	Obese	1.0			30.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836812	PRJEB28687	Obese	1.0			30.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836813	PRJEB28687	Obese	1.0			30.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836814	PRJEB28687	Obese	1.0			30.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836815	PRJEB28687	Obese	1.0			30.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836816	PRJEB28687	Obese	1.0			30.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836817	PRJEB28687	Normal	0.0			16.8	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836818	PRJEB28687	Normal	0.0			16.8	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836820	PRJEB28687	Normal	0.0			16.8	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836821	PRJEB28687	Normal	0.0			16.8	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836822	PRJEB28687	Normal	0.0			16.8	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836823	PRJEB28687	Normal	0.0			21.54	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836824	PRJEB28687	Normal	0.0			21.54	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836825	PRJEB28687	Normal	0.0			21.54	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836826	PRJEB28687	Normal	0.0			21.54	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836829	PRJEB28687	Normal	0.0			21.54	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836831	PRJEB28687	Overweight	0.0			26.05	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836832	PRJEB28687	Normal	0.0			24.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836834	PRJEB28687	Overweight	0.0			25.04	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836836	PRJEB28687	Obese	1.0			32.52	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836837	PRJEB28687	Overweight	0.0			28.38	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836838	PRJEB28687	Overweight	0.0			25.25	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836839	PRJEB28687	Normal	0.0			23.23	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836840	PRJEB28687	Overweight	0.0			27.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836842	PRJEB28687	Normal	0.0			21.42	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836843	PRJEB28687	Overweight	0.0			25.26	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836844	PRJEB28687	Overweight	0.0			26.76	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836845	PRJEB28687	Normal	0.0			23.26	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836848	PRJEB28687	Normal	0.0			24.77	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836849	PRJEB28687	Normal	0.0			24.35	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836850	PRJEB28687	Normal	0.0			21.61	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836851	PRJEB28687	Normal	0.0			24.37	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836852	PRJEB28687	Obese	1.0			30.1	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836853	PRJEB28687	Overweight	0.0			29.21	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836854	PRJEB28687	Normal	0.0			23.75	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836855	PRJEB28687	Normal	0.0			19.33	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836858	PRJEB28687	Overweight	0.0			26.16	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836859	PRJEB28687	Overweight	0.0			28.83	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836860	PRJEB28687	Normal	0.0			24.49	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836861	PRJEB28687	Normal	0.0			22.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836862	PRJEB28687	Obese	1.0			31.37	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836863	PRJEB28687	Overweight	0.0			29.73	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836864	PRJEB28687	Normal	0.0			21.38	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836865	PRJEB28687	Overweight	0.0			25.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836867	PRJEB28687	Normal	0.0			18.48	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836868	PRJEB28687	Normal	0.0			21.49	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836869	PRJEB28687	Obese	1.0			32.18	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836870	PRJEB28687	Overweight	0.0			26.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836872	PRJEB28687	Normal	0.0			21.13	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836873	PRJEB28687	Overweight	0.0			26.02	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836874	PRJEB28687	Normal	0.0			22.02	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836875	PRJEB28687	Obese	1.0			37.13	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836876	PRJEB28687	Normal	0.0			23.02	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836877	PRJEB28687	Overweight	0.0			26.15	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836878	PRJEB28687	Normal	0.0			20.87	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836881	PRJEB28687	Obese	1.0			42.2	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836882	PRJEB28687	Normal	0.0			20.68	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836883	PRJEB28687	Normal	0.0			21.51	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836884	PRJEB28687	Normal	0.0			23.21	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836885	PRJEB28687	Normal	0.0			24.04	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836887	PRJEB28687	Obese	1.0			31.55	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836888	PRJEB28687	Normal	0.0			24.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836890	PRJEB28687	Obese	1.0			32.12	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836892	PRJEB28687	Obese	1.0			32.33	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836893	PRJEB28687	Normal	0.0			21.87	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836894	PRJEB28687	Overweight	0.0			26.98	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836895	PRJEB28687	Normal	0.0			18.22	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836897	PRJEB28687	Normal	0.0			21.4	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836898	PRJEB28687	Normal	0.0			23.55	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836899	PRJEB28687	Overweight	0.0			26.66	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836900	PRJEB28687	Overweight	0.0			25.33	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836901	PRJEB28687	Overweight	0.0			27.66	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836902	PRJEB28687	Normal	0.0			23.31	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836904	PRJEB28687	Overweight	0.0			25.93	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836905	PRJEB28687	Normal	0.0			23.51	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836906	PRJEB28687	Normal	0.0			20.16	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836907	PRJEB28687	Overweight	0.0			29.67	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836908	PRJEB28687	Normal	0.0			18.71	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836909	PRJEB28687	Overweight	0.0			26.43	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836910	PRJEB28687	Normal	0.0			24.77	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836911	PRJEB28687	Overweight	0.0			25.28	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836914	PRJEB28687	Normal	0.0			22.98	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836916	PRJEB28687	Normal	0.0			19.94	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836926	PRJEB28687	Overweight	0.0			28.34	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836928	PRJEB28687	Overweight	0.0			27.16	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836929	PRJEB28687	Normal	0.0			21.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836930	PRJEB28687	Normal	0.0			20.66	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836931	PRJEB28687	Normal	0.0			17.39	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836932	PRJEB28687	Normal	0.0			18.81	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836933	PRJEB28687	Normal	0.0			21.6	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836934	PRJEB28687	Obese	1.0			32.5	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836935	PRJEB28687	Normal	0.0			19.35	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836936	PRJEB28687	Normal	0.0			20.0	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836937	PRJEB28687	Normal	0.0			20.82	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836938	PRJEB28687	Normal	0.0			23.47	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836939	PRJEB28687	Normal	0.0			20.11	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836940	PRJEB28687	Normal	0.0			23.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836941	PRJEB28687	Normal	0.0			23.05	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836942	PRJEB28687	Normal	0.0			19.15	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836944	PRJEB28687	Normal	0.0			22.9	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836945	PRJEB28687	Normal	0.0			23.25	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836946	PRJEB28687	Normal	0.0			19.5	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836947	PRJEB28687	Normal	0.0			22.46	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836948	PRJEB28687	Normal	0.0			19.61	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836949	PRJEB28687	Normal	0.0			19.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836950	PRJEB28687	Normal	0.0			24.06	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836951	PRJEB28687	Overweight	0.0			26.02	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836952	PRJEB28687	Normal	0.0			21.73	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836953	PRJEB28687	Normal	0.0			19.15	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836954	PRJEB28687	Normal	0.0			21.51	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836955	PRJEB28687	Normal	0.0			22.83	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836956	PRJEB28687	Normal	0.0			20.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836957	PRJEB28687	Overweight	0.0			27.17	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836959	PRJEB28687	Overweight	0.0			27.19	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836960	PRJEB28687	Overweight	0.0			25.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836961	PRJEB28687	Overweight	0.0			26.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836963	PRJEB28687	Normal	0.0			19.75	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836964	PRJEB28687	Overweight	0.0			26.59	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836966	PRJEB28687	Obese	1.0			33.12	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836967	PRJEB28687	Overweight	0.0			26.88	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836969	PRJEB28687	Overweight	0.0			28.53	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836970	PRJEB28687	Overweight	0.0			28.14	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836972	PRJEB28687	Overweight	0.0			27.36	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836976	PRJEB28687	Obese	1.0			34.33	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836977	PRJEB28687	Normal	0.0			19.7	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836978	PRJEB28687	Overweight	0.0			27.77	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836979	PRJEB28687	Overweight	0.0			29.39	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836980	PRJEB28687	Normal	0.0			23.84	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836981	PRJEB28687	Obese	1.0			31.01	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836982	PRJEB28687	Obese	1.0			32.72	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836983	PRJEB28687	Normal	0.0			23.13	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836984	PRJEB28687	Normal	0.0			24.46	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836985	PRJEB28687	Normal	0.0			21.74	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836986	PRJEB28687	Overweight	0.0			29.89	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836987	PRJEB28687	Overweight	0.0			25.91	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836988	PRJEB28687	Overweight	0.0			25.24	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836989	PRJEB28687	Overweight	0.0			25.07	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836990	PRJEB28687	Obese	1.0			30.39	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836991	PRJEB28687	Normal	0.0			23.65	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836993	PRJEB28687	Overweight	0.0			28.83	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836995	PRJEB28687	Overweight	0.0			25.83	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836996	PRJEB28687	Normal	0.0			17.71	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836997	PRJEB28687	Normal	0.0			18.49	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836998	PRJEB28687	Overweight	0.0			26.33	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2836999	PRJEB28687	Normal	0.0			17.51	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2837003	PRJEB28687	Obese	1.0			31.77	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2837005	PRJEB28687	Obese	1.0			34.08	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2837007	PRJEB28687	Normal	0.0			24.81	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2837009	PRJEB28687	Overweight	0.0			26.44	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR2837011	PRJEB28687	Overweight	0.0			28.2	USA			ILLUMINA	Obesity	U.S. immigration westernizes the human gut microbiome	OB	
+ERR1678480	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2308520	PRJEB11419	control	0.0		male		Spain				Obesity		OB	
+ERR2308543	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2308566	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2308572	PRJEB11419	Obesity	1.0		male		Canada				Obesity		OB	
+ERR2308629	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2308708	PRJEB11419	control	0.0		male		Australia				Obesity		OB	
+ERR2308711	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2308750	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2308822	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2308823	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2308847	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2308850	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2308861	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2308889	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2308895	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2308896	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2308907	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2308921	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2308931	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2308937	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2309191	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2309363	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2309395	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2309424	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2314031	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2314069	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2314100	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2314110	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2314132	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2314215	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2314223	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2314224	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2314225	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2314228	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2314302	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2314312	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2314355	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2404903	PRJEB11419	control	0.0		female		Canada				Obesity		OB	
+ERR2404959	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2404998	PRJEB11419	control	0.0		male		Sweden				Obesity		OB	
+ERR2405014	PRJEB11419	Obesity	1.0		male		Ireland				Obesity		OB	
+ERR2405069	PRJEB11419	control	0.0		female		Isle of Man				Obesity		OB	
+ERR2405072	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2405129	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2405130	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2405137	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2405138	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2405139	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2405169	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2405170	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2405171	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2405172	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2405220	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2405252	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2405257	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2405269	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2405271	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2405273	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2405284	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2405364	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1597077	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1597078	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1597092	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1597252	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1597276	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1551653	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1678464	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2032150	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2032156	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2032209	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2032237	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2032262	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2032277	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2032351	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2032377	PRJEB11419	control	0.0		female		not provided				Obesity		OB	
+ERR2032397	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2032402	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2032438	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2032495	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2032497	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2032540	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2032547	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2032559	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2032561	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2032575	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2032576	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2032592	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2032721	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2032848	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2032868	PRJEB11419	control	0.0		female		not provided				Obesity		OB	
+ERR2032919	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2032943	PRJEB11419	control	0.0		male		India				Obesity		OB	
+ERR2033395	PRJEB11419	control	0.0		female		Ireland				Obesity		OB	
+ERR2033534	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2033610	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1841712	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1841731	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1841748	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1841824	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1841828	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR1842718	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1842747	PRJEB11419	Obesity	1.0		not provided		United States				Obesity		OB	
+ERR1842816	PRJEB11419	Obesity	1.0		male		Switzerland				Obesity		OB	
+ERR1844625	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1845795	PRJEB11419	Obesity	1.0		male		Canada				Obesity		OB	
+ERR1845803	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR1845807	PRJEB11419	Obesity	1.0		male		Australia				Obesity		OB	
+ERR1845809	PRJEB11419	control	0.0		male		Australia				Obesity		OB	
+ERR1845961	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1845969	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1845976	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1846149	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1846158	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1846215	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2523864	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2523877	PRJEB11419	Obesity	1.0		female		Korea, Republic of				Obesity		OB	
+ERR2523909	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2524098	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2524127	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2524165	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2524166	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2524177	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2524189	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2524196	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1854661	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1841524	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1841538	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1844552	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1315996	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1316071	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1316109	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1316169	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1316242	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1316274	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2056760	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2056801	PRJEB11419	Obesity	1.0		male		Serbia				Obesity		OB	
+ERR2056818	PRJEB11419	control	0.0		male		Portugal				Obesity		OB	
+ERR2056905	PRJEB11419	control	0.0		male		Australia				Obesity		OB	
+ERR2056943	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2056954	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2057033	PRJEB11419	control	0.0		male		Canada				Obesity		OB	
+ERR2057047	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2057180	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1458743	PRJEB11419	Obesity	1.0		female		Australia				Obesity		OB	
+ERR1458744	PRJEB11419	Obesity	1.0		female		Australia				Obesity		OB	
+ERR1458795	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1458809	PRJEB11419	control	0.0		male		Belgium				Obesity		OB	
+ERR1458838	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1458868	PRJEB11419	control	0.0		female		Canada				Obesity		OB	
+ERR1458899	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1458925	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1458941	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR1459003	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1459024	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1459045	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1459048	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1459071	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1459072	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1459078	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1459084	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR1459120	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR1459145	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1459213	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092000	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2092020	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2092030	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2092039	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2092040	PRJEB11419	control	0.0		male		Belgium				Obesity		OB	
+ERR2092103	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2092165	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092166	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2092178	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092214	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092220	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092243	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092244	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092261	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2092264	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092272	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2092324	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092338	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2092341	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2092365	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2092386	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2092465	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2091828	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2091836	PRJEB11419	Obesity	1.0		male		Belgium				Obesity		OB	
+ERR2091854	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2091857	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2091869	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2091909	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2091914	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2091917	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2091929	PRJEB11419	control	0.0		male		France				Obesity		OB	
+ERR2091930	PRJEB11419	control	0.0		male		France				Obesity		OB	
+ERR2091973	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1843438	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1843508	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1843509	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1843512	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR1843522	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1843604	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1843613	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1843628	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1843705	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1843730	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1843748	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1843758	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1843822	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1843845	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1843849	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2318011	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2318133	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2318140	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2318182	PRJEB11419	Obesity	1.0		female		Canada				Obesity		OB	
+ERR2318187	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2318196	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2318267	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2318282	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2319269	PRJEB11419	control	0.0		female		Australia				Obesity		OB	
+ERR2319278	PRJEB11419	control	0.0		male		Australia				Obesity		OB	
+ERR2319380	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2319447	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2319465	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2319500	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2319502	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2319538	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2319549	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2319581	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2306129	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2306197	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2306243	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2306263	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2303816	PRJEB11419	Obesity	1.0		female		Australia				Obesity		OB	
+ERR2303846	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2303854	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2303873	PRJEB11419	Obesity	1.0		female		Australia				Obesity		OB	
+ERR2303896	PRJEB11419	Obesity	1.0		male		Australia				Obesity		OB	
+ERR2303958	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2304010	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2304022	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2304037	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2304052	PRJEB11419	control	0.0		male		Italy				Obesity		OB	
+ERR2304065	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2304152	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2304181	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1417426	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1417477	PRJEB11419	control	0.0		female		Sweden				Obesity		OB	
+ERR1417538	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1417544	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1417570	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1417572	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1417582	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1417609	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1417610	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1417648	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2579375	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2579390	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2579428	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2579460	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2579470	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2579498	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2579564	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2579656	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2579671	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2579694	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2579726	PRJEB11419	Obesity	1.0		male		Finland				Obesity		OB	
+ERR2579800	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2579810	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2579838	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2579880	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2579913	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2579920	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2579951	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2580102	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR2580107	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1389675	PRJEB11419	control	0.0		female		France				Obesity		OB	
+ERR1389706	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1389717	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1389726	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR1389762	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR1389787	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1389826	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1389871	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1389913	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2696468	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2696518	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2696574	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2696608	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2696825	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2696856	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2696907	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2696910	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2696948	PRJEB11419	Obesity	1.0		male		Guernsey				Obesity		OB	
+ERR2696961	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2696986	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2696995	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2697003	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1389964	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1389981	PRJEB11419	control	0.0		male		Canada				Obesity		OB	
+ERR1390003	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2696457	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2696467	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2696569	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2696582	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2696597	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2696606	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2696612	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2696655	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR2696699	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2696762	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1233449	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1233451	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1841458	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR1841641	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1842695	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1842723	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR1842753	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1842770	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR1842840	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1844518	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR2697596	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2697613	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2697622	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2697641	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2697699	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2697702	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR2697716	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2697737	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2697742	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2697743	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2697772	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2697797	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR2697946	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2697952	PRJEB11419	Obesity	1.0		male		Netherlands				Obesity		OB	
+ERR2697976	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR2697979	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2697985	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2697998	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR2698017	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR2698018	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR1551641	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1551644	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1551652	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR1551655	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR4018905	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR4018906	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR4018992	PRJEB11419	control	0.0		female		Ireland				Obesity		OB	
+ERR4019025	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR4019100	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR4019230	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR4019251	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR4019319	PRJEB11419	Obesity	1.0		male		France				Obesity		OB	
+ERR4019326	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR4019697	PRJEB11419	Obesity	1.0		male		Philippines				Obesity		OB	
+ERR4019700	PRJEB11419	Obesity	1.0		female		Philippines				Obesity		OB	
+ERR4020384	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR4020390	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR4020405	PRJEB11419	control	0.0		male		Switzerland				Obesity		OB	
+ERR4020447	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR4020456	PRJEB11419	control	0.0		male		Denmark				Obesity		OB	
+ERR4020460	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR4020464	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR4020469	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR4020481	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR4020494	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR4020578	PRJEB11419	Obesity	1.0		female		Philippines				Obesity		OB	
+ERR4020614	PRJEB11419	Obesity	1.0		female		Philippines				Obesity		OB	
+ERR4020643	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR4020644	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR4020662	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR9744032	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR4020715	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR4018914	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR4018946	PRJEB11419	control	0.0		female		India				Obesity		OB	
+ERR4019057	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR4019066	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR4019074	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR4019194	PRJEB11419	control	0.0		male		Sweden				Obesity		OB	
+ERR9744058	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR9744069	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR9744078	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR9744096	PRJEB11419	Obesity	1.0		male		Mexico				Obesity		OB	
+ERR9744108	PRJEB11419	control	0.0		female		Mexico				Obesity		OB	
+ERR9744165	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR9744172	PRJEB11419	control	0.0		male		Mexico				Obesity		OB	
+ERR9744261	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR9744267	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR8477427	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR8477429	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR8477431	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR8477498	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR8477543	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR9734760	PRJEB11419	control	0.0		female		Mexico				Obesity		OB	
+ERR9734761	PRJEB11419	control	0.0		male		Mexico				Obesity		OB	
+ERR9734832	PRJEB11419	control	0.0		female		Mexico				Obesity		OB	
+ERR9734841	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR9734847	PRJEB11419	control	0.0		female		Mexico				Obesity		OB	
+ERR9734850	PRJEB11419	control	0.0		female		Mexico				Obesity		OB	
+ERR9734875	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR9734876	PRJEB11419	Obesity	1.0		male		Mexico				Obesity		OB	
+ERR9734891	PRJEB11419	control	0.0		male		Mexico				Obesity		OB	
+ERR9734909	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR9734915	PRJEB11419	control	0.0		female		Mexico				Obesity		OB	
+ERR9734958	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR9734959	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR9734974	PRJEB11419	control	0.0		male		Mexico				Obesity		OB	
+ERR9734996	PRJEB11419	Obesity	1.0		male		Mexico				Obesity		OB	
+ERR9735038	PRJEB11419	control	0.0		female		Mexico				Obesity		OB	
+ERR9735039	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR9735085	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR9735122	PRJEB11419	Obesity	1.0		male		Mexico				Obesity		OB	
+ERR6360868	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6360876	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6360898	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR6360914	PRJEB11419	Obesity	1.0		female		not provided				Obesity		OB	
+ERR6360973	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR6361032	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR6361038	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR6361048	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361085	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361111	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR6361117	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361123	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361127	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361129	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361148	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR6361191	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR6361199	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR6361227	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361230	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361237	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361255	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR6361262	PRJEB11419	Obesity	1.0		female		China				Obesity		OB	
+ERR6361273	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361304	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361478	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361525	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361530	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361615	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361662	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361705	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERR6361708	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361748	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6361855	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR6361933	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR6362988	PRJEB11419	Obesity	1.0		female		Mexico				Obesity		OB	
+ERR6363033	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6363049	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6363160	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR6358233	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR6358286	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR6358288	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERR6358289	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR6358346	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR6358374	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR6358385	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR6358402	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR6358407	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR6358421	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR6358431	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR6358436	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERR7451659	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR7451671	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR7451683	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR7451693	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERR7451701	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR7451721	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR7451750	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERR7451753	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR7458443	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERR7458456	PRJEB11419	Obesity	1.0		female		Isle of Man				Obesity		OB	
+ERR7458465	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERR5328198	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERR5328197	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283564	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283565	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283571	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283572	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283574	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283575	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283588	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS6283597	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS6283598	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS6283615	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283616	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283617	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283618	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283620	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283621	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6283649	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283650	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283651	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283652	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283653	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6283655	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283656	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283657	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283658	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283659	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6283680	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS6283681	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS6283693	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6283696	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6283727	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5790624	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5790646	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5790651	PRJEB11419	control	0.0		female		Canada				Obesity		OB	
+ERS5790673	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS5790674	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5790685	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5790689	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS5790691	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5790696	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5790807	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5790810	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5790811	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5790873	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5790877	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5790898	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5790931	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5790956	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5790958	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5790967	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5790986	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS5790988	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS5790992	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5791004	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5791029	PRJEB11419	control	0.0		female		New Zealand				Obesity		OB	
+ERS5810049	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5810110	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5810134	PRJEB11419	Obesity	1.0		male		New Zealand				Obesity		OB	
+ERS5810160	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5810185	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5810198	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5810205	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5796559	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5796561	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5796708	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS5796779	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS5801982	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5802025	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5802046	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5802072	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5802076	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5802103	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5802113	PRJEB11419	Obesity	1.0		male		Canada				Obesity		OB	
+ERS5802117	PRJEB11419	control	0.0		male		Canada				Obesity		OB	
+ERS5802151	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5802176	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5802203	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5802248	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5802273	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5802290	PRJEB11419	Obesity	1.0		female		Canada				Obesity		OB	
+ERS5802293	PRJEB11419	control	0.0		male		Canada				Obesity		OB	
+ERS5802332	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5802346	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5802368	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS5802421	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5802436	PRJEB11419	control	0.0		female		Norway				Obesity		OB	
+ERS5802460	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5806610	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5806708	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5806745	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS5806769	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5806777	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5806782	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5794089	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5794116	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5794122	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5794134	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS5794163	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERS5794199	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5794202	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5794214	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5794236	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5794266	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5794275	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5794351	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5794390	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5794633	PRJEB11419	control	0.0		male		not provided				Obesity		OB	
+ERS5794681	PRJEB11419	Obesity	1.0		male		Australia				Obesity		OB	
+ERS5794942	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5794952	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5794994	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS5795004	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5795009	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5795019	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS5795412	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5795423	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERS5795510	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5795515	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS5796390	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5796451	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERS5796517	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERS5796539	PRJEB11419	Obesity	1.0		male		Ireland				Obesity		OB	
+ERS5796606	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5796711	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERS5801558	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5795239	PRJEB11419	Obesity	1.0		male		France				Obesity		OB	
+ERS5795266	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5795277	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5795303	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS5795351	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS5795369	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5795381	PRJEB11419	Obesity	1.0		male		Ireland				Obesity		OB	
+ERS5795570	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5795571	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5795578	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5796396	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERS5796476	PRJEB11419	control	0.0		male		Hungary				Obesity		OB	
+ERS5796664	PRJEB11419	Obesity	1.0		female		Canada				Obesity		OB	
+ERS5796694	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5801428	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5801449	PRJEB11419	control	0.0		male		Netherlands				Obesity		OB	
+ERS5801514	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5801560	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5801566	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS5801575	PRJEB11419	Obesity	1.0		female		China				Obesity		OB	
+ERS5801658	PRJEB11419	Obesity	1.0		male		Canada				Obesity		OB	
+ERS5801659	PRJEB11419	Obesity	1.0		male		Canada				Obesity		OB	
+ERS5801697	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERS5801730	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERS5801731	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS5801748	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5801817	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5801830	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5801846	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS5801852	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5801983	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS5802119	PRJEB11419	control	0.0		male		Canada				Obesity		OB	
+ERS5806743	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS7061494	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS7061495	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS7061538	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS7061565	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS7061570	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630020	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630032	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630054	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630058	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630071	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6630089	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS6630091	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630092	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS6630119	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS6630120	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630137	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6630139	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630179	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630190	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6630191	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6630193	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630211	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630219	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630235	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630242	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6630256	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630278	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630302	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630305	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630316	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS6630332	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630342	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6630366	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6630380	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630410	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS6630411	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630419	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630535	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS6630575	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS6630610	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS6630621	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS6630623	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS6630625	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS6630746	PRJEB11419	Obesity	1.0		male		United Kingdom				Obesity		OB	
+ERS6630753	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS6630763	PRJEB11419	control	0.0		female		United Kingdom				Obesity		OB	
+ERS6630793	PRJEB11419	Obesity	1.0		female		United States				Obesity		OB	
+ERS6630815	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS6630824	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS4851165	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS4851214	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS4851229	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS4851247	PRJEB11419	Obesity	1.0		female		United Kingdom				Obesity		OB	
+ERS4851296	PRJEB11419	control	0.0		female		United States				Obesity		OB	
+ERS4851309	PRJEB11419	control	0.0		male		United Kingdom				Obesity		OB	
+ERS5442580	PRJEB11419	Obesity	1.0		male		United States				Obesity		OB	
+ERS5442599	PRJEB11419	control	0.0		male		United States				Obesity		OB	
+ERS5442670	PRJEB11419	control	0.0		female		Germany				Obesity		OB	
+ERS5442689	PRJEB11419	Obesity	1.0		female		Germany				Obesity		OB	
+ERS5442722	PRJEB11419	control	0.0		male		Germany				Obesity		OB	
+ERS5442732	PRJEB11419	Obesity	1.0		female		Germany				Obesity		OB	
+ERS5442739	PRJEB11419	control	0.0		male		Germany				Obesity		OB	
+ERS5442760	PRJEB11419	control	0.0		female		Germany				Obesity		OB	
+ERS5442772	PRJEB11419	control	0.0		female		Germany				Obesity		OB	
+ERS5442784	PRJEB11419	control	0.0		male		Germany				Obesity		OB	
+ERS5442811	PRJEB11419	control	0.0		female		United States				Obesity		OB	
