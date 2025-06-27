@@ -1,0 +1,238 @@
+sample	study	diagnosis	group	age	sex	bmi	country	region	pcr_primers	platform	disease_name	title	disease_name_ab	host_body_mass_index
+ERR1597234	PRJEB11419	control	0.0		female		United Kingdom				Bipolar		BD	
+ERR1841643	PRJEB11419	control	0.0		female		United Kingdom				Bipolar		BD	
+ERR1843630	PRJEB11419	control	0.0		female		United Kingdom				Bipolar		BD	
+ERR1843754	PRJEB11419	control	0.0		female		United Kingdom				Bipolar		BD	
+ERR2032263	PRJEB11419	control	0.0		female		United States				Bipolar		BD	
+ERR2032586	PRJEB11419	Bipolar	1.0		male		United States				Bipolar		BD	
+ERR2056987	PRJEB11419	control	0.0		male		Ireland				Bipolar		BD	
+ERR2057127	PRJEB11419	control	0.0		female		United States				Bipolar		BD	
+ERR2091978	PRJEB11419	control	0.0		male		United Kingdom				Bipolar		BD	
+ERR2303898	PRJEB11419	control	0.0		female		Australia				Bipolar		BD	
+ERR2308705	PRJEB11419	Bipolar	1.0		male		United Kingdom				Bipolar		BD	
+ERR2314354	PRJEB11419	Bipolar	1.0		female		United States				Bipolar		BD	
+ERR2405162	PRJEB11419	control	0.0		female		United States				Bipolar		BD	
+ERR2579503	PRJEB11419	control	0.0		male		United States				Bipolar		BD	
+ERR2696620	PRJEB11419	Bipolar	1.0		female		United Kingdom				Bipolar		BD	
+ERR4019255	PRJEB11419	Bipolar	1.0		male		Canada				Bipolar		BD	
+ERR4019692	PRJEB11419	control	0.0		female		Philippines				Bipolar		BD	
+ERR4019704	PRJEB11419	control	0.0		male		United States				Bipolar		BD	
+ERR4569889	PRJEB23500	H	0.0				China	V3-V4 	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569890	PRJEB23500	BD	1.0				China	V3-V4 	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569891	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569892	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569893	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569894	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569895	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569896	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569897	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569898	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569899	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569900	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569901	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569902	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569903	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569904	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569905	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569906	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569907	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569908	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569909	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569910	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569911	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569912	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569913	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569914	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569915	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569916	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569917	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569918	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569919	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569920	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569921	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569922	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569923	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569924	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569925	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569926	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569927	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569928	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569929	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569930	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569931	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569932	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569933	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569934	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569935	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569936	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569937	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569938	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569939	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569940	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569941	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569942	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569943	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569944	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569945	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569946	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569947	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569948	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569949	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569950	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569951	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569952	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569953	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569954	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569955	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569956	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569957	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569958	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569959	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569960	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569961	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569962	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569963	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569964	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569965	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569966	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569967	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569968	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569969	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569970	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569971	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569972	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569973	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569974	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569975	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569976	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569977	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569978	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569979	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569980	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569981	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569982	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569983	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569984	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569985	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569986	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569987	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569988	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569989	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569990	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569991	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569992	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569993	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569994	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569995	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569996	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569997	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569998	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4569999	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4570000	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4570001	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4570002	PRJEB23500	H	0.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4570003	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4570004	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4570005	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4570006	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR4570007	PRJEB23500	BD	1.0				China	V3-V4	F: CCTACGGGNGGCWGCAG; R: GACTACHVGGGTATCTAATCC	ILLUMINA	Bipolar disorder	Gut Microbiota Changes in Patients with Bipolar Depression	BD	
+ERR6358349	PRJEB11419	Bipolar	1.0		male		United Kingdom				Bipolar		BD	
+ERS5790706	PRJEB11419	Bipolar	1.0		female		not provided				Bipolar		BD	
+ERS5790730	PRJEB11419	Bipolar	1.0		female		United States				Bipolar		BD	
+ERS5790732	PRJEB11419	Bipolar	1.0		male		United States				Bipolar		BD	
+ERS5790733	PRJEB11419	Bipolar	1.0		male		United States				Bipolar		BD	
+ERS5794051	PRJEB11419	Bipolar	1.0		female		United States				Bipolar		BD	
+ERS5795007	PRJEB11419	Bipolar	1.0		male		United Kingdom				Bipolar		BD	
+ERS5795511	PRJEB11419	Bipolar	1.0		male		United States				Bipolar		BD	
+ERS5802040	PRJEB11419	control	0.0		male		United States				Bipolar		BD	
+ERS5802379	PRJEB11419	Bipolar	1.0		female		United Kingdom				Bipolar		BD	
+ERS6630331	PRJEB11419	control	0.0		male		United States				Bipolar		BD	
+ERS7061523	PRJEB11419	Bipolar	1.0		male		United States				Bipolar		BD	
+SRR27720353	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720354	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720355	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720356	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720357	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720358	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720359	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720360	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720361	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720362	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720363	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720364	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720365	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720366	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720367	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720368	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720369	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720370	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720371	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720372	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720373	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720374	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720375	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720376	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720377	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720378	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720379	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720380	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720381	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720382	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720383	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720384	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720385	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720386	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720387	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720388	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720389	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720390	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720391	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720392	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720393	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720394	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720395	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720396	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720397	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720398	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720399	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720400	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720401	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720402	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720403	PRJNA1068750	HC	0.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720404	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720405	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720406	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720407	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720408	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720409	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720410	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720411	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720412	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720413	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720414	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720415	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720416	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720417	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720418	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720419	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720420	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720421	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720422	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720423	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720424	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720425	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720426	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720427	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720428	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720429	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720430	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720431	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720432	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720433	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720434	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720435	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720436	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720437	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720438	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720439	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
+SRR27720440	PRJNA1068750	BD	1.0				China	V4		ILLUMINA	Bipolar disorder	Disruption of the gut microbiota-inflammation-brain axis in unmedicated bipolar disorder II depression	BD	
