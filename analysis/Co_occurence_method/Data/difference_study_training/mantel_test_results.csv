@@ -1,0 +1,81 @@
+Matrix 1,Matrix 2,R_value,p_value
+russell rao weight-0,russell rao weight-1,0.2642196336594144,0.001
+russell rao weight-0,russell rao weight-7,0.05163524056311611,0.001
+russell rao weight-0,russell rao weight-2,0.1674610779102979,0.001
+russell rao weight-0,russell rao weight-5,0.015111982688877375,0.001
+russell rao weight-0,russell rao weight-3,0.07201168476383579,0.001
+russell rao weight-0,russell rao weight-6,0.16451768659006205,0.001
+russell rao weight-0,russell rao weight-8,0.0028520999764951624,0.649
+russell rao weight-0,russell rao weight-10,0.22223425889897452,0.001
+russell rao weight-0,russell rao weight-4,0.06418516625223625,0.001
+russell rao weight-0,russell rao weight-9,0.0731950657505193,0.001
+braycurtis percentile-0,braycurtis percentile-5,-0.015152911388588427,0.02
+braycurtis percentile-0,braycurtis percentile-9,0.0003425477836917157,0.374
+braycurtis percentile-0,braycurtis percentile-4,0.020628659046308798,0.001
+braycurtis percentile-0,braycurtis percentile-3,0.03618678540359662,0.001
+braycurtis percentile-0,braycurtis percentile-6,0.14652410188035825,0.001
+braycurtis percentile-0,braycurtis percentile-2,0.1448970502750978,0.001
+braycurtis percentile-0,braycurtis percentile-1,0.2343849111878244,0.001
+braycurtis percentile-0,braycurtis percentile-7,0.07221228453996978,0.001
+braycurtis percentile-0,braycurtis percentile-8,-0.016134533214791292,0.02
+braycurtis percentile-0,braycurtis percentile-10,0.22159483292351284,0.001
+braycurtis totalsum-0,braycurtis totalsum-10,0.2063424566232857,0.001
+braycurtis totalsum-0,braycurtis totalsum-3,0.05565100656406366,0.001
+braycurtis totalsum-0,braycurtis totalsum-2,0.14325098064678451,0.001
+braycurtis totalsum-0,braycurtis totalsum-4,0.05817409212105167,0.001
+braycurtis totalsum-0,braycurtis totalsum-5,-0.006336822480619885,0.315
+braycurtis totalsum-0,braycurtis totalsum-9,0.06855686378116183,0.001
+braycurtis totalsum-0,braycurtis totalsum-8,-0.005084306456514378,0.444
+braycurtis totalsum-0,braycurtis totalsum-1,0.19758233997272412,0.001
+braycurtis totalsum-0,braycurtis totalsum-7,0.08062986088449967,0.001
+braycurtis totalsum-0,braycurtis totalsum-6,0.13815189894336555,0.001
+russell rao-0,russell rao-9,0.06833216639087969,0.001
+russell rao-0,russell rao-5,0.037512685020514344,0.001
+russell rao-0,russell rao-3,0.07706638604409355,0.001
+russell rao-0,russell rao-2,0.16605274670235276,0.001
+russell rao-0,russell rao-7,0.044114142049125574,0.001
+russell rao-0,russell rao-8,0.003995053200848206,0.581
+russell rao-0,russell rao-10,0.1546713299625958,0.001
+russell rao-0,russell rao-4,0.043989367680451474,0.001
+russell rao-0,russell rao-1,0.29584543912578,0.001
+russell rao-0,russell rao-6,0.16882814618334524,0.001
+abundance percentile-0,abundance percentile-7,0.08806786578772766,0.001
+abundance percentile-0,abundance percentile-6,0.20253945117463779,0.001
+abundance percentile-0,abundance percentile-4,0.11650918904963366,0.001
+abundance percentile-0,abundance percentile-3,0.12217450946733503,0.001
+abundance percentile-0,abundance percentile-8,0.06661729890757619,0.001
+abundance percentile-0,abundance percentile-5,0.08817788663692842,0.001
+abundance percentile-0,abundance percentile-10,0.2761600954049974,0.001
+abundance percentile-0,abundance percentile-1,0.2867007304473616,0.001
+abundance percentile-0,abundance percentile-2,0.2166859612259532,0.001
+abundance percentile-0,abundance percentile-9,0.1433996781714454,0.001
+faith-0,faith-8,-0.04445279293140333,0.001
+faith-0,faith-6,0.08615674123805091,0.001
+faith-0,faith-2,0.1023401310597271,0.001
+faith-0,faith-1,0.21990471210137202,0.001
+faith-0,faith-3,0.0340179003690197,0.001
+faith-0,faith-7,0.012401763131236464,0.006
+faith-0,faith-5,-0.014494463173853993,0.035
+faith-0,faith-10,0.1380059577393198,0.001
+faith-0,faith-9,0.046777810708170345,0.001
+faith-0,faith-4,0.029107119338666516,0.001
+jaccard-0,jaccard-7,0.0087990667020488,0.061
+jaccard-0,jaccard-3,-0.0411999376224594,0.001
+jaccard-0,jaccard-9,-0.019265148061526242,0.001
+jaccard-0,jaccard-6,0.03711341516509209,0.001
+jaccard-0,jaccard-8,-0.07952636239750102,0.001
+jaccard-0,jaccard-10,0.07025690790387257,0.001
+jaccard-0,jaccard-4,-0.02487042915915236,0.001
+jaccard-0,jaccard-2,0.04083849704339138,0.001
+jaccard-0,jaccard-1,0.1499741691833716,0.001
+jaccard-0,jaccard-5,-0.07770667661746875,0.001
+abundance totalsum-0,abundance totalsum-6,0.14450488710550244,0.001
+abundance totalsum-0,abundance totalsum-3,0.10896816091862971,0.001
+abundance totalsum-0,abundance totalsum-1,0.21333648441741845,0.001
+abundance totalsum-0,abundance totalsum-10,0.2240771309197913,0.001
+abundance totalsum-0,abundance totalsum-5,0.07374290354965705,0.001
+abundance totalsum-0,abundance totalsum-9,0.11596986066306722,0.001
+abundance totalsum-0,abundance totalsum-4,0.09362276841132676,0.001
+abundance totalsum-0,abundance totalsum-2,0.17958088695297947,0.001
+abundance totalsum-0,abundance totalsum-7,0.06365750315480037,0.001
+abundance totalsum-0,abundance totalsum-8,0.05662420204490908,0.001
