@@ -8,16 +8,16 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.linear_model import LogisticRegression
 
-co_embedding = pd.read_csv("/home/dongbiao/word_embedding_microbiome/all_data/gut/glove/abundance-percentile_100.txt",
+co_embedding = pd.read_csv("../../data/social_niche_embedding_100.txt",
                           header=None, sep=" ", low_memory=False, index_col=0)
 co_embedding = co_embedding.drop("<unk>")
 
-phy_embedding = pd.read_csv("/home/dongbiao/word_embedding_microbiome/all_data/gut/Phy_embedding/PCA/PCA_100.txt",
+phy_embedding = pd.read_csv("../../data/Embedding_list/PCA_100.txt",
                           header=None, sep=" ", low_memory=False, index_col=0)
 phy_embedding = phy_embedding.loc[co_embedding.index]
 
 
-hgt_embed = pd.read_csv("/home/dongbiao/word_embedding_microbiome/HGT/results/hgt.csv")
+hgt_embed = pd.read_csv("Data/hgt.csv")
 
 # 初始化随机森林分类器
 rf_classifier = RandomForestClassifier(
@@ -101,5 +101,5 @@ for fold, (train_index, val_index) in enumerate(kf.split(all_id)):
 
 
 hgt_predict_res = pd.DataFrame({"test":test, "group":group, "labels":labels, "proba":proba})
-hgt_predict_res.to_csv("/home/dongbiao/word_embedding_microbiome/HGT/results/hgt_predict_res_all.csv", index=None)
+hgt_predict_res.to_csv("Data/hgt_predict_res_all.csv", index=None)
 
