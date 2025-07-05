@@ -171,21 +171,18 @@ def maincall(inputfile, outputfile, model_id, default_score=-1.0, uptake_score=0
 
 def main(i):
     model_id = i
-    inputfile = f"/home/dongbiao/word_embedding_microbiome/modelseed/predict_otu_metabolic/OTU_bigg_gene/{model_id}.tsv"
-    outputfile = f"/home/dongbiao/word_embedding_microbiome/modelseed/predict_otu_metabolic/OTU_metabolic_model_WD/{model_id}.xml"
+    inputfile = f"Data/OTU_bigg_gene/{model_id}.tsv"
+    outputfile = f"Data/OTU_metabolic_model_M3/{model_id}.xml"
     universe = fid_gram.get(model_id)
-    mediadb = "/home/dongbiao/word_embedding_microbiome/modelseed/media-main/media/WD.tsv"
+    mediadb = "Data/media_db.tsv"
     maincall(inputfile=inputfile, outputfile=outputfile, model_id=model_id,
-                universe=universe, gapfill="WD", mediadb=mediadb)
+                universe=universe, gapfill="M3", mediadb=mediadb)
 
 
 if __name__ == '__main__':
     set_default_solver("cplex")
-    with open("/home/dongbiao/word_embedding_microbiome/modelseed/predict_otu_metabolic/fid_gram.json", "r") as file:
+    with open("Data/fid_gram.json", "r") as file:
         fid_gram = json.load(file) 
-    # fid = pd.read_csv("/home/dongbiao/word_embedding_microbiome/modelseed/predict_otu_metabolic/fid.txt", header=None)
-    # fid = fid.iloc[:,0].values
     fid = sys.argv[1]
     main(fid)
-    # Parallel(n_jobs=1)(delayed(main)(i) for i in tqdm(fid, desc="Processing"))
 

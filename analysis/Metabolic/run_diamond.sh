@@ -4,8 +4,8 @@
 #SBATCH -n 5
 #SBATCH -p cu
 #SBATCH --mem=40
-#SBATCH -o ../output/diamond_%a.out
-#SBATCH -e ../output/diamond_%a.err
+#SBATCH -o diamond_%a.out
+#SBATCH -e diamond_%a.err
 #SBATCH --array=2-100
 #SBATCH --exclude=cu01
 

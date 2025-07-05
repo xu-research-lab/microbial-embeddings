@@ -15,11 +15,11 @@ def build_model_id(name):
 
 genome_id = sys.argv[1]
 
-inputfile = f"/home/dongbiao/word_embedding_microbiome/picrust2_ref_16S_genome/data/faa/{genome_id}.faa"
+inputfile = f"Data/genome/{genome_id}.faa"
 model_id = os.path.splitext(os.path.basename(inputfile))[0]
 model_id = build_model_id(model_id)
 diamond_db = project_dir + config.get('generated', 'diamond_db')
-blast_output = f"/home/dongbiao/word_embedding_microbiome/modelseed/predict_otu_metabolic/output/blast_output/{genome_id}.tsv"
+blast_output = f"Data/blast_output/{genome_id}.tsv"
 exit_code = run_blast(inputfile, 'protein', blast_output, diamond_db)
 annotations = load_diamond_results(blast_output)
 gene2gene = annotations.sort_values(by='score', ascending=False) \

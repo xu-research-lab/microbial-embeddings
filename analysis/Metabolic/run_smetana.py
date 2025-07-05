@@ -10,7 +10,7 @@ from reframed import set_default_solver
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
-mediadb = "/home/dongbiao/word_embedding_microbiome/modelseed/media-main/media/WD.tsv"
+mediadb = "Data/media_db.tsv"
 
 def maincall(i, run_file):
     
@@ -18,9 +18,8 @@ def maincall(i, run_file):
     run_file = f"{run_file}/{i}"
     genome_id = modelseed_micro_pairs.loc[i, ].values
     split_id = i
-    metabolic_model_path = "/home/dongbiao/word_embedding_microbiome/modelseed/predict_otu_metabolic/OTU_metabolic_model_WD"
-    # metabolic_model_path = "/home/dongbiao/word_embedding_microbiome/modelseed/metabolic_genome"
-    output = "/home/dongbiao/word_embedding_microbiome/modelseed/smetana/results"
+    metabolic_model_path = "Data/OTU_metabolic_model_M3"
+    output = "Data/smetana/results"
     
     ### generate community file
     id_2 = [f"{i}_{split_id}" for i in genome_id]
@@ -33,14 +32,11 @@ def maincall(i, run_file):
     otuput_file = '_'.join(genome_id)
     
     ### model: global, detailed
-    main([f"{run_file}/*_{split_id}.xml"], mode="global", output=f"{output}/{otuput_file}_WD_output", media="WD",
-        mediadb=mediadb, exclude="../inorganic.txt", communities=f"{run_file}/communities_{split_id}.tsv", 
+    main([f"{run_file}/*_{split_id}.xml"], mode="global", output=f"{output}/{otuput_file}_WD_output", media="M11",
+        mediadb=mediadb, exclude="Data/inorganic.txt", communities=f"{run_file}/communities_{split_id}.tsv", 
         use_lp=True, ignore_coupling=True)
     
-    ### remove file
-    # for j in range(len(genome_id)):
-    #     subprocess.run(['rm', f'{run_file}/{genome_id[j]}_{split_id}.xml'], capture_output=True, text=True)
-    # subprocess.run(['rm', f'{run_file}/communities_{split_id}.tsv'], capture_output=True, text=True)
+
     
     subprocess.run(['rm', '-rf', f'{run_file}'], capture_output=True, text=True)
     
