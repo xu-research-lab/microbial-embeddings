@@ -54,6 +54,7 @@ p1 <- ggplot(studies, aes(area = n, fill = class, label = project)) +
           axis.title = element_text(face = "bold"), # 加粗坐标轴标题
           axis.text = element_text(face = "bold")) 
 
+
 ### samples reads
 df <- read.csv("Data/read_depth_samples.csv", header = FALSE)
 colnames(df) <- "reads"
@@ -107,6 +108,9 @@ p2 <- ggplot(df, aes(x = reads)) +
         # 文本设置
         text = element_text(color = "black", face = "bold"),
         axis.text = element_text(color = "black"))
+ggsave("Data/read_depth_samples.pdf", p2, 
+       width = 20, height = 18, units = "cm")
+
 
 ### prevalence distribution
 prevalence <- read.csv("Data/prevalence.csv")
@@ -162,7 +166,8 @@ p3 <- ggplot(prevalence, aes(x = prevalence)) +
         # 文本设置
         text = element_text(color = "black", face = "bold"),
         axis.text = element_text(color = "black"))
-
+ggsave("Data/prevalence.pdf", p3, 
+       width = 20, height = 18, units = "cm")
 
 ### tax sample nums
 final_df <- read.csv("Data/tax_num_samples.csv", row.names = 1)
@@ -315,6 +320,8 @@ p7 <- ggplot(hist_data, aes(x = bin_center, y = count, color = label)) +
           plot.title = element_text(hjust = 0.5), # 居中对齐标题
           axis.title = element_text(face = "bold"), # 加粗坐标轴标题
           axis.text = element_text(face = "bold")) 
+ggsave("Data/top_phyla_abundance.pdf", p7, 
+       width = 20, height = 18, units = "cm")
 
 ### shannon diversity
 meta_data <- read.csv("Data/meta_data_include_shannon.csv")
@@ -362,8 +369,11 @@ p8 <- ggplot(meta_data, aes(x = shannon)) +
         text = element_text(color = "black", face = "bold"),
         axis.text = element_text(color = "black"))
 
+ggsave("Data/shannon.pdf", p8, 
+       width = 20, height = 18, units = "cm")
+
 # load data
-meta_data <- read.csv("/home/dongbiao/word_embedding_microbiome/all_data/gut/cell/meta_data_include_shannon.csv")
+meta_data <- read.csv("Data/meta_data_include_shannon.csv")
 # 获取地图数据并标准化名称
 world_map <- map_data("world")
 # 创建区域分类标准
@@ -584,8 +594,6 @@ region_reads_plot
 # 合并图形
 merge_plot <- temp + region_counts_plot + region_shannon_plot + region_reads_plot +
     plot_layout(ncol = 4,widths = c(1, 0.5, 0.5, 0.5)) 
-merge_plot
-
 
 # 测序区间统计
 reads_region <- meta_data %>%
@@ -648,7 +656,6 @@ region_pie <- ggplot(reads_region_count, aes(x = 2, y = count, fill = seq_region
     guides(fill = guide_legend(ncol = 2)) +
     theme(text = element_text(face = "bold"))
 
-region_pie
 upp_plot <- plot_grid(p1, region_pie, p2, p3,
                          labels = c('a', 'b', 'c', 'd'),
                          align="hv",
@@ -671,9 +678,6 @@ p <- plot_grid(upp_plot, middle_plot, bottom_plot,
                align="hv",
                scale = c(1, 1, 1),
                nrow = 3, ncol = 1, plot=FALSE)
-
-ggsave("/home/dongbiao/word_embedding_microbiome/result/gut_pretrain_data.png", p,
-       width = 45, height = 25, units = "cm")
 
 
 ### beta diversity
@@ -709,9 +713,9 @@ plot_data <- plot_data %>% arrange(region)
 
 # 绘制散点图
 p1 = ggplot(plot_data, aes(x = tsne1, y = tsne2, color = region)) + 
-    geom_point(size = 0.5, show.legend = F, alpha=0.1) + 
-    labs(x = "t-SNE 1", y = "t-SNE 2", title = "Region") + 
-    theme_bw(base_size = 14) +
+    geom_point(size = 0.5, show.legend = FALSE, alpha=0.1) + 
+    labs(x = "", y = "", title = "Region") + 
+    theme_bw() +
     scale_color_manual(values = map_colors) +
     theme(
         text = element_text(face = "bold"), 
@@ -769,6 +773,7 @@ plots <- pmap(variables, function(t, data, limit) {
         theme_minimal() +
         labs(x = "", y = "", title = t) +
         theme(
+            text = element_text(face = "bold"),
             panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
             axis.line = element_line(color = "black", linewidth = 0.5),
             axis.ticks = element_line(color = "black", linewidth = 0.5)
@@ -782,9 +787,7 @@ names(plots) <- p_vector
 list2env(plots, envir = .GlobalEnv)
 
 
-# 步骤1：确保所有子图具有相同的图注空间和主题参数
-# ---------------------------------------------------------
-# 统一所有子图的主题设置（包括图注宽度）
+
 uniform_theme <- theme(
     legend.position = "right",  # 强制图注统一在右侧
     legend.box.margin = margin(0, 0, 0, 10),  # 图注右侧留出10pt空间
@@ -806,7 +809,8 @@ p9 <- p9 + uniform_theme
 combined_plot <- p1 + p3 + p4 + p5 + p6 + p7 + p8 + p9 +
     plot_layout(
         nrow = 2,  ncol = 4,
-    )
+    ) & labs(x = "t-SNE 1", y = "t-SNE 2")
+
 
 # 测序区间
 metadata <- read.csv("Data/metadata_filter.txt" ,header = T,"\t")
@@ -851,8 +855,8 @@ reads_region <- reads_region %>% arrange(reads_region$seq_region)
 # 生成 p2（注意修正未完成的 guides 参数）
 p2 <- ggplot(reads_region, aes(x = tsne1, y = tsne2, color = seq_region)) + 
     geom_point(size = 0.5, alpha = 0.1) + 
-    labs(x = "t-SNE 1", y = "t-SNE 2", title = "Sequence region") + 
-    theme_bw(base_size = 14) +
+    labs(x = "", y = "", title = "Sequence region") + 
+    theme_bw() +
     scale_color_manual(values = region_colors) +
     theme(
         text = element_text(face = "bold"), 
@@ -885,15 +889,18 @@ plot_list <- lapply(split_data, function(sub_data) {
             panel.border = element_rect(color = "black", linewidth = 1, fill = NA),
             axis.line = element_line(color = "black", linewidth = 0.5),
             axis.ticks = element_line(color = "black", linewidth = 0.5),
-            plot.title = element_text(hjust = 0.5, face = "bold"),
-            axis.title = element_blank(),  # 隐藏坐标轴标题
+            plot.title = element_text(face = "bold"),
+            # axis.title = element_blank(),  # 隐藏坐标轴标题
             legend.position = "none"
         )
 })
 
 # 使用 patchwork 组合图形
 combined_plot <- p2 + plot_list[[1]] + plot_list[[2]] + plot_list[[3]] + plot_list[[4]] + plot_list[[5]] +
-    plot_layout(nrow = 2, ncol = 3) 
+    plot_layout(nrow = 2, ncol = 3) & labs(x = "t-SNE 1", y = "t-SNE 2")
+
+ggsave("Data/beta_sequence_region.pdf", combined_plot, 
+       width = 22.5, height = 15, units = "cm")
 
 # Load the data
 pabundance <- read.csv("Data/phyla_abundance_top.csv", header = TRUE)
@@ -925,7 +932,7 @@ p1 = ggplot(shannon_list, aes(x = tsne1, y = tsne2)) +
     ) +
     labs(x = "t-SNE 1", y = "t-SNE 2", title = "Shannon",color = "Shannon") +
     theme_minimal() +
-    theme(
+    theme(text = element_text(face = "bold"),
         panel.border = element_rect(      # 面板外框
             color = "black",                # 框线颜色
             fill = NA,                      # 填充透明
@@ -955,13 +962,13 @@ plot_list <- imap(sorted_list, ~ {
             show.legend = is_legend  # 仅目标图显示图例
         ) +
         scale_color_viridis_c(
-            option = "D",
+            option = "E",
             limits = c(0, 100),
             guide = if (is_legend) "colourbar" else "none"  # 控制颜色标尺图例
         ) +
         labs(x = "t-SNE 1", y = "t-SNE 2", title = .y,color = "abundacne") +
         theme_minimal() +
-        theme(
+        theme(text = element_text(face = "bold"),
             panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
             axis.line = element_line(color = "black", linewidth = 0.5),
             axis.ticks = element_line(color = "black", linewidth = 0.5)
@@ -986,5 +993,4 @@ combined_plot <- (p1+plot_list[[1]]+plot_list[[2]])/(plot_list[[3]]+plot_list[[4
     widths = rep(1, 3), # 每列宽度相等
     guides = "collect"
     
-)
-
+) & labs(x = "t-SNE 1", y = "t-SNE 2")
