@@ -266,7 +266,8 @@ def glove_train(**kwargs):
               help='Column name in metadata containing class labels (e.g., [0.0, 1.0])')
 @click.option('--sample_id_col', 
               type=click.STRING, 
-              required=True,
+              required=False,
+              default='sample',
               help="Unique sample ID column name matching BIOM sample IDs")
 @click.option('-e',
               '--embedding-birnn',
