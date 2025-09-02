@@ -9,11 +9,9 @@
 - [Download pretraining microbiome table ](./data/pretraining_table_filter.biom): pretraining_table_filter.biom
 - [Download social_niche_embedding](./data/social_niche_embedding_100.txt) : social_niche_embedding_100.txt
 
-
-
 ## Usage Tutorial
 
-To reproduce our results, follow these steps to install and run the project.
+**To reproduce our results, follow these steps to install and run the project.**
 
 ### Installation
 
@@ -23,7 +21,7 @@ We highly recommend using Conda to manage the environment and dependencies.
 
    ```bash
    # Create a new environment named 'membed'
-   conda env create --name SNE --file requirements_dev.yml
+   conda env create --name membed --file requirements_dev.yml
    conda activate membed
    ```
 
@@ -105,8 +103,6 @@ We adapt the **GloVe** (Global Vectors for Word Representation) model, originall
 
 ### Part 2: Downstream Classification using SNE
 
-The `membed class-attention`  An attention-based classification model that operates on pre-trained microbial embeddings. The model assigns learnable weights to each microbe within a sample to identify the key taxa most predictive of the classification target.
-
 The **membed class-attention** module is an attention-based classification model that operates on pre-trained microbial embeddings. It assigns learnable weights to each microbe within a sample to identify the key taxa most predictive of a classification target.
 
 - **Prerequisites:**
@@ -157,12 +153,12 @@ This repository is organized to faithfully reproduce every analysis presented in
 - **`Co_occurence_method/`**: Comparative Analysis of Co-occurrence Metrics 
   - Comparative_analysis.R: This is a standalone R script used to sample OTUs from a single sample and generate network visualizations for each of the 8 co-occurrence metrics. 
 - **`Simulation_experiments/`**: Validation of the SNE framework using synthetic microbiome data
-- **`SNE_overview/`**: Code for visualizing the pre-trained Social Niche Embeddings,
+- **`SNE_overview/`**: Code for visualizing the pre-trained Social Niche Embeddings
 - **`Genome_collection_search/`**: Scripts for mapping OTUs to reference genomes
 - **`Traits/`**: Analysis of the association between SNEs and microbial traits
 - **`Metabolic/`**: Metabolic interaction analysis using SMETANA
 - **`HGT/`**: Analysis of SNEs in relation to phylogeny, function, and Horizontal Gene Transfer
-- **`Disease_classification_loo/`**: All disease and host phenotype classification experiments,
+- **`Disease_classification_loo/`**: All disease and host phenotype classification experiments
 
 
 
