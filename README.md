@@ -1,17 +1,21 @@
-# membed: Microbial Social Niche Embeddings from Large-Scale Microbiome Data
+# SNEs: Microbial Social Niches Learned from >210,000 Human Gut Microbiomes for Improve Deep Learning-based Disease Classification
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)`membed` is a Python package that implements our pioneering **Social Niche Embedding (SNE)** framework. For a comprehensive description of the framework, please see our paper: [*“Microbial Social Niches Revealed from over 210,000 human gut microbiome samples”*].Grounded in the idea that a microbe's ecological role can be learned from its co-occurring neighbors, we adapted techniques from Natural Language Processing (NLP) to learn dense vector representations (i.e., "embeddings") for microbes. By training on a massive dataset of over 210,000 human gut microbiome samples, these embeddings position each microbe within a continuous "ecological space," revealing profound insights into their functions, interaction patterns, and connections to host health and disease.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)`membed` package adapts Natural Language Processing techniques to create vector representations for microbes based on their co-occurrence patterns across samples. These embeddings position microbes within a continuous ecological space to infer their social niches and functional roles.
 
-## Key Findings 
+![SNE](img/img1.png)
 
-Learned from an unprecedented amount of data, our SNEs are not just abstract vectors; they are rich with biological meaning:
+## Download pretraining microbiome table and SNEs
 
-- **🧬 Encodes Core Biological Traits**: SNEs effectively capture fundamental microbial phenotypes, including oxygen preference, Gram staining, cell shape, and key metabolic capabilities like sugar utilization.
-- **🤝 Reveals Ecological Interactions**: SNE similarity is correlated with **competition** (Metabolic Resource Overlap) and **cooperation** (Metabolic Interaction Potential) between microbes. This allows for the prediction of potential microbial interactions directly from the embeddings.
-- **🌳 Uncovers Insights Beyond Phylogeny**: SNEs capture ecological information that cannot be explained by evolutionary relatedness alone. SNEs are strongly associated with **Horizontal Gene Transfer (HGT)** events, especially for genes involved in environmental adaptation like antibiotic resistance and stress response.
-- **🩺 Dramatically Improves Disease-State Classification**: Integrating pre-trained SNEs into machine learning models **substantially boosts diagnostic accuracy** for a wide range of diseases.
+- [Download pretraining microbiome table ](./data/pretraining_table_filter.biom): pretraining_table_filter.biom
+- [Download social_niche_embedding](./data/social_niche_embedding_100.txt) : social_niche_embedding_100.txt
 
-## Installation
+
+
+## Usage Tutorial
+
+To reproduce our results, follow these steps to install and run the project.
+
+### Installation
 
 We highly recommend using Conda to manage the environment and dependencies.
 
@@ -19,7 +23,7 @@ We highly recommend using Conda to manage the environment and dependencies.
 
    ```bash
    # Create a new environment named 'membed'
-   conda env create --name membed --file requirements_dev.yml
+   conda env create --name SNE --file requirements_dev.yml
    conda activate membed
    ```
 
@@ -35,10 +39,7 @@ We highly recommend using Conda to manage the environment and dependencies.
    pip install .
    ```
 
-
-## Usage Tutorial
-
-### Part 1: Generating Social Niche Embeddings (SNE)
+### Part 1: Generating SNEs
 
 We adapt the **GloVe** (Global Vectors for Word Representation) model, originally from the field of natural language processing, for this purpose. By learning from the global co-occurrence statistics of microbes across thousands of samples, these embedding vectors capture the "social niche" of each microbe within its complex ecological network. 
 
@@ -104,7 +105,9 @@ We adapt the **GloVe** (Global Vectors for Word Representation) model, originall
 
 ### Part 2: Downstream Classification using SNE
 
-The `membed class-attention` module is a high-performance tool designed for this purpose. It implements a classification model based on the Transformer architecture. In this framework, each biological sample is conceptualized as a "sentence" composed of its constituent microbes (OTUs). The pre-trained embeddings function as dense vector representations for each microbe. The model's core attention mechanism then learns to dynamically weight the importance of each microbe, identifying the key taxa that are most predictive of the classification target (e.g., case vs. control).
+The `membed class-attention`  An attention-based classification model that operates on pre-trained microbial embeddings. The model assigns learnable weights to each microbe within a sample to identify the key taxa most predictive of the classification target.
+
+The **membed class-attention** module is an attention-based classification model that operates on pre-trained microbial embeddings. It assigns learnable weights to each microbe within a sample to identify the key taxa most predictive of a classification target.
 
 - **Prerequisites:**
 
@@ -150,22 +153,20 @@ The `membed class-attention` module is a high-performance tool designed for this
 
 This repository is organized to faithfully reproduce every analysis presented in our paper. The `analysis/` directory contains subfolders, each corresponding to a specific figure or analytical theme.
 
-- **`Pretraining_data_profile/`**: Scripts for building and profiling the pre-training dataset, corresponding to **Figure S2**.
-- **`Co_occurence_method/`**: Comparative Analysis of Co-occurrence Metrics (Corresponds to Figure S1)
+- **`Pretraining_data_profile/`**: Scripts for building and profiling the pre-training dataset
+- **`Co_occurence_method/`**: Comparative Analysis of Co-occurrence Metrics 
   - Comparative_analysis.R: This is a standalone R script used to sample OTUs from a single sample and generate network visualizations for each of the 8 co-occurrence metrics. 
-- **`Simulation_experiments/`**: Validation of the SNE framework using synthetic microbiome data, corresponding to **Figure 2**.
-- **`SNE_overview/`**: Code for visualizing the pre-trained Social Niche Embeddings, corresponding to **Figure S4**.
-- **`Genome_collection_search/`**: Scripts for mapping OTUs to reference genomes, supporting the analyses in **Figure S6**.
-- **`Traits/`**: Analysis of the association between SNEs and microbial traits, corresponding to **Figure 3 & S5**.
-- **`Metabolic/`**: Metabolic interaction analysis using SMETANA, corresponding to **Figure 4**.
-- **`HGT/`**: Analysis of SNEs in relation to phylogeny, function, and Horizontal Gene Transfer, corresponding to **Figure 5**.
-- **`Disease_classification_loo/`**: All disease and host phenotype classification experiments, corresponding to **Figure 6, 7, S8, & S9**.
+- **`Simulation_experiments/`**: Validation of the SNE framework using synthetic microbiome data
+- **`SNE_overview/`**: Code for visualizing the pre-trained Social Niche Embeddings,
+- **`Genome_collection_search/`**: Scripts for mapping OTUs to reference genomes
+- **`Traits/`**: Analysis of the association between SNEs and microbial traits
+- **`Metabolic/`**: Metabolic interaction analysis using SMETANA
+- **`HGT/`**: Analysis of SNEs in relation to phylogeny, function, and Horizontal Gene Transfer
+- **`Disease_classification_loo/`**: All disease and host phenotype classification experiments,
 
 
 
 ## Citation
 
-If you use the `membed` package or our SNEs in your research, please cite our paper (placeholder, please update upon publication):
-
-> Xu, Z. Z., et al. (2025). Microbial Social Niches Revealed from over 210,000 human gut microbiome samples. *Journal Name*, vol(issue), pages.
+> 
 
