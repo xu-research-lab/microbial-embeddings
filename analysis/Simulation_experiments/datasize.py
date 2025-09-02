@@ -2,13 +2,13 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from sklearn.metrics.pairwise import cosine_similarity
-from scipy.stats import pearsonr
+from skbio.stats.distance import mantel
 import matplotlib.pyplot as plt
 import os # 用于文件路径操作
 
 # --- 1. 加载基准数据 (E_global_v23.csv) ---
 
-df_randomE = pd.read_csv('Data/original_data_files/E_global_v46.csv', index_col=0)
+df_randomE = pd.read_csv('original_data_files/E_global_v46.csv', index_col=0)
 species_randomE_dict = {}
 for microbe_name, row_data in df_randomE.iterrows():
     resource_vector = row_data.tolist()
@@ -46,8 +46,10 @@ repetitions = [1, 2, 3, 4, 5]
 # !! 修改这里 !! 指定您的 embedding 文件所在的目录和命名模板
 # 假设文件在当前脚本运行目录下的 'downloaded_embeddings' 子目录中
 # 如果文件就在当前目录，可以将 EMBEDDING_DIR 改为 "."
-EMBEDDING_DIR = "/softerware/analysis_datasize_simul_V4" # 或者例如 "downloaded_embeddings"
-embedding_file_template = os.path.join(EMBEDDING_DIR, 'processed_size_{size}', "subset_{rep}/result/embeddings_100.txt")
+# EMBEDDING_DIR = "/softerware/analysis_datasize_simul_V4" # 或者例如 "downloaded_embeddings"
+# embedding_file_template = os.path.join(EMBEDDING_DIR, 'processed_size_{size}', "subset_{rep}/result/embeddings_100.txt") 
+embedding_file_template = os.path.join("/softerware/datasize_embeddings/embeddings_100_size{size}_{rep}.txt")
+
 
 # --- 4. 计算每个数据集大小和重复实验的相关性 ---
 all_correlations_by_size = {size: [] for size in dataset_sizes} # 用于存储每个size下的5个相关性值
@@ -90,10 +92,14 @@ for size_val in tqdm(dataset_sizes, desc="处理数据集大小"):
         df_sim_randomE_current = pd.DataFrame(cosine_similarity(filtered_randomE_np), index=common_keys, columns=common_keys)
         df_sim_embedding_current = pd.DataFrame(cosine_similarity(filtered_embedding_np), index=common_keys, columns=common_keys)
         
-        # 获取上三角值并计算 Pearson 相关性
+        # 计算相关性
         try:
-            cor, p_value = pearsonr(get_upper_triangle_values(df_sim_randomE_current), get_upper_triangle_values(df_sim_embedding_current))
-            correlations_for_current_size.append(cor)
+            array_sim_randomE = df_sim_randomE_current.to_numpy()
+            np.fill_diagonal(array_sim_randomE, 0)
+            array_sim_embedding = df_sim_embedding_current.to_numpy()
+            np.fill_diagonal(array_sim_embedding, 0)
+            corr, p_value, n = mantel(array_sim_randomE, array_sim_embedding, method='pearson', permutations=999)
+            correlations_for_current_size.append(corr)
         except ValueError as e:
             print(f"警告: 计算 {current_embedding_file} 的 Pearson 相关性时出错: {e}。可能是由于输入数组方差为0。跳过。")
             correlations_for_current_size.append(np.nan)
@@ -119,6 +125,7 @@ for size_val in dataset_sizes:
         std_dev_correlations.append(np.std(valid_corrs))
     else:
         print(f"警告: 数据集大小 {size_val} 没有有效的相关性数据，将不在图表中显示。")
+
 df_plot = pd.DataFrame({'size': plot_sizes, 'mean_correlation': mean_correlations, 'std_dev': std_dev_correlations})
 df_plot.to_csv('df_plot_datasetsize.csv', index=False)
 if not plot_sizes:
@@ -135,7 +142,7 @@ else:
 
 
     ax.set_xlabel("Dataset size", fontsize=14)
-    ax.set_ylabel("PearsonR", fontsize=14)
+    ax.set_ylabel("R", fontsize=14)
     # ax.legend(fontsize=12)
     ax.grid(True, linestyle='--', alpha=0.6)
 
@@ -158,6 +165,6 @@ else:
 
 
     plt.tight_layout() # 自动调整子图参数，使之填充整个图像区域
-    plt.show()
+    plt.savefig('correlation_by_datasetsize.png', dpi=300)
 
 print("\n脚本执行完毕。")

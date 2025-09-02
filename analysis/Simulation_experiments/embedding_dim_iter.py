@@ -120,7 +120,7 @@ def main(output_csv_filename="plot_dimension.csv"): # 新增 output_csv_filename
     plt.figure(figsize=(4, 3)) # 原始尺寸，如果需要可以调整
     # iterations 变量在上面已定义为 iterations_range
     
-    error_every_n_points = 20 
+    
     error_bar_indices = np.array([0,19,39,59,79,99]) # 确保这些索引在0到num_iterations-1范围内
 
     colors = ['#C0C0BFFF', '#FFCD44FF', '#EE7C7AFF', '#4589C8FF', '#008F91FF']
