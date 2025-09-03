@@ -12,7 +12,7 @@ co_embedding = pd.read_csv("../../data/social_niche_embedding_100.txt",
                           header=None, sep=" ", low_memory=False, index_col=0)
 co_embedding = co_embedding.drop("<unk>")
 
-phy_embedding = pd.read_csv("../../data/Embedding_list/PCA_100.txt",
+phy_embedding = pd.read_csv("../../data/Embedding_list/PhyloE.txt",
                           header=None, sep=" ", low_memory=False, index_col=0)
 phy_embedding = phy_embedding.loc[co_embedding.index]
 
