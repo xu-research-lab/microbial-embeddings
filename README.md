@@ -1,15 +1,15 @@
 # SNEs: Microbial Social Niches Learned from >210,000 Human Gut Microbiomes for Improve Deep Learning-based Disease Classification
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)`membed` package adapts Natural Language Processing techniques to create Social Niche Embeddings(SNEs) for microbes based on their co-occurrence patterns across samples. These embeddings provide ecological representations of microbial taxa based on their community context.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) `membed` package adapts Natural Language Processing techniques to create Social Niche Embeddings(SNEs) for microbes based on their co-occurrence patterns across samples. These embeddings provide ecological representations of microbial taxa based on their community context.
 
 ![SNE](img/img1.png)
 
 ## Human gut microbiome resource
 
 * **Pre-training Microbiome Biom Table:** [pretraining_table_filter.biom](./data/pretraining_table_filter.biom)
-  * **Description:** This BIOM-format file contains the raw input data for training. It is a large-scale feature table of Operational Taxonomic Unit (OTU) abundance, comprising **21,091 samples** and **14,093 distinct OTUs**. The data was derived from the processing of 16S rRNA gene sequences from a collection of diverse human gut microbiome samples. 
+  * **Description:** This BIOM-format file contains **210,090 samples** and **14,093 microbial taxa** mapped to the SILVA SSU rRNA reference, representing one of the most comprehensive human gut microbiome datasets available.
 * **SNEs (100-dimensional):** [social_niche_embedding_100.txt](./data/social_niche_embedding_100.txt)
-  * **Description:** This text file contains the pre-trained Social Niche Embeddings (SNEs). These embeddings were generated using the **GloVe** algorithm, which was trained on the microbial co-occurrence patterns within the BIOM table. Each row corresponds to a single OTU, followed by 100 floating-point values that constitute its learned vector. The file contains corresponding vectors for all 14,093 OTUs.
+  * **Description:** This Social Niche Embedding file provides 100-dimensional representations for all 14,093 human gut microbes, pretrained from the BIOM table described above.
 
 
 ## Usage
