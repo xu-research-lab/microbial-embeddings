@@ -26,7 +26,7 @@ We recommend using Conda to manage the environment and dependencies. Complete in
 
    ```bash
    # Clone the repository (approx. 32GB download size)
-   git clone <repository-url>
+   git clone https://github.com/xu-research-lab/microbial-embeddings.git
    cd microbial-embeddings
    ```
 
