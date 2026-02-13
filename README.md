@@ -20,9 +20,17 @@
 
 ### Installation
 
-We recommend using Conda to manage the environment and dependencies.
+We recommend using Conda to manage the environment and dependencies. Complete installation on a machine with 8 threads and 32GB of RAM usually takes around 45 minutes to download the repository (approx. 32GB total size) + 10 minutes for environment setup.
 
-1. **Create or Update Conda Environment:** Use the provided file to create a new, clean environment:
+1. **Clone the repository:**
+
+   ```bash
+   # Clone the repository (approx. 32GB download size)
+   git clone https://github.com/xu-research-lab/microbial-embeddings.git
+   cd microbial-embeddings
+   ```
+
+2. **Create or Update Conda Environment:** Use the provided file to create a new, clean environment:
 
    ```bash
    # Create a new environment named 'membed'
@@ -30,7 +38,7 @@ We recommend using Conda to manage the environment and dependencies.
    conda activate membed
    ```
 
-   **Install the `membed` package:** Install in editable mode using pip (recommended for development):
+3. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
 
    ```bash
    pip install -e .
@@ -111,7 +119,13 @@ The **membed class-attention** module is an attention-based classification model
 
   - Training and testing data (`train.biom`, `test.biom`)
   - A metadata file (`metadata.tsv`) mapping sample IDs to their corresponding class labels.
-  - Pre-trained SNEs: `embeddings_100.txt` 
+  - Pre-trained SNEs: `embeddings_100.txt`
+
+- **Hardware Requirements:**
+  - This module is computationally intensive and benefits from GPU acceleration.
+  - **Recommended:** NVIDIA GPU with at least 8GB VRAM for optimal performance.
+  - **Minimum:** CPU with 8+ cores, but training will be significantly slower.
+  - Memory: At least 32GB RAM for handling large datasets. 
 
 - **Basic Example: Training an Attention-based Classifier (as used in our paper)**
 
@@ -145,7 +159,54 @@ The **membed class-attention** module is an attention-based classification model
   + `-ploss`, `-pauc`, `-e`: Define the output paths for the loss curve plot, the AUC curve plot, and the model's attention weights.
   + `--labels_col group`: Informs the program that the column named `group` in the metadata file contains the classification labels.
   + `--num-epochs`, `--lr`, `--batch-size`, etc.: Set the model's hyperparameters, such as epochs, learning rate, batch size, and model dimensions, mirroring the definitions in your script.
+  + `--numb`: Sets the number of visible CUDA devices (CUDA_VISIBLE_DEVICES) for GPU training. For example, `--numb 8` will use 8 GPU devices.
   + `--d-model 100`: Defines the model's internal dimensionality. **This value must exactly match the dimension of the input embeddings.**
+
+## Running the tool on test data
+
+To test the main functionalities of the `membed` package, we provide test data and scripts in the `tests/` directory.
+
+### Test data
+
+The test data includes:
+- `tests/data/test_Glove.biom`: A small BIOM table for testing the GloVe embedding pipeline
+- `tests/data/IBD_train.biom`, `tests/data/IBD_test.biom`: Training and testing data for classification
+- `tests/data/metadata_IBD.txt`: Metadata file mapping sample IDs to labels
+
+### Running the GloVe pipeline test
+
+To test the GloVe embedding generation pipeline:
+
+```bash
+cd tests
+./run_glove.sh
+```
+
+**Expected output:** The script will generate embeddings in `tests/glove_output/` directory with detailed timing logs.
+
+**Test results (on a machine with 32GB RAM, 8 CPU cores):**
+- Total execution time: 00:01:28 (hh:mm:ss)
+- Each step timing is recorded in `glove_output/pipeline_timing.log`
+
+### Running the classification test
+
+To test the attention-based classification module:
+
+```bash
+cd tests
+./run_classification.sh
+```
+
+**Expected output:** The script will train a classification model and save results in `tests/classification_output/` directory.
+
+**Test results (on a machine with GeForce RTX 2080Ti GPU):**
+- Total execution time: 00:01:16 (hh:mm:ss)
+- Timing logs are saved in `classification_output/classification_time.txt`
+
+### Notes:
+- Ensure the Conda environment is activated before running tests: `conda activate membed`
+- The test scripts include time tracking to help users estimate runtime on their own hardware
+- Both scripts use conservative hyperparameters suitable for testing purposes
 
 ## Code Structure & Analysis Reproducibility
 
