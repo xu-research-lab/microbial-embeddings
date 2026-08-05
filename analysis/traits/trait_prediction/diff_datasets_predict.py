@@ -32,14 +32,14 @@ for n in [1,2,3,4,5]:
                                        header=None, sep=" ", low_memory=False, index_col=0)
             co_embedding.drop("<unk>", inplace=True)
         else:
-            co_embedding = pd.read_csv("../../data/social_niche_embedding_100.txt",
+            co_embedding = pd.read_csv("../sne_construction/data/social_niche_embedding_100.txt",
                           header=None, sep=" ", low_memory=False, index_col=0)
             co_embedding.drop("<unk>", inplace=True)
         fid_8 = np.unique(fid_8)
         inter_id = np.intersect1d(fid_8, co_embedding.index.values)
         co_embedding = co_embedding.loc[inter_id, ]
         fid = co_embedding.index.values
-        taxonomy = pd.read_csv("../Pretraining_data_profile/Data/taxmap_slv_ssu_ref_nr_138.2.txt", sep="\t", low_memory=False)
+        taxonomy = pd.read_csv("../pretraining_resources/data/profile/taxmap_slv_ssu_ref_nr_138.2.txt", sep="\t", low_memory=False)
         acc = []
         for i in range(taxonomy.shape[0]):
             temp = taxonomy.iloc[i]
@@ -51,7 +51,7 @@ for n in [1,2,3,4,5]:
         taxonomy.columns = ["k", "p", "c", "o", "f", "g", "s"]
         taxonomy = taxonomy.loc[fid]
     
-        traits =  pd.read_csv("Data/trait_predcit.csv", index_col=0)
+        traits =  pd.read_csv("data/trait_predcit.csv", index_col=0)
         inter_id = np.intersect1d(fid, traits.index.values)
         traits = traits.loc[inter_id]
         traits = traits.astype(int)
@@ -93,7 +93,7 @@ for n in [1,2,3,4,5]:
     
         # --- 1. Load and prepare the traits data ---
         # Read the CSV, drop duplicates based on 'X16s_ID', and set it as the index
-        traits = pd.read_csv("Data/bacDive.csv")
+        traits = pd.read_csv("data/bacDive.csv")
         traits.drop_duplicates(subset='16s_ID', inplace=True)
         traits.set_index('16s_ID', inplace=True)
         
@@ -294,6 +294,6 @@ for n in [1,2,3,4,5]:
                 datasize.append(datasize_dict[t])
 
 res = pd.DataFrame({"auc":auc, "traits_type":traits_type, "group":group, "tax":tax, "datasize":datasize})
-res.to_csv("Data/auc_res.csv", index=None)
+res.to_csv("results/auc_res.csv", index=None)
 
 

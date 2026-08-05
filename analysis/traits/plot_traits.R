@@ -15,7 +15,7 @@ combined_colors <- c("negative" = "#CD6889", "positive" = "#551A8B",
                      "yes" = color_pool[8], "no" = color_pool[9])
 
 ### fa - an =ae Traitar
-df_cos  <- read.csv("Data/Traitar_Facultatively_Anaerobic_Anaerobic_Aerobic_all_co.csv")
+df_cos  <- read.csv("results/Traitar_Facultatively_Anaerobic_Anaerobic_Aerobic_all_co.csv")
 df_cos$group <- rep("SNE", nrow(df_cos))
 
 df_cos$Type <- factor(df_cos$Type, levels = c("anaerobic", "aerobic", "facultatively"))
@@ -36,7 +36,7 @@ p1 <- ggplot(df_cos, aes(x = Type, y = cosine)) +
 
 # Gram status, Oxygen preference, Cell shape, Spore production, Motility
 ### bugbase
-traits <- read.csv("Data/traits_bugbase.csv", row.names = 1)
+traits <- read.csv("data/traits_bugbase.csv", row.names = 1)
 traits_name <- c("Gram_Status", "Oxygen_Preference")
 traits[traits == "Anaerobic"] <- "anaerobic"
 traits[traits == "Aerobic"] <- "aerobic"
@@ -45,14 +45,14 @@ traits[traits == "Gram_Negative"] <- "negative"
 traits[traits == "Gram_Positive"] <- "positive"
 
 all_plot_data <- map_dfr(traits_name, ~{
-    model <- readRDS(file = paste0("/Data/bugbase/model_", .x, ".rds"))
+    model <- readRDS(file = paste0("data/bugbase/model_", .x, ".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- traits[rownames(plot_data), .x]
     plot_data %>% mutate(facet_group = .x)
 })
 all_plot_data <- all_plot_data[!is.na(all_plot_data$Trait), ]
 annotation_data <- map_dfr(traits_name, ~{
-    model <- readRDS(file = paste0("Data/bugbase/model_", .x, ".rds"))
+    model <- readRDS(file = paste0("data/bugbase/model_", .x, ".rds"))
     data.frame(
         R2Y_model = model@summaryDF[1, 2],
         Q2Y_model = model@summaryDF[1, 3],
@@ -85,7 +85,7 @@ p_bugbase <- all_plot_data %>%
 
 
 ### traitar
-traits <- read.csv("Data/trait_predcit.csv", row.names = 1)
+traits <- read.csv("data/trait_predcit.csv", row.names = 1)
 
 traits[traits == 3] <- 1
 traits$Oxygen_Preference <- rep(0, nrow(traits))
@@ -118,13 +118,13 @@ p_traitar <- list()
 n <- 1
 
 all_plot_data <- map_dfr(traits_name, ~{
-    model <- readRDS(file = paste0("Data/traitar/model_", .x, ".rds"))
+    model <- readRDS(file = paste0("data/traitar/model_", .x, ".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- traits[rownames(plot_data), .x]
     plot_data %>% mutate(facet_group = traits_name_list[[.x]])
 })
 annotation_data <- map_dfr(traits_name, ~{
-    model <- readRDS(file = paste0("Data/traitar/model_", .x, ".rds"))
+    model <- readRDS(file = paste0("data/traitar/model_", .x, ".rds"))
     data.frame(
         R2Y_model = model@summaryDF[1, 2],
         Q2Y_model = model@summaryDF[1, 3],
@@ -159,11 +159,11 @@ p_traitar <- all_plot_data %>%
     guides(color = guide_legend(override.aes = list(size = 3, alpha = 1)))
 
 ### bacDive
-traits <- read.csv("Data/bacDive.csv")
+traits <- read.csv("data/bacDive.csv")
 traits <- traits[!duplicated(traits$X16s_ID),]
 rownames(traits) <- traits$X16s_ID
 
-co_embedding <- read.csv("../../data/social_niche_embedding_100.txt", row.names = 1, sep=" ", header = FALSE)
+co_embedding <- read.csv("../sne_construction/data/social_niche_embedding_100.txt", row.names = 1, sep=" ", header = FALSE)
 accessions_num <- str_split(rownames(co_embedding), "\\.", simplify = TRUE)
 accessions_num <- accessions_num[,1]
 df <- data.frame(accessions=accessions_num, embed_id=rownames(co_embedding))
@@ -196,14 +196,14 @@ traits_name_list[["spore_formation"]] <- "Spore_Formation"
 traits_name_list[["motility"]] <- "Motility"
 
 all_plot_data <- map_dfr(traits_name, ~{
-    model <- readRDS(file = paste0("Data/bacdive/model_", .x, ".rds"))
+    model <- readRDS(file = paste0("data/bacdive/model_", .x, ".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- traits[rownames(plot_data), .x]
     plot_data %>% mutate(facet_group = traits_name_list[[.x]])
 })
 all_plot_data <- all_plot_data[!is.na(all_plot_data$Trait), ]
 annotation_data <- map_dfr(traits_name, ~{
-    model <- readRDS(file = paste0("Data/bacdive/model_", .x, ".rds"))
+    model <- readRDS(file = paste0("data/bacdive/model_", .x, ".rds"))
     data.frame(
         R2Y_model = model@summaryDF[1, 2],
         Q2Y_model = model@summaryDF[1, 3],
@@ -241,16 +241,16 @@ p_bacdive <- all_plot_data %>%
 
 ### metabolc
 # Traitar
-traits <- read.csv("Data/trait_predcit.csv", row.names = 1, check.names = FALSE)
-traits_group <- read.csv("Data/traits.tsv", sep="\t", check.names = FALSE) %>%
+traits <- read.csv("data/trait_predcit.csv", row.names = 1, check.names = FALSE)
+traits_group <- read.csv("data/traits.tsv", sep="\t", check.names = FALSE) %>%
     filter(category == "Growth: Sugar")
 traits_group <- traits_group[-1, ]
 traits_name <- traits_group$accession
 traits <- traits[, traits_name]
 traits[traits == 0] = "no"
 traits[traits == 3] = "yes"
-names_1 <- read.csv("Data/trait_predcit.csv", row.names = 1, check.names = FALSE) %>% colnames()
-names_2 <- read.csv("Data/trait_predcit.csv", row.names = 1) %>% colnames()
+names_1 <- read.csv("data/trait_predcit.csv", row.names = 1, check.names = FALSE) %>% colnames()
+names_2 <- read.csv("data/trait_predcit.csv", row.names = 1) %>% colnames()
 names_dict <- list()
 for (i in c(1: length(names_1))){
     names_dict[[names_1[i]]] <- names_2[i]
@@ -261,7 +261,7 @@ pR2Y <- c()
 pQ2 <- c()
 for (i in traits_name){
     i <- names_dict[[i]]
-    model <- readRDS(file = paste0("Data/traitar/model_",
+    model <- readRDS(file = paste0("data/traitar/model_",
                                    i,".rds"))
     R2Y <- c(R2Y, model@summaryDF[1, 2])
     Q2 <- c(Q2, model@summaryDF[1, 3])
@@ -276,11 +276,11 @@ results_traitar$group_2 <- rep("growth: sugar")
 results_traitar <- results_traitar %>% arrange(desc(Q2))
 
 ### BacDive
-traits <- read.csv("Data/bacDive.csv")
+traits <- read.csv("data/bacDive.csv")
 traits <- traits[!duplicated(traits$`X16s_ID`), ]
 rownames(traits) <- traits$`X16s_ID`
 
-co_embedding <- read.csv("../../data/social_niche_embedding_100.txt",
+co_embedding <- read.csv("../sne_construction/data/social_niche_embedding_100.txt",
                          row.names = 1, sep=" ", header = FALSE)
 accessions_num <- str_split(rownames(co_embedding), "\\.", simplify = TRUE)
 accessions_num <- accessions_num[,1]
@@ -306,7 +306,7 @@ co_embedding_shuffled <- co_embedding %>%
 
 traits_name <- colnames(traits)
 traits_name <- traits_name[10:length(traits_name)]
-agg_bac <- read.csv("Data/agg_bac.csv") %>%
+agg_bac <- read.csv("data/agg_bac.csv") %>%
     filter(level_2 %in% c("assimilation", "builds_acid_from"))
 agg_bac <- agg_bac[!duplicated(agg_bac$terms), ] %>% filter(terms %in% traits_name)
 
@@ -316,7 +316,7 @@ pR2Y <- c()
 pQ2 <- c()
 for (i in agg_bac$terms){
     tryCatch({
-        model <- readRDS(file = paste0("Data/bacdive/model_", i,".rds"))
+        model <- readRDS(file = paste0("data/bacdive/model_", i,".rds"))
         if (sum(table(traits[rownames(model@scoreMN), i]) > 5) ==2){
             R2Y <- c(R2Y, model@summaryDF[1, 2])
             Q2 <- c(Q2, model@summaryDF[1, 3])
@@ -363,23 +363,23 @@ p_point <- results %>% ggplot(aes(x=R2Y, y=Q2)) +
     guides(color = guide_legend(override.aes = list(size = 3, alpha = 1)),
            shape = guide_legend(override.aes = list(size = 3)))
 
-ggsave("Figures/p1.pdf", p1, width = 5.5, height = 11, units = "cm")
-ggsave("Figures/merge_p1.pdf", p_bugbase, width = 7.5, height = 9, units = "cm")
-ggsave("Figures/merge_p2.pdf", p_traitar,width = 8, height = 20, units = "cm")
-ggsave("Figures/merge_p3.pdf", p_bacdive, width = 7.6, height = 20, units = "cm")
-ggsave("Figures/p_point.pdf", p_point, width = 13.5, height = 13, units = "cm")
+ggsave("results/figures/p1.pdf", p1, width = 5.5, height = 11, units = "cm")
+ggsave("results/figures/merge_p1.pdf", p_bugbase, width = 7.5, height = 9, units = "cm")
+ggsave("results/figures/merge_p2.pdf", p_traitar,width = 8, height = 20, units = "cm")
+ggsave("results/figures/merge_p3.pdf", p_bacdive, width = 7.6, height = 20, units = "cm")
+ggsave("results/figures/p_point.pdf", p_point, width = 13.5, height = 13, units = "cm")
 
 
 ### plot supplemnet
-traits <- read.csv("Data/trait_predcit.csv", row.names = 1, check.names = FALSE)
-traits_group <- read.csv("Data/traits.tsv", sep="\t", check.names = FALSE) %>% filter(category == "Growth: Sugar")
+traits <- read.csv("data/trait_predcit.csv", row.names = 1, check.names = FALSE)
+traits_group <- read.csv("data/traits.tsv", sep="\t", check.names = FALSE) %>% filter(category == "Growth: Sugar")
 traits_group <- traits_group[-1, ]
 traits_name <- traits_group$accession
 traits <- traits[, traits_name]
 traits[traits == 0] = "no"
 traits[traits == 3] = "yes"
-names_1 <- read.csv("Data/trait_predcit.csv", row.names = 1, check.names = FALSE) %>% colnames()
-names_2 <- read.csv("Data/trait_predcit.csv", row.names = 1) %>% colnames()
+names_1 <- read.csv("data/trait_predcit.csv", row.names = 1, check.names = FALSE) %>% colnames()
+names_2 <- read.csv("data/trait_predcit.csv", row.names = 1) %>% colnames()
 names_dict <- list()
 for (i in c(1: length(names_1))){
     names_dict[[names_1[i]]] <- names_2[i]
@@ -390,7 +390,7 @@ pR2Y <- c()
 pQ2 <- c()
 for (i in traits_name){
     i <- names_dict[[i]]
-    model <- readRDS(file = paste0("Data/traitar/model_", i,".rds"))
+    model <- readRDS(file = paste0("data/traitar/model_", i,".rds"))
     R2Y <- c(R2Y, model@summaryDF[1, 2])
     Q2 <- c(Q2, model@summaryDF[1, 3])
     pR2Y <- c(pR2Y, model@summaryDF[1, 7])
@@ -407,7 +407,7 @@ n <- 1
 traits_name <- results_traitar$Traits
 for (i in traits_name){
     title <- i
-    model <- readRDS(file = paste0("Data/traitar/model_", names_dict[[i]],".rds"))
+    model <- readRDS(file = paste0("data/traitar/model_", names_dict[[i]],".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- as.factor(traits[rownames(plot_data), i])
     R2Y_model <- model@summaryDF[1, 2]
@@ -437,16 +437,16 @@ for (i in traits_name){
 p <- wrap_plots(p, nrow = 4, ncol =5) +
     plot_annotation(title = "a Traitar: growth sugar",
         theme = theme(plot.title = element_text(size = 14, face = "bold")))
-ggsave("Figures/res_traitar_part_2.pdf", p,
+ggsave("results/figures/res_traitar_part_2.pdf", p,
        width = 35, height = 20, units = "cm")
 
 
 ### bacdive
-traits <- read.csv("Data/bacDive.csv")
+traits <- read.csv("data/bacDive.csv")
 traits <- traits[!duplicated(traits$`X16s_ID`), ]
 rownames(traits) <- traits$`X16s_ID`
 
-co_embedding <- read.csv("../../data/social_niche_embedding_100.txt", row.names = 1, sep=" ", header = FALSE)
+co_embedding <- read.csv("../sne_construction/data/social_niche_embedding_100.txt", row.names = 1, sep=" ", header = FALSE)
 accessions_num <- str_split(rownames(co_embedding), "\\.", simplify = TRUE)
 accessions_num <- accessions_num[,1]
 df <- data.frame(accessions=accessions_num, embed_id=rownames(co_embedding))
@@ -471,7 +471,7 @@ co_embedding_shuffled <- co_embedding %>%
 
 traits_name <- colnames(traits)
 traits_name <- traits_name[10:length(traits_name)]
-agg_bac <- read.csv("Data/agg_bac.csv") %>%
+agg_bac <- read.csv("data/agg_bac.csv") %>%
     filter(level_2 %in% c("assimilation", "builds_acid_from"))
 agg_bac <- agg_bac[!duplicated(agg_bac$terms), ] %>% filter(terms %in% traits_name)
 
@@ -479,7 +479,7 @@ R2Y <- c()
 Q2 <- c()
 for (i in agg_bac$terms){
     tryCatch({
-        model <- readRDS(file = paste0("Data/bacdive/model_", i,".rds"))
+        model <- readRDS(file = paste0("data/bacdive/model_", i,".rds"))
         if (sum(table(traits[rownames(model@scoreMN), i]) > 5) ==2){
             R2Y <- c(R2Y, model@summaryDF[1, 2])
             Q2 <- c(Q2, model@summaryDF[1, 3])
@@ -509,7 +509,7 @@ agg_bac_assimilation <- agg_bac %>% filter(level_2 == "assimilation") %>%
 p <- list()
 n <- 1
 for (i in agg_bac_assimilation$terms){
-    model <- readRDS(file = paste0("Data/bacdive/model_",
+    model <- readRDS(file = paste0("data/bacdive/model_",
                                    i,".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- as.factor(traits[rownames(plot_data), i])
@@ -540,7 +540,7 @@ for (i in agg_bac_assimilation$terms){
 p <- wrap_plots(p, nrow = 1, ncol = 4) +
     plot_annotation(title = "b BacDive: assimilation",
                     theme = theme(plot.title = element_text(size = 14, face = "bold")))
-ggsave("Figures/bac_dive_assimilation.pdf", p,
+ggsave("results/figures/bac_dive_assimilation.pdf", p,
        width = 27, height = 6, units = "cm")
 
 ### builds_acid_from
@@ -550,7 +550,7 @@ agg_bac_builds_acid_from <- agg_bac %>% filter(level_2 == "builds_acid_from") %>
 p <- list()
 n <- 1
 for (i in agg_bac_builds_acid_from$terms){
-    model <- readRDS(file = paste0("Data/bacdive/model_", i,".rds"))
+    model <- readRDS(file = paste0("data/bacdive/model_", i,".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- as.factor(traits[rownames(plot_data), i])
     R2Y_model <- model@summaryDF[1, 2]
@@ -580,4 +580,4 @@ for (i in agg_bac_builds_acid_from$terms){
 p <- wrap_plots(p, nrow = 4, ncol = 5)+
     plot_annotation(title = "c BacDive: builds acid from",
                     theme = theme(plot.title = element_text(size = 14, face = "bold")))
-ggsave("Figures/bac_dive_builds_acid_from.pdf", p, width = 35, height = 20, units = "cm")
+ggsave("results/figures/bac_dive_builds_acid_from.pdf", p, width = 35, height = 20, units = "cm")

@@ -24,7 +24,7 @@ library(ggVennDiagram)
 
 # Gram status, Oxygen preference, Cell shape, Spore production, Motility
 ### bugbase
-traits <- read.csv("Data/traits_bugbase.csv", row.names = 1)
+traits <- read.csv("data/traits_bugbase.csv", row.names = 1)
 traits_name <- c("Gram_Status", "Oxygen_Preference")
 traits[traits == "Anaerobic"] <- "anaerobic"
 traits[traits == "Aerobic"] <- "aerobic"
@@ -35,7 +35,7 @@ traits[traits == "Gram_Positive"] <- "positive"
 p <- list()
 n <- 1
 for (i in traits_name){
-    model <- readRDS(file = paste0("Data/bugbase/model_", i,".rds"))
+    model <- readRDS(file = paste0("data/bugbase/model_", i,".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- traits[rownames(plot_data), i]
     plot_data <- plot_data %>% mutate(Trait = if_else(Trait == "Facultatively_Anaerobic", "Facultatively", Trait))
@@ -69,7 +69,7 @@ for (i in traits_name){
 p <- wrap_plots(p, nrow = 1, ncol = 2)
 
 ### traitar
-traits <- read.csv("Data/trait_predcit.csv", row.names = 1)
+traits <- read.csv("data/trait_predcit.csv", row.names = 1)
 
 traits[traits == 3] <- 1
 traits$Oxygen_Preference <- rep(0, nrow(traits))
@@ -98,7 +98,7 @@ traits_name_list[["Motile"]] <- "Motility"
 p <- list()
 n <- 1
 for (i in traits_name){
-    model <- readRDS(file = paste0("Data/traitar/model_", i,".rds"))
+    model <- readRDS(file = paste0("data/traitar/model_", i,".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- as.factor(traits[rownames(plot_data), i])
     R2Y_model <- model@summaryDF[1, 2]
@@ -131,17 +131,17 @@ for (i in traits_name){
 p <- wrap_plots(p, nrow = 1, ncol =5)
 
 
-traits <- read.csv("Data/trait_predcit.csv", row.names = 1, check.names = FALSE)
-traits_group <- read.csv("Data/traits.tsv", sep="\t", check.names = FALSE) %>%
+traits <- read.csv("data/trait_predcit.csv", row.names = 1, check.names = FALSE)
+traits_group <- read.csv("data/traits.tsv", sep="\t", check.names = FALSE) %>%
     filter(category == "Growth: Sugar")
 traits_group <- traits_group[-1, ]
 traits_name <- traits_group$accession
 traits <- traits[, traits_name]
 traits[traits == 0] = "no"
 traits[traits == 3] = "yes"
-names_1 <- read.csv("Data/trait_predcit.csv", 
+names_1 <- read.csv("data/trait_predcit.csv", 
                     row.names = 1, check.names = FALSE) %>% colnames()
-names_2 <- read.csv("Data/trait_predcit.csv", 
+names_2 <- read.csv("data/trait_predcit.csv", 
                     row.names = 1) %>% colnames()
 names_dict <- list()
 for (i in c(1: length(names_1))){
@@ -153,7 +153,7 @@ pR2Y <- c()
 pQ2 <- c()
 for (i in traits_name){
     i <- names_dict[[i]]
-    model <- readRDS(file = paste0("Data/traitar/model_",
+    model <- readRDS(file = paste0("data/traitar/model_",
                                    i,".rds"))
     R2Y <- c(R2Y, model@summaryDF[1, 2])
     Q2 <- c(Q2, model@summaryDF[1, 3])
@@ -171,7 +171,7 @@ n <- 1
 traits_name <- results_traitar$Traits
 for (i in traits_name){
     title <- i
-    model <- readRDS(file = paste0("Data/traitar/model_",
+    model <- readRDS(file = paste0("data/traitar/model_",
                                    names_dict[[i]],".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- as.factor(traits[rownames(plot_data), i])
@@ -203,11 +203,11 @@ p <- wrap_plots(p, nrow = 4, ncol =5)
 
 
 ### bacDive
-traits <- read.csv("Data/bacDive.csv")
+traits <- read.csv("data/bacDive.csv")
 traits <- traits[!duplicated(traits$X16s_ID),]
 rownames(traits) <- traits$X16s_ID
 
-co_embedding <- read.csv("../../data/social_niche_embedding_100.txt",
+co_embedding <- read.csv("../sne_construction/data/social_niche_embedding_100.txt",
                          row.names = 1, sep=" ", header = FALSE)
 accessions_num <- str_split(rownames(co_embedding), "\\.", simplify = TRUE)
 accessions_num <- accessions_num[,1]
@@ -244,7 +244,7 @@ traits_name_list[["motility"]] <- "Motility"
 p <- list()
 n <- 1
 for (i in traits_name){
-    model <- readRDS(file = paste0("Data/bacdive/model_",
+    model <- readRDS(file = paste0("data/bacdive/model_",
                                    i,".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- as.factor(traits[rownames(plot_data), i])
@@ -277,11 +277,11 @@ p <- wrap_plots(p, nrow = 1, ncol = 5)
 
 
 ### 
-traits <- read.csv("Data/bacDive.csv")
+traits <- read.csv("data/bacDive.csv")
 traits <- traits[!duplicated(traits$`X16s_ID`), ]
 rownames(traits) <- traits$`X16s_ID`
 
-co_embedding <- read.csv("../../data/social_niche_embedding_100.txt",
+co_embedding <- read.csv("../sne_construction/data/social_niche_embedding_100.txt",
                          row.names = 1, sep=" ", header = FALSE)
 accessions_num <- str_split(rownames(co_embedding), "\\.", simplify = TRUE)
 accessions_num <- accessions_num[,1]
@@ -307,7 +307,7 @@ co_embedding_shuffled <- co_embedding %>%
 
 traits_name <- colnames(traits)
 traits_name <- traits_name[10:length(traits_name)]
-agg_bac <- read.csv("Data/agg_bac.csv") %>%
+agg_bac <- read.csv("data/agg_bac.csv") %>%
     filter(level_2 %in% c("assimilation", "builds_acid_from"))
 agg_bac <- agg_bac[!duplicated(agg_bac$terms), ] %>% filter(terms %in% traits_name)
 
@@ -317,7 +317,7 @@ pR2Y <- c()
 pQ2 <- c()
 for (i in agg_bac$terms){
     tryCatch({
-        model <- readRDS(file = paste0("Data/bacdive/model_",
+        model <- readRDS(file = paste0("data/bacdive/model_",
                                        i,".rds"))
         if (sum(table(traits[rownames(model@scoreMN), i]) > 5) ==2){
             R2Y <- c(R2Y, model@summaryDF[1, 2])
@@ -366,7 +366,7 @@ R2Y <- c()
 Q2 <- c()
 for (i in agg_bac$terms){
     tryCatch({
-        model <- readRDS(file = paste0("Data/bacdive/model_",
+        model <- readRDS(file = paste0("data/bacdive/model_",
                                        i,".rds"))
         if (sum(table(traits[rownames(model@scoreMN), i]) > 5) ==2){
         R2Y <- c(R2Y, model@summaryDF[1, 2])
@@ -397,7 +397,7 @@ agg_bac_assimilation <- agg_bac %>% filter(level_2 == "assimilation") %>%
 p <- list()
 n <- 1
 for (i in agg_bac_assimilation$terms){
-    model <- readRDS(file = paste0("Data/bacdive/model_", i,".rds"))
+    model <- readRDS(file = paste0("data/bacdive/model_", i,".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- as.factor(traits[rownames(plot_data), i])
     R2Y_model <- model@summaryDF[1, 2]
@@ -434,7 +434,7 @@ agg_bac_builds_acid_from <- agg_bac %>% filter(level_2 == "builds_acid_from") %>
 p <- list()
 n <- 1
 for (i in agg_bac_builds_acid_from$terms){
-    model <- readRDS(file = paste0("Data/bacdive/model_", i,".rds"))
+    model <- readRDS(file = paste0("data/bacdive/model_", i,".rds"))
     plot_data <- as.data.frame(model@scoreMN)
     plot_data$Trait <- as.factor(traits[rownames(plot_data), i])
     R2Y_model <- model@summaryDF[1, 2]
