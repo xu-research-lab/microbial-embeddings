@@ -12,7 +12,7 @@ def load_pretrained_embeddings(vectors_file):
                  for line in f if (vals := line.rstrip().split(' '))}
     return vectors
 
-embedding_dict = load_pretrained_embeddings('/softerware/glove_embedding_new/new_data/p80_0/result/embeddings_100.txt')
+embedding_dict = load_pretrained_embeddings('../sne_construction/data/social_niche_embedding_100.txt')
 
 # 获取有效微生物列表
 microbes = [k for k in embedding_dict.keys() if k != '<unk>']
@@ -132,4 +132,3 @@ ax_main.set(
 
 plt.tight_layout()
 plt.show()
-

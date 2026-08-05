@@ -6,12 +6,12 @@ library(ggpubr)
 brewer.pal(9, c("Set1"))
 c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", "#FFFF33", "#A65628","#F781BF", "#999999")
 
-df_1 <- read.csv("Data/auc_res.csv") %>%
+df_1 <- read.csv("results/auc_res.csv") %>%
     filter(datasize == "210,000") %>% filter(group == "times_1")
 df_1 <- df_1[, c("auc", "traits_type", "tax")]
 colnames(df_1) <- c("AUC", "traits", "tax")
 df_1$group <- "traits_1"
-df_2 <- read.csv("Data/predict_metabolics_res.csv") %>%
+df_2 <- read.csv("results/predict_metabolics_res.csv") %>%
     arrange(desc(AUC))
 df_2$group <- "traits_2"
 
@@ -53,7 +53,7 @@ p_1 <- ggplot() +
         axis.text.x = element_text(angle = -45, hjust = 0, vjust = 1))
 
 ### pretrain data size
-auc_res <- read.csv("Data/auc_res.csv")
+auc_res <- read.csv("results/auc_res.csv")
 auc_res <- auc_res %>% group_by(traits_type, tax, datasize) %>%
     summarise(AUC = mean(auc))
 auc_summary <- auc_res %>% group_by(traits_type, datasize) %>%

@@ -7,10 +7,10 @@ library(doParallel)
 library(foreach)
 
 ### bugbase
-traits <- read.csv("Data/traits_bugbase.csv", 
+traits <- read.csv("data/traits_bugbase.csv", 
                    row.names = 1)
 fid <- rownames(traits)
-co_embedding <- read.csv("../../data/social_niche_embedding_100.txt",
+co_embedding <- read.csv("../sne_construction/data/social_niche_embedding_100.txt",
                          row.names = 1, sep=" ", header = FALSE)
 
 traits_name <- c("Oxygen_Preference", "Gram_Status")
@@ -21,11 +21,11 @@ for (i in traits_name){
     y <- as.factor(df$Trait)
     x <- as.matrix(co_embedding[rownames(df), ])
     plsda_model <- opls(x, y, predI=2, permI=999, crossvalI=5, fig.pdfC = 'none')
-    saveRDS(plsda_model, file = paste0("Data/bugbase/model_", i,".rds"))
+    saveRDS(plsda_model, file = paste0("data/bugbase/model_", i,".rds"))
 }
 
 ### Traitar
-traits <- read.csv("Data/trait_predcit.csv", row.names = 1)
+traits <- read.csv("data/trait_predcit.csv", row.names = 1)
 traits[traits == 3] <- 1
 
 ### Aerobe Facultative Anaerobe
@@ -47,7 +47,7 @@ traits[traits$Coccus == 1, "cell_shape"] <- 1
 traits[traits$`Bacillus.or.coccobacillus` == 1, "cell_shape"] <- 2
 traits[rowSums(traits[, c("Coccus", "Bacillus.or.coccobacillus")]) != 1, "cell_shape"] = NA
 fid <- rownames(traits)
-co_embedding <- read.csv("../../data/social_niche_embedding_100.txt",
+co_embedding <- read.csv("../sne_construction/data/social_niche_embedding_100.txt",
                          row.names = 1, sep=" ", header = FALSE)
 co_embedding <- co_embedding[fid, ]
 
@@ -62,7 +62,7 @@ traits_name <- traits_name[!(traits_name %in% c("Aerobe", "Facultative", "Anaero
 n_cores <- detectCores() - 2  
 cl <- makeCluster(n_cores)
 registerDoParallel(cl)
-output_dir <- "Data/traitar/"
+output_dir <- "data/traitar/"
 foreach(i = traits_name, .packages = "ropls", .combine = 'c') %dopar% {
     df <- co_embedding
     df$Trait <- traits[, i]
@@ -75,11 +75,11 @@ foreach(i = traits_name, .packages = "ropls", .combine = 'c') %dopar% {
 }
 
 ### bacDive
-traits <- read.csv("Data/bacDive.csv")
+traits <- read.csv("data/bacDive.csv")
 traits <- traits[!duplicated(traits$`X16s_ID`), ]
 rownames(traits) <- traits$`X16s_ID`
 
-co_embedding <- read.csv("../../data/social_niche_embedding_100.txt", row.names = 1, sep=" ", header = FALSE)
+co_embedding <- read.csv("../sne_construction/data/social_niche_embedding_100.txt", row.names = 1, sep=" ", header = FALSE)
 accessions_num <- str_split(rownames(co_embedding), "\\.", simplify = TRUE)
 accessions_num <- accessions_num[,1]
 df <- data.frame(accessions=accessions_num, embed_id=rownames(co_embedding))
@@ -118,7 +118,7 @@ co_embedding_shuffled <- co_embedding %>%
 
 traits_name <- colnames(traits)
 traits_name <- traits_name[10:length(traits_name)]
-output_dir <- "Data/bacdive/"
+output_dir <- "data/bacdive/"
 
 # 并行主循环
 foreach(i = traits_name, .packages = "ropls", .combine = c, .errorhandling = "pass") %dopar% {
