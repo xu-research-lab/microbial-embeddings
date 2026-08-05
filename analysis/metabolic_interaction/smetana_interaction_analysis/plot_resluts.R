@@ -23,10 +23,10 @@ library(RColorBrewer)
 
 set1_colors <- brewer.pal(n = 9, name = "Set1")  
 
-high_sim_res <- read.csv("Data/high_sim_res_M11.csv")
+high_sim_res <- read.csv("results/high_sim_res_M11.csv")
 high_sim_res <- high_sim_res %>% filter(cosine > 0.9)
 high_sim_res$group <- rep("cosine > 0.9", nrow(high_sim_res))
-low_SNE_res <- read.csv("Data/low_SNE_res.csv", row.names = 1)
+low_SNE_res <- read.csv("results/low_SNE_res.csv", row.names = 1)
 low_SNE_res$group <- rep("cosine ≈ 0", nrow(low_SNE_res))
 high_sim_res <- high_sim_res[, colnames(low_SNE_res)]
 plot_df <- rbind(high_sim_res, low_SNE_res)
@@ -71,7 +71,7 @@ p_all <- plot_grid(p1, p2, align="hv",
                nrow = 1, ncol=4, plot=FALSE, rel_heights = c(1, 1))
 
 
-high_sim_res <- read.csv("Data/high_sim_res_M11.csv")
+high_sim_res <- read.csv("results/high_sim_res_M11.csv")
 high_sim_res <- high_sim_res %>% filter(cosine > 0.9) %>% arrange(co_occur)
 high_sim_res_low <- high_sim_res[1:100, ]
 high_sim_res_low$group <- rep("Low co-occur", 100)
@@ -131,7 +131,7 @@ p1 <- as.ggplot(p1) +
     labs(title = "cosine > 0.9") +  
     theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
 
-low_sim_res <- read.csv("Data/low_SNE_res.csv", row.names = 1)
+low_sim_res <- read.csv("results/low_SNE_res.csv", row.names = 1)
 low_sim_res <- low_sim_res %>% arrange(co_occur)
 low_sim_res_low <- low_sim_res[1:100, ]
 low_sim_res_low$group <- rep("Low co-occur", 100)
@@ -197,5 +197,5 @@ p_top <- plot_grid(p1, p2, align="hv",
 p <- plot_grid(p_all, p_top,
                align="hv", labels = c('a', 'b'),
                nrow = 2, ncol=1, plot=FALSE, rel_heights = c(1, 1))
-ggsave("Figures/metabolic_smetana.pdf", p, width = 20, height = 14, units = "cm")
+ggsave("results/figures/metabolic_smetana.pdf", p, width = 20, height = 14, units = "cm")
 
