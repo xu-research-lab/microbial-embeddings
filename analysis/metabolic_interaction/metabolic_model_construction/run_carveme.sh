@@ -12,7 +12,7 @@
 module load miniconda/4.9.2
 source activate carvem_3.7
 
-id=$(sed "${SLURM_ARRAY_TASK_ID}q;d" split_files.txt)
-for i in `less split_files_add/${id}`;do
-    python build_metbolic_model_picrust2.py ${i}
+id=$(sed "${SLURM_ARRAY_TASK_ID}q;d" data/split_files.txt)
+for i in `less data/split_files_add/${id}`;do
+    python metabolic_model_construction/build_metbolic_model_picrust2.py ${i}
 done

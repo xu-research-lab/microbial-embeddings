@@ -171,17 +171,17 @@ def maincall(inputfile, outputfile, model_id, default_score=-1.0, uptake_score=0
 
 def main(i):
     model_id = i
-    inputfile = f"Data/OTU_bigg_gene/{model_id}.tsv"
-    outputfile = f"Data/OTU_metabolic_model_M3/{model_id}.xml"
+    inputfile = f"data/OTU_bigg_gene/{model_id}.tsv"
+    outputfile = f"data/OTU_metabolic_model_M3/{model_id}.xml"
     universe = fid_gram.get(model_id)
-    mediadb = "Data/media_db.tsv"
+    mediadb = "data/media_db.tsv"
     maincall(inputfile=inputfile, outputfile=outputfile, model_id=model_id,
                 universe=universe, gapfill="M3", mediadb=mediadb)
 
 
 if __name__ == '__main__':
     set_default_solver("cplex")
-    with open("Data/fid_gram.json", "r") as file:
+    with open("data/fid_gram.json", "r") as file:
         fid_gram = json.load(file) 
     fid = sys.argv[1]
     main(fid)
