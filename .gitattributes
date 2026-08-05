@@ -5,3 +5,5 @@
 *.tsv filter=lfs diff=lfs merge=lfs -text
 analysis/Simulation_experiments/plot_ratios/plot_csvs/*.csv filter=lfs diff=lfs merge=lfs -text
 analysis/synthetic_validation/embedding_validation/results/plot_ratios/plot_csvs/*.csv filter=lfs diff=lfs merge=lfs -text
+analysis/disease_prediction/data/IBD_CRC_model/All_disease_linda/result/Model_*.csv filter=lfs diff=lfs merge=lfs -text
+analysis/disease_prediction/data/biomark/shap_table_*.csv filter=lfs diff=lfs merge=lfs -text
