@@ -17,7 +17,7 @@ pruned_tree <- keep.tip(tree, fid)
 
 func_table <- func_table %>% mutate(across(where(is.numeric), ~ ifelse(. > 0, 1, .)))
 
-co_embedding <- read.csv("../sne_construction/data/social_niche_embedding_100.txt", row.names = 1, sep=" ", header = FALSE)
+co_embedding <- read.csv("../../data/social_niche_embedding_100.txt", row.names = 1, sep=" ", header = FALSE)
 co_embedding <- co_embedding[fid, ]
 
 data <- cbind(func_table[, func_id], co_embedding)
@@ -51,4 +51,3 @@ model <- phyloglm(
 )
 
 saveRDS(model, file = paste0("data/phylolm/co_model_", func_id,".rds"))
-

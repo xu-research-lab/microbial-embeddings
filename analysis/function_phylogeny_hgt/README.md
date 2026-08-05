@@ -11,9 +11,13 @@ provenance is established.
 | HGT analysis | `hgt_analysis/HGT.ipynb`, `run_blastn.sh`, `run_HGT_predict.py` | genome pairs, BLAST resources, SNE, PhyloE and HGT labels | prediction candidate `data/hgt_predict_res_all.csv` | Legacy source; sample space and HGT aggregation are unresolved |
 | Result visualization | `result_visualization/hgt.R`, `plot_results.R` | retained module data and compact HGT/taxonomy summaries | `result_visualization/results/tax_group.csv`, `result_visualization/results/hgt_plot_res.csv` | Legacy source; panel adoption unknown |
 
-The shared SNE is consumed from `../sne_construction/data/`. Function-model
-RDS files and intermediate HGT prediction data remain in `data/`; compact
-tables used only for visualization remain with `result_visualization/results/`.
+The HGT module uses the root-level canonical SNE input at
+`../../data/social_niche_embedding_100.txt` (SHA-256
+`374511e8610fa406d9d3e98f6dee74ce3485e379be64b7cf1e9516b02bd3a22f`),
+resolved from the module root. This is the selected module input and does not
+use the separate SNE-module copy. Function-model RDS files and intermediate
+HGT prediction data remain in `data/`; compact tables used only for
+visualization remain with `result_visualization/results/`.
 
 The retained scripts are scientifically inconsistent: visualization code uses
 Pearson-style statistics while earlier documentation describes Spearman-style

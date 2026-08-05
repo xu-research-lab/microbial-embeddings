@@ -8,7 +8,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.linear_model import LogisticRegression
 
-co_embedding = pd.read_csv("../sne_construction/data/social_niche_embedding_100.txt",
+co_embedding = pd.read_csv("../../data/social_niche_embedding_100.txt",
                           header=None, sep=" ", low_memory=False, index_col=0)
 co_embedding = co_embedding.drop("<unk>")
 
@@ -102,4 +102,3 @@ for fold, (train_index, val_index) in enumerate(kf.split(all_id)):
 
 hgt_predict_res = pd.DataFrame({"test":test, "group":group, "labels":labels, "proba":proba})
 hgt_predict_res.to_csv("data/hgt_predict_res_all.csv", index=None)
-
