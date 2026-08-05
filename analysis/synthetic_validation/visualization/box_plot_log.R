@@ -8,7 +8,7 @@ library(scales) # For log scale formatting
 
 # Specify the input directory containing the CSV files
 # 指定包含CSV文件的输入目录
-input_dir <- "v46/plot_csvs"
+input_dir <- "results/plot_ratios/plot_csvs"
 
 # Get a list of all CSV files in the directory
 # 获取目录中所有CSV文件的列表
@@ -183,7 +183,7 @@ for (file_path in csv_files) {
   new_name <- sub("df_plot_ratio", "boxplot", base_name)
   new_name <- sub("\\.csv$", "_log10.png", new_name)
 
-  output_path <- file.path("v46", new_name)
+  output_path <- file.path("results/plot_ratios", new_name)
 
   ggsave(p1, filename = output_path, width = 3.8, height = 3.8, dpi = 300)
 

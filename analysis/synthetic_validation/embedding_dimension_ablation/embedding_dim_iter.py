@@ -42,13 +42,13 @@ def parse_glove_log(file_path):
         print(f"Error parsing file {file_path}: {e}")
         return []
 
-def main(output_csv_filename="plot_dimension.csv"): # 新增 output_csv_filename 参数
+def main(output_csv_filename="results/plot_dimension.csv"): # 新增 output_csv_filename 参数
     # Define dimensions and number of runs
     dimensions = [25, 50, 100, 150, 200]
     num_runs = 5
     num_iterations = 100
 
-    log_file_directory = "/softerware/glove_embedding_new/embedding_dim" # 请确保这是正确的路径
+    log_file_directory = "results/embedding_dim_log/embedding_dim_log"
 
     all_costs_per_dimension = defaultdict(list)
 

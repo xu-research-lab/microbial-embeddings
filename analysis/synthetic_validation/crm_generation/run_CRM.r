@@ -28,7 +28,7 @@ E_global <- miaSim::randomE(
     mean_production = 1
 )
 cat("E_global 维度:", dim(E_global), "\n")
-E_global_filename <- "E_global_v46.csv"
+E_global_filename <- "data/E_global_v46.csv"
 
 cat("步骤 1.5: 生成全局物种-资源 Monod 常数矩阵 (monod_constant_global)...\n")
 # 假设资源量的最大值为 100 来设定 shape 参数，这与函数默认行为一致
@@ -223,7 +223,7 @@ if(!file.exists(E_global_filename)){
     cat("全局交互矩阵 E_global 已保存到", E_global_filename, "\n")
 }
 
-abundance_table_filename <- "final_abundance_table_v46.csv"
+abundance_table_filename <- "data/final_abundance_table_v46.csv"
 write.csv(final_abundance_table, abundance_table_filename, row.names = TRUE, na = "NA")
 cat("最终丰度表已保存到", abundance_table_filename, "\n")
 

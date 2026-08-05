@@ -8,7 +8,7 @@ import os # 用于文件路径操作
 
 # --- 1. 加载基准数据 (E_global_v23.csv) ---
 
-df_randomE = pd.read_csv('original_data_files/E_global_v46.csv', index_col=0)
+df_randomE = pd.read_csv('data/E_global_v46.csv', index_col=0)
 species_randomE_dict = {}
 for microbe_name, row_data in df_randomE.iterrows():
     resource_vector = row_data.tolist()
@@ -48,7 +48,9 @@ repetitions = [1, 2, 3, 4, 5]
 # 如果文件就在当前目录，可以将 EMBEDDING_DIR 改为 "."
 # EMBEDDING_DIR = "/softerware/analysis_datasize_simul_V4" # 或者例如 "downloaded_embeddings"
 # embedding_file_template = os.path.join(EMBEDDING_DIR, 'processed_size_{size}', "subset_{rep}/result/embeddings_100.txt") 
-embedding_file_template = os.path.join("/softerware/datasize_embeddings/embeddings_100_size{size}_{rep}.txt")
+embedding_file_template = os.path.join(
+    "data/datasize_embeddings/datasize_embeddings/embeddings_100_size{size}_{rep}.txt"
+)
 
 
 # --- 4. 计算每个数据集大小和重复实验的相关性 ---
@@ -127,7 +129,7 @@ for size_val in dataset_sizes:
         print(f"警告: 数据集大小 {size_val} 没有有效的相关性数据，将不在图表中显示。")
 
 df_plot = pd.DataFrame({'size': plot_sizes, 'mean_correlation': mean_correlations, 'std_dev': std_dev_correlations})
-df_plot.to_csv('df_plot_datasetsize.csv', index=False)
+df_plot.to_csv('results/df_plot_datasetsize.csv', index=False)
 if not plot_sizes:
     print("错误：没有足够的数据来绘制折线图。请检查您的 embedding 文件和路径。")
 else:
@@ -165,6 +167,6 @@ else:
 
 
     plt.tight_layout() # 自动调整子图参数，使之填充整个图像区域
-    plt.savefig('correlation_by_datasetsize.png', dpi=300)
+    plt.savefig('results/correlation_by_datasetsize.png', dpi=300)
 
 print("\n脚本执行完毕。")
