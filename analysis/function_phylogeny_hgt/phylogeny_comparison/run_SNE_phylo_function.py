@@ -26,7 +26,7 @@ plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
 
-df_embedding = pd.read_csv("../sne_construction/data/social_niche_embedding_100.txt",
+df_embedding = pd.read_csv("../../data/social_niche_embedding_100.txt",
                           header=None, sep=" ", low_memory=False, index_col=0)
 df_embedding = df_embedding.drop("<unk>")
 
