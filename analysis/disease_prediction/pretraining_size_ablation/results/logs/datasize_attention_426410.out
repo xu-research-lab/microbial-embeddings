@@ -1,0 +1,990 @@
+no change     /home/cjj/miniconda3/condabin/conda
+no change     /home/cjj/miniconda3/bin/conda
+no change     /home/cjj/miniconda3/bin/conda-env
+no change     /home/cjj/miniconda3/bin/activate
+no change     /home/cjj/miniconda3/bin/deactivate
+no change     /home/cjj/miniconda3/etc/profile.d/conda.sh
+no change     /home/cjj/miniconda3/etc/fish/conf.d/conda.fish
+no change     /home/cjj/miniconda3/shell/condabin/Conda.psm1
+no change     /home/cjj/miniconda3/shell/condabin/conda-hook.ps1
+no change     /home/cjj/miniconda3/lib/python3.12/site-packages/xontrib/conda.xsh
+no change     /home/cjj/miniconda3/etc/profile.d/conda.csh
+no change     /home/cjj/.bashrc
+No action taken.
+Starting script...
+Embedding base directory: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/embedding
+Result base directory: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result
+Processing disease: AS
+Found studies for AS: PRJCA007396 SRP332779
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [AS/datasize_result_1/subset_table_16w/PRJCA007396] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_1/subset_table_16w/PRJCA007396
+    [AS/datasize_result_1/subset_table_16w/SRP332779] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_1/subset_table_16w/SRP332779
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [AS/datasize_result_2/subset_table_16w/PRJCA007396] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_2/subset_table_16w/PRJCA007396
+    [AS/datasize_result_2/subset_table_16w/SRP332779] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_2/subset_table_16w/SRP332779
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [AS/datasize_result_3/subset_table_16w/PRJCA007396] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_3/subset_table_16w/PRJCA007396
+    [AS/datasize_result_3/subset_table_16w/SRP332779] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_3/subset_table_16w/SRP332779
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [AS/datasize_result_4/subset_table_16w/PRJCA007396] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_4/subset_table_16w/PRJCA007396
+    [AS/datasize_result_4/subset_table_16w/SRP332779] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_4/subset_table_16w/SRP332779
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.5837810039520264, test loss 0.5097377300262451, train auc 0.635, test auc 0.672 train f1 0.529, test f1 0.443 train mcc 0.230, test mcc -0.063 train aupr 0.791, test aupr 0.906 train acc 0.738, test acc 0.797 confusion_matrix [[ 0 11]
+ [ 1 47]]
+    [AS/datasize_result_1/subset_table_16w/PRJCA007396] Job on GPU-0 completed.
+    [AS/datasize_result_5/subset_table_16w/PRJCA007396] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_5/subset_table_16w/PRJCA007396
+train loss 0.6550501585006714, test loss 0.6072009801864624, train auc 0.522, test auc 0.742 train f1 0.454, test f1 0.443 train mcc 0.074, test mcc -0.063 train aupr 0.717, test aupr 0.936 train acc 0.714, test acc 0.797 confusion_matrix [[ 0 11]
+ [ 1 47]]
+train loss 0.6016737222671509, test loss 0.538891077041626, train auc 0.568, test auc 0.786 train f1 0.454, test f1 0.443 train mcc 0.074, test mcc -0.063 train aupr 0.732, test aupr 0.941 train acc 0.714, test acc 0.797 confusion_matrix [[ 0 11]
+ [ 1 47]]
+train loss 0.4874947667121887, test loss 0.7501249313354492, train auc 0.523, test auc 0.803 train f1 0.443, test f1 0.714 train mcc -0.063, test mcc 0.440 train aupr 0.829, test aupr 0.909 train acc 0.797, test acc 0.786 confusion_matrix [[12 12]
+ [ 6 54]]
+    [AS/datasize_result_3/subset_table_16w/PRJCA007396] Job on GPU-4 completed.
+    [AS/datasize_result_5/subset_table_16w/SRP332779] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/AS/datasize_result_5/subset_table_16w/SRP332779
+Processing disease: ASD
+Found studies for ASD: PRJNA1103839 PRJNA578223 PRJNA932561
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.5009905099868774, test loss 0.7399482727050781, train auc 0.350, test auc 0.845 train f1 0.443, test f1 0.817 train mcc -0.063, test mcc 0.637 train aupr 0.756, test aupr 0.904 train acc 0.797, test acc 0.845 confusion_matrix [[19  5]
+ [ 8 52]]
+train loss 0.4840538501739502, test loss 0.6794089078903198, train auc 0.561, test auc 0.876 train f1 0.443, test f1 0.803 train mcc -0.063, test mcc 0.633 train aupr 0.826, test aupr 0.929 train acc 0.797, test acc 0.857 confusion_matrix [[14 10]
+ [ 2 58]]
+train loss 0.6001222729682922, test loss 0.5158633589744568, train auc 0.600, test auc 0.667 train f1 0.413, test f1 0.443 train mcc -0.069, test mcc -0.063 train aupr 0.783, test aupr 0.900 train acc 0.702, test acc 0.797 confusion_matrix [[ 0 11]
+ [ 1 47]]
+    [AS/datasize_result_2/subset_table_16w/PRJCA007396] Job on GPU-2 completed.
+    [ASD/datasize_result_1/subset_table_16w/PRJNA1103839] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_1/subset_table_16w/PRJNA1103839
+train loss 0.4655150771141052, test loss 0.7309810519218445, train auc 0.606, test auc 0.853 train f1 0.656, test f1 0.797 train mcc 0.390, test mcc 0.603 train aupr 0.850, test aupr 0.930 train acc 0.847, test acc 0.845 confusion_matrix [[15  9]
+ [ 4 56]]
+    [AS/datasize_result_2/subset_table_16w/SRP332779] Job on GPU-3 completed.
+    [ASD/datasize_result_1/subset_table_16w/PRJNA578223] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_1/subset_table_16w/PRJNA578223
+    [AS/datasize_result_1/subset_table_16w/SRP332779] Job on GPU-1 completed.
+    [ASD/datasize_result_1/subset_table_16w/PRJNA932561] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_1/subset_table_16w/PRJNA932561
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [AS/datasize_result_3/subset_table_16w/SRP332779] Job on GPU-5 completed.
+    [ASD/datasize_result_2/subset_table_16w/PRJNA1103839] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_2/subset_table_16w/PRJNA1103839
+    [AS/datasize_result_4/subset_table_16w/PRJCA007396] Job on GPU-6 completed.
+    [ASD/datasize_result_2/subset_table_16w/PRJNA578223] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_2/subset_table_16w/PRJNA578223
+    [AS/datasize_result_4/subset_table_16w/SRP332779] Job on GPU-7 completed.
+    [ASD/datasize_result_2/subset_table_16w/PRJNA932561] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_2/subset_table_16w/PRJNA932561
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.5679070949554443, test loss 0.5045018196105957, train auc 0.724, test auc 0.665 train f1 0.545, test f1 0.443 train mcc 0.191, test mcc -0.063 train aupr 0.880, test aupr 0.908 train acc 0.726, test acc 0.797 confusion_matrix [[ 0 11]
+ [ 1 47]]
+    [AS/datasize_result_5/subset_table_16w/PRJCA007396] Job on GPU-0 completed.
+    [ASD/datasize_result_3/subset_table_16w/PRJNA1103839] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_3/subset_table_16w/PRJNA1103839
+train loss 0.4691503643989563, test loss 0.7450248003005981, train auc 0.646, test auc 0.835 train f1 0.443, test f1 0.778 train mcc -0.063, test mcc 0.569 train aupr 0.901, test aupr 0.919 train acc 0.797, test acc 0.833 confusion_matrix [[14 10]
+ [ 4 56]]
+    [AS/datasize_result_5/subset_table_16w/SRP332779] Job on GPU-4 completed.
+    [ASD/datasize_result_3/subset_table_16w/PRJNA578223] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_3/subset_table_16w/PRJNA578223
+train loss 0.11271519958972931, test loss 2.5445828437805176, train auc 0.990, test auc 0.639 train f1 0.977, test f1 0.650 train mcc 0.955, test mcc 0.329 train aupr 0.987, test aupr 0.584 train acc 0.977, test acc 0.656 confusion_matrix [[16 15]
+ [ 6 24]]
+train loss 0.6707002520561218, test loss 0.6720436811447144, train auc 0.661, test auc 0.796 train f1 0.391, test f1 0.730 train mcc 0.091, test mcc 0.502 train aupr 0.712, test aupr 0.753 train acc 0.516, test acc 0.738 confusion_matrix [[23 17]
+ [ 4 36]]
+    [ASD/datasize_result_1/subset_table_16w/PRJNA1103839] Job on GPU-2 completed.
+    [ASD/datasize_result_3/subset_table_16w/PRJNA932561] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_3/subset_table_16w/PRJNA932561
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [ASD/datasize_result_1/subset_table_16w/PRJNA932561] Job on GPU-1 completed.
+    [ASD/datasize_result_4/subset_table_16w/PRJNA1103839] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_4/subset_table_16w/PRJNA1103839
+train loss 0.6800644993782043, test loss 0.6776303648948669, train auc 0.698, test auc 0.799 train f1 0.611, test f1 0.686 train mcc 0.271, test mcc 0.431 train aupr 0.671, test aupr 0.819 train acc 0.624, test acc 0.698 confusion_matrix [[24 24]
+ [ 5 43]]
+train loss 0.648118257522583, test loss 0.6383010745048523, train auc 0.732, test auc 0.788 train f1 0.645, test f1 0.673 train mcc 0.321, test mcc 0.413 train aupr 0.717, test aupr 0.828 train acc 0.652, test acc 0.688 confusion_matrix [[23 25]
+ [ 5 43]]
+train loss 0.6479411125183105, test loss 0.6700501441955566, train auc 0.737, test auc 0.794 train f1 0.718, test f1 0.744 train mcc 0.443, test mcc 0.524 train aupr 0.751, test aupr 0.730 train acc 0.720, test acc 0.750 confusion_matrix [[24 16]
+ [ 4 36]]
+train loss 0.14075767993927002, test loss 1.7555338144302368, train auc 0.979, test auc 0.532 train f1 0.966, test f1 0.356 train mcc 0.932, test mcc -0.003 train aupr 0.971, test aupr 0.569 train acc 0.966, test acc 0.492 confusion_matrix [[ 1 30]
+ [ 1 29]]
+    [ASD/datasize_result_2/subset_table_16w/PRJNA578223] Job on GPU-6 completed.
+    [ASD/datasize_result_4/subset_table_16w/PRJNA578223] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_4/subset_table_16w/PRJNA578223
+    [ASD/datasize_result_1/subset_table_16w/PRJNA578223] Job on GPU-3 completed.
+    [ASD/datasize_result_4/subset_table_16w/PRJNA932561] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_4/subset_table_16w/PRJNA932561
+    [ASD/datasize_result_2/subset_table_16w/PRJNA932561] Job on GPU-7 completed.
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [ASD/datasize_result_5/subset_table_16w/PRJNA1103839] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_5/subset_table_16w/PRJNA1103839
+    [ASD/datasize_result_2/subset_table_16w/PRJNA1103839] Job on GPU-5 completed.
+    [ASD/datasize_result_5/subset_table_16w/PRJNA578223] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_5/subset_table_16w/PRJNA578223
+train loss 0.13665641844272614, test loss 1.728902816772461, train auc 0.984, test auc 0.540 train f1 0.955, test f1 0.322 train mcc 0.909, test mcc -0.131 train aupr 0.983, test aupr 0.554 train acc 0.955, test acc 0.475 confusion_matrix [[ 0 31]
+ [ 1 29]]
+    [ASD/datasize_result_3/subset_table_16w/PRJNA1103839] Job on GPU-0 completed.
+    [ASD/datasize_result_5/subset_table_16w/PRJNA932561] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/ASD/datasize_result_5/subset_table_16w/PRJNA932561
+Processing disease: BD
+Found studies for BD: PRJEB11419 PRJEB23500 PRJNA1068750
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6641287207603455, test loss 0.6621915102005005, train auc 0.732, test auc 0.806 train f1 0.692, test f1 0.649 train mcc 0.436, test mcc 0.428 train aupr 0.690, test aupr 0.817 train acc 0.702, test acc 0.677 confusion_matrix [[19 29]
+ [ 2 46]]
+    [ASD/datasize_result_3/subset_table_16w/PRJNA578223] Job on GPU-4 completed.
+    [BD/datasize_result_1/subset_table_16w/PRJEB11419] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_1/subset_table_16w/PRJEB11419
+train loss 0.6754645705223083, test loss 0.6910797953605652, train auc 0.763, test auc 0.786 train f1 0.569, test f1 0.732 train mcc 0.364, test mcc 0.494 train aupr 0.758, test aupr 0.760 train acc 0.624, test acc 0.738 confusion_matrix [[24 16]
+ [ 5 35]]
+    [ASD/datasize_result_3/subset_table_16w/PRJNA932561] Job on GPU-2 completed.
+    [BD/datasize_result_1/subset_table_16w/PRJEB23500] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_1/subset_table_16w/PRJEB23500
+train loss 0.6924778819084167, test loss 0.6919158697128296, train auc 0.544, test auc 0.629 train f1 0.398, test f1 0.409 train mcc 0.109, test mcc 0.055 train aupr 0.553, test aupr 0.664 train acc 0.523, test acc 0.508 confusion_matrix [[ 3 28]
+ [ 2 28]]
+    [ASD/datasize_result_4/subset_table_16w/PRJNA1103839] Job on GPU-1 completed.
+    [BD/datasize_result_1/subset_table_16w/PRJNA1068750] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_1/subset_table_16w/PRJNA1068750
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6962503790855408, test loss 0.6877338290214539, train auc 0.495, test auc 0.819 train f1 0.329, test f1 0.781 train mcc -0.085, test mcc 0.564 train aupr 0.524, test aupr 0.778 train acc 0.489, test acc 0.781 confusion_matrix [[36 12]
+ [ 9 39]]
+train loss 0.1679832488298416, test loss 1.8788784742355347, train auc 0.985, test auc 0.786 train f1 0.930, test f1 0.762 train mcc 0.862, test mcc 0.525 train aupr 0.985, test aupr 0.743 train acc 0.930, test acc 0.762 confusion_matrix [[31  9]
+ [10 30]]
+train loss 0.13442152738571167, test loss 2.3313374519348145, train auc 0.987, test auc 0.708 train f1 0.972, test f1 0.703 train mcc 0.943, test mcc 0.420 train aupr 0.983, test aupr 0.702 train acc 0.972, test acc 0.705 confusion_matrix [[19 12]
+ [ 6 24]]
+train loss 0.6846126914024353, test loss 0.6832903623580933, train auc 0.577, test auc 0.761 train f1 0.373, test f1 0.648 train mcc 0.084, test mcc 0.375 train aupr 0.579, test aupr 0.752 train acc 0.511, test acc 0.667 confusion_matrix [[21 27]
+ [ 5 43]]
+    [ASD/datasize_result_4/subset_table_16w/PRJNA578223] Job on GPU-6 completed.
+    [BD/datasize_result_2/subset_table_16w/PRJEB11419] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_2/subset_table_16w/PRJEB11419
+    [ASD/datasize_result_5/subset_table_16w/PRJNA1103839] Job on GPU-7 completed.
+    [ASD/datasize_result_4/subset_table_16w/PRJNA932561] Job on GPU-3 completed.
+    [BD/datasize_result_2/subset_table_16w/PRJEB23500] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_2/subset_table_16w/PRJEB23500
+    [BD/datasize_result_2/subset_table_16w/PRJNA1068750] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_2/subset_table_16w/PRJNA1068750
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [ASD/datasize_result_5/subset_table_16w/PRJNA578223] Job on GPU-5 completed.
+    [BD/datasize_result_3/subset_table_16w/PRJEB11419] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_3/subset_table_16w/PRJEB11419
+train loss 0.6468166708946228, test loss 0.6658117771148682, train auc 0.765, test auc 0.782 train f1 0.750, test f1 0.762 train mcc 0.508, test mcc 0.526 train aupr 0.810, test aupr 0.737 train acc 0.752, test acc 0.762 confusion_matrix [[29 11]
+ [ 8 32]]
+    [ASD/datasize_result_5/subset_table_16w/PRJNA932561] Job on GPU-0 completed.
+    [BD/datasize_result_3/subset_table_16w/PRJEB23500] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_3/subset_table_16w/PRJEB23500
+train loss 0.518467366695404, test loss 0.6506558656692505, train auc 0.836, test auc 0.702 train f1 0.775, test f1 0.661 train mcc 0.561, test mcc 0.346 train aupr 0.843, test aupr 0.677 train acc 0.783, test acc 0.667 confusion_matrix [[ 8  7]
+ [ 3 12]]
+train loss 0.682948648929596, test loss 0.6966586112976074, train auc 0.661, test auc 0.706 train f1 0.618, test f1 0.544 train mcc 0.283, test mcc 0.276 train aupr 0.611, test aupr 0.765 train acc 0.627, test acc 0.664 confusion_matrix [[ 9 38]
+ [ 2 70]]
+    [BD/datasize_result_1/subset_table_16w/PRJEB11419] Job on GPU-4 completed.
+    [BD/datasize_result_3/subset_table_16w/PRJNA1068750] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_3/subset_table_16w/PRJNA1068750
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [BD/datasize_result_1/subset_table_16w/PRJEB23500] Job on GPU-2 completed.
+    [BD/datasize_result_4/subset_table_16w/PRJEB11419] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_4/subset_table_16w/PRJEB11419
+train loss 0.524045467376709, test loss 0.6686145067214966, train auc 0.836, test auc 0.731 train f1 0.800, test f1 0.637 train mcc 0.638, test mcc 0.340 train aupr 0.839, test aupr 0.725 train acc 0.819, test acc 0.648 confusion_matrix [[21 25]
+ [ 6 36]]
+    [BD/datasize_result_1/subset_table_16w/PRJNA1068750] Job on GPU-1 completed.
+    [BD/datasize_result_4/subset_table_16w/PRJEB23500] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_4/subset_table_16w/PRJEB23500
+train loss 0.6495755910873413, test loss 0.7002702355384827, train auc 0.785, test auc 0.671 train f1 0.737, test f1 0.521 train mcc 0.475, test mcc 0.217 train aupr 0.781, test aupr 0.726 train acc 0.737, test acc 0.647 confusion_matrix [[ 8 39]
+ [ 3 69]]
+train loss 0.6840844750404358, test loss 0.6885150074958801, train auc 0.612, test auc 0.724 train f1 0.501, test f1 0.661 train mcc 0.238, test mcc 0.346 train aupr 0.617, test aupr 0.744 train acc 0.609, test acc 0.667 confusion_matrix [[ 8  7]
+ [ 3 12]]
+    [BD/datasize_result_2/subset_table_16w/PRJEB23500] Job on GPU-3 completed.
+    [BD/datasize_result_4/subset_table_16w/PRJNA1068750] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_4/subset_table_16w/PRJNA1068750
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.46557292342185974, test loss 0.6487497091293335, train auc 0.842, test auc 0.744 train f1 0.811, test f1 0.655 train mcc 0.644, test mcc 0.344 train aupr 0.807, test aupr 0.687 train acc 0.826, test acc 0.659 confusion_matrix [[24 22]
+ [ 8 34]]
+train loss 0.6107827425003052, test loss 0.6766167283058167, train auc 0.806, test auc 0.693 train f1 0.697, test f1 0.653 train mcc 0.425, test mcc 0.364 train aupr 0.845, test aupr 0.668 train acc 0.715, test acc 0.667 confusion_matrix [[ 7  8]
+ [ 2 13]]
+    [BD/datasize_result_2/subset_table_16w/PRJEB11419] Job on GPU-6 completed.
+    [BD/datasize_result_5/subset_table_16w/PRJEB11419] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_5/subset_table_16w/PRJEB11419
+    [BD/datasize_result_2/subset_table_16w/PRJNA1068750] Job on GPU-7 completed.
+    [BD/datasize_result_5/subset_table_16w/PRJEB23500] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_5/subset_table_16w/PRJEB23500
+    [BD/datasize_result_3/subset_table_16w/PRJEB11419] Job on GPU-5 completed.
+    [BD/datasize_result_5/subset_table_16w/PRJNA1068750] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/BD/datasize_result_5/subset_table_16w/PRJNA1068750
+Processing disease: CAD
+Found studies for CAD: PRJDB6472 PRJDB7456
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6414976716041565, test loss 0.6773111820220947, train auc 0.738, test auc 0.645 train f1 0.686, test f1 0.459 train mcc 0.375, test mcc 0.174 train aupr 0.715, test aupr 0.706 train acc 0.686, test acc 0.630 confusion_matrix [[ 4 43]
+ [ 1 71]]
+    [BD/datasize_result_3/subset_table_16w/PRJEB23500] Job on GPU-0 completed.
+    [CAD/datasize_result_1/subset_table_16w/PRJDB6472] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_1/subset_table_16w/PRJDB6472
+train loss 0.6719710230827332, test loss 0.6870613098144531, train auc 0.650, test auc 0.698 train f1 0.539, test f1 0.691 train mcc 0.220, test mcc 0.424 train aupr 0.693, test aupr 0.671 train acc 0.614, test acc 0.700 confusion_matrix [[ 8  7]
+ [ 2 13]]
+train loss 0.4509703814983368, test loss 0.7103097438812256, train auc 0.842, test auc 0.720 train f1 0.827, test f1 0.627 train mcc 0.671, test mcc 0.311 train aupr 0.820, test aupr 0.645 train acc 0.839, test acc 0.636 confusion_matrix [[21 25]
+ [ 7 35]]
+    [BD/datasize_result_4/subset_table_16w/PRJEB11419] Job on GPU-2 completed.
+    [CAD/datasize_result_1/subset_table_16w/PRJDB7456] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_1/subset_table_16w/PRJDB7456
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [BD/datasize_result_3/subset_table_16w/PRJNA1068750] Job on GPU-4 completed.
+    [CAD/datasize_result_2/subset_table_16w/PRJDB6472] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_2/subset_table_16w/PRJDB6472
+train loss 0.6626266241073608, test loss 0.6856120824813843, train auc 0.726, test auc 0.687 train f1 0.695, test f1 0.478 train mcc 0.391, test mcc 0.207 train aupr 0.681, test aupr 0.746 train acc 0.695, test acc 0.639 confusion_matrix [[ 5 42]
+ [ 1 71]]
+    [BD/datasize_result_4/subset_table_16w/PRJEB23500] Job on GPU-1 completed.
+    [CAD/datasize_result_2/subset_table_16w/PRJDB7456] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_2/subset_table_16w/PRJDB7456
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6701461672782898, test loss 0.7069615125656128, train auc 0.746, test auc 0.676 train f1 0.685, test f1 0.554 train mcc 0.386, test mcc 0.268 train aupr 0.768, test aupr 0.728 train acc 0.686, test acc 0.664 confusion_matrix [[10 37]
+ [ 3 69]]
+train loss 0.47592973709106445, test loss 0.6648368835449219, train auc 0.869, test auc 0.715 train f1 0.815, test f1 0.642 train mcc 0.669, test mcc 0.324 train aupr 0.865, test aupr 0.667 train acc 0.832, test acc 0.648 confusion_matrix [[23 23]
+ [ 8 34]]
+    [BD/datasize_result_5/subset_table_16w/PRJEB23500] Job on GPU-7 completed.
+    [CAD/datasize_result_3/subset_table_16w/PRJDB6472] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_3/subset_table_16w/PRJDB6472
+train loss 0.3226450979709625, test loss 1.1555777788162231, train auc 0.887, test auc 0.776 train f1 0.886, test f1 0.716 train mcc 0.784, test mcc 0.436 train aupr 0.896, test aupr 0.790 train acc 0.893, test acc 0.716 confusion_matrix [[31 15]
+ [10 32]]
+    [BD/datasize_result_4/subset_table_16w/PRJNA1068750] Job on GPU-3 completed.
+    [CAD/datasize_result_3/subset_table_16w/PRJDB7456] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_3/subset_table_16w/PRJDB7456
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.5905996561050415, test loss 0.6795519590377808, train auc 0.817, test auc 0.671 train f1 0.772, test f1 0.623 train mcc 0.549, test mcc 0.283 train aupr 0.792, test aupr 0.661 train acc 0.778, test acc 0.633 confusion_matrix [[ 7  8]
+ [ 3 12]]
+    [BD/datasize_result_5/subset_table_16w/PRJNA1068750] Job on GPU-5 completed.
+    [CAD/datasize_result_4/subset_table_16w/PRJDB6472] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_4/subset_table_16w/PRJDB6472
+    [BD/datasize_result_5/subset_table_16w/PRJEB11419] Job on GPU-6 completed.
+    [CAD/datasize_result_4/subset_table_16w/PRJDB7456] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_4/subset_table_16w/PRJDB7456
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6590479612350464, test loss 0.7131876945495605, train auc 0.811, test auc 0.699 train f1 0.629, test f1 0.641 train mcc 0.378, test mcc 0.388 train aupr 0.866, test aupr 0.562 train acc 0.667, test acc 0.654 confusion_matrix [[12 16]
+ [ 2 22]]
+    [CAD/datasize_result_1/subset_table_16w/PRJDB6472] Job on GPU-0 completed.
+    [CAD/datasize_result_5/subset_table_16w/PRJDB6472] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_5/subset_table_16w/PRJDB6472
+train loss 0.690771222114563, test loss 0.7090116739273071, train auc 0.530, test auc 0.877 train f1 0.432, test f1 0.825 train mcc 0.093, test mcc 0.651 train aupr 0.465, test aupr 0.918 train acc 0.500, test acc 0.825 confusion_matrix [[25  5]
+ [ 6 27]]
+    [CAD/datasize_result_1/subset_table_16w/PRJDB7456] Job on GPU-2 completed.
+    [CAD/datasize_result_5/subset_table_16w/PRJDB7456] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/CAD/datasize_result_5/subset_table_16w/PRJDB7456
+Processing disease: GD
+Found studies for GD: PRJNA695309 PRJNA850658
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6159865260124207, test loss 0.7062909603118896, train auc 0.833, test auc 0.661 train f1 0.778, test f1 0.645 train mcc 0.562, test mcc 0.366 train aupr 0.885, test aupr 0.535 train acc 0.778, test acc 0.654 confusion_matrix [[13 15]
+ [ 3 21]]
+train loss 0.6882913708686829, test loss 0.6969882249832153, train auc 0.496, test auc 0.785 train f1 0.490, test f1 0.768 train mcc 0.181, test mcc 0.579 train aupr 0.489, test aupr 0.724 train acc 0.538, test acc 0.778 confusion_matrix [[18 12]
+ [ 2 31]]
+    [CAD/datasize_result_2/subset_table_16w/PRJDB6472] Job on GPU-4 completed.
+    [GD/datasize_result_1/subset_table_16w/PRJNA695309] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_1/subset_table_16w/PRJNA695309
+    [CAD/datasize_result_2/subset_table_16w/PRJDB7456] Job on GPU-1 completed.
+    [GD/datasize_result_1/subset_table_16w/PRJNA850658] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_1/subset_table_16w/PRJNA850658
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.611728310585022, test loss 0.7323628664016724, train auc 0.814, test auc 0.707 train f1 0.793, test f1 0.617 train mcc 0.606, test mcc 0.356 train aupr 0.875, test aupr 0.576 train acc 0.794, test acc 0.635 confusion_matrix [[11 17]
+ [ 2 22]]
+train loss 0.6714448928833008, test loss 0.774017870426178, train auc 0.658, test auc 0.716 train f1 0.533, test f1 0.573 train mcc 0.288, test mcc 0.337 train aupr 0.662, test aupr 0.711 train acc 0.577, test acc 0.635 confusion_matrix [[ 8 22]
+ [ 1 32]]
+    [CAD/datasize_result_3/subset_table_16w/PRJDB6472] Job on GPU-7 completed.
+    [GD/datasize_result_2/subset_table_16w/PRJNA695309] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_2/subset_table_16w/PRJNA695309
+train loss 0.633028507232666, test loss 0.7612627744674683, train auc 0.744, test auc 0.710 train f1 0.617, test f1 0.510 train mcc 0.356, test mcc 0.209 train aupr 0.654, test aupr 0.663 train acc 0.635, test acc 0.587 confusion_matrix [[ 6 24]
+ [ 2 31]]
+train loss 0.6735039949417114, test loss 0.6900863647460938, train auc 0.768, test auc 0.702 train f1 0.726, test f1 0.628 train mcc 0.461, test mcc 0.316 train aupr 0.804, test aupr 0.602 train acc 0.730, test acc 0.635 confusion_matrix [[13 15]
+ [ 4 20]]
+    [CAD/datasize_result_3/subset_table_16w/PRJDB7456] Job on GPU-3 completed.
+    [GD/datasize_result_2/subset_table_16w/PRJNA850658] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_2/subset_table_16w/PRJNA850658
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [CAD/datasize_result_4/subset_table_16w/PRJDB7456] Job on GPU-6 completed.
+    [GD/datasize_result_3/subset_table_16w/PRJNA695309] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_3/subset_table_16w/PRJNA695309
+    [CAD/datasize_result_4/subset_table_16w/PRJDB6472] Job on GPU-5 completed.
+    [GD/datasize_result_3/subset_table_16w/PRJNA850658] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_3/subset_table_16w/PRJNA850658
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6296718716621399, test loss 0.7277742624282837, train auc 0.826, test auc 0.653 train f1 0.762, test f1 0.617 train mcc 0.524, test mcc 0.356 train aupr 0.885, test aupr 0.535 train acc 0.762, test acc 0.635 confusion_matrix [[11 17]
+ [ 2 22]]
+    [CAD/datasize_result_5/subset_table_16w/PRJDB6472] Job on GPU-0 completed.
+    [GD/datasize_result_4/subset_table_16w/PRJNA695309] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_4/subset_table_16w/PRJNA695309
+train loss 0.6835638284683228, test loss 0.7151511907577515, train auc 0.610, test auc 0.856 train f1 0.584, test f1 0.773 train mcc 0.249, test mcc 0.561 train aupr 0.563, test aupr 0.890 train acc 0.596, test acc 0.778 confusion_matrix [[20 10]
+ [ 4 29]]
+    [CAD/datasize_result_5/subset_table_16w/PRJDB7456] Job on GPU-2 completed.
+    [GD/datasize_result_4/subset_table_16w/PRJNA850658] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_4/subset_table_16w/PRJNA850658
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6729739904403687, test loss 0.6849527359008789, train auc 0.645, test auc 0.573 train f1 0.607, test f1 0.426 train mcc 0.371, test mcc 0.050 train aupr 0.648, test aupr 0.753 train acc 0.660, test acc 0.663 confusion_matrix [[ 1 32]
+ [ 1 64]]
+    [GD/datasize_result_1/subset_table_16w/PRJNA850658] Job on GPU-1 completed.
+    [GD/datasize_result_5/subset_table_16w/PRJNA695309] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_5/subset_table_16w/PRJNA695309
+train loss 0.5588864684104919, test loss 0.7241526246070862, train auc 0.803, test auc 0.659 train f1 0.758, test f1 0.646 train mcc 0.517, test mcc 0.348 train aupr 0.885, test aupr 0.613 train acc 0.786, test acc 0.670 confusion_matrix [[21 27]
+ [ 7 48]]
+    [GD/datasize_result_1/subset_table_16w/PRJNA695309] Job on GPU-4 completed.
+Processing disease: IBS
+    [GD/datasize_result_5/subset_table_16w/PRJNA850658] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/GD/datasize_result_5/subset_table_16w/PRJNA850658
+Found studies for IBS: PRJEB11419 PRJNA268708
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.4484749138355255, test loss 0.8107215166091919, train auc 0.879, test auc 0.658 train f1 0.790, test f1 0.629 train mcc 0.598, test mcc 0.334 train aupr 0.931, test aupr 0.619 train acc 0.827, test acc 0.660 confusion_matrix [[19 29]
+ [ 6 49]]
+    [GD/datasize_result_2/subset_table_16w/PRJNA695309] Job on GPU-7 completed.
+    [IBS/datasize_result_1/subset_table_16w/PRJEB11419] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_1/subset_table_16w/PRJEB11419
+train loss 0.6377156972885132, test loss 0.6988993287086487, train auc 0.751, test auc 0.568 train f1 0.755, test f1 0.395 train mcc 0.511, test mcc -0.072 train aupr 0.699, test aupr 0.735 train acc 0.757, test acc 0.653 confusion_matrix [[ 0 33]
+ [ 1 64]]
+train loss 0.6829798817634583, test loss 0.6880366206169128, train auc 0.504, test auc 0.559 train f1 0.499, test f1 0.395 train mcc 0.172, test mcc -0.072 train aupr 0.591, test aupr 0.707 train acc 0.583, test acc 0.653 confusion_matrix [[ 0 33]
+ [ 1 64]]
+train loss 0.40697842836380005, test loss 0.8032459020614624, train auc 0.879, test auc 0.682 train f1 0.832, test f1 0.611 train mcc 0.672, test mcc 0.320 train aupr 0.923, test aupr 0.652 train acc 0.857, test acc 0.650 confusion_matrix [[17 31]
+ [ 5 50]]
+    [GD/datasize_result_2/subset_table_16w/PRJNA850658] Job on GPU-3 completed.
+    [IBS/datasize_result_1/subset_table_16w/PRJNA268708] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_1/subset_table_16w/PRJNA268708
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [GD/datasize_result_3/subset_table_16w/PRJNA850658] Job on GPU-5 completed.
+    [IBS/datasize_result_2/subset_table_16w/PRJEB11419] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_2/subset_table_16w/PRJEB11419
+    [GD/datasize_result_3/subset_table_16w/PRJNA695309] Job on GPU-6 completed.
+    [IBS/datasize_result_2/subset_table_16w/PRJNA268708] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_2/subset_table_16w/PRJNA268708
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.4564741551876068, test loss 0.6355427503585815, train auc 0.802, test auc 0.711 train f1 0.706, test f1 0.592 train mcc 0.511, test mcc 0.352 train aupr 0.866, test aupr 0.730 train acc 0.786, test acc 0.650 confusion_matrix [[14 34]
+ [ 2 53]]
+    [GD/datasize_result_4/subset_table_16w/PRJNA695309] Job on GPU-0 completed.
+    [IBS/datasize_result_3/subset_table_16w/PRJEB11419] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_3/subset_table_16w/PRJEB11419
+train loss 0.6750229001045227, test loss 0.6926722526550293, train auc 0.581, test auc 0.568 train f1 0.388, test f1 0.395 train mcc 0.070, test mcc -0.072 train aupr 0.588, test aupr 0.745 train acc 0.544, test acc 0.653 confusion_matrix [[ 0 33]
+ [ 1 64]]
+    [GD/datasize_result_4/subset_table_16w/PRJNA850658] Job on GPU-2 completed.
+    [IBS/datasize_result_3/subset_table_16w/PRJNA268708] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_3/subset_table_16w/PRJNA268708
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6946423053741455, test loss 0.6921324729919434, train auc 0.485, test auc 0.650 train f1 0.456, test f1 0.547 train mcc 0.124, test mcc 0.244 train aupr 0.676, test aupr 0.650 train acc 0.673, test acc 0.612 confusion_matrix [[12 36]
+ [ 4 51]]
+    [GD/datasize_result_5/subset_table_16w/PRJNA695309] Job on GPU-1 completed.
+    [IBS/datasize_result_4/subset_table_16w/PRJEB11419] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_4/subset_table_16w/PRJEB11419
+train loss 0.6841415762901306, test loss 0.68951815366745, train auc 0.543, test auc 0.628 train f1 0.428, test f1 0.456 train mcc 0.151, test mcc 0.124 train aupr 0.566, test aupr 0.771 train acc 0.563, test acc 0.673 confusion_matrix [[ 2 31]
+ [ 1 64]]
+    [GD/datasize_result_5/subset_table_16w/PRJNA850658] Job on GPU-4 completed.
+    [IBS/datasize_result_4/subset_table_16w/PRJNA268708] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_4/subset_table_16w/PRJNA268708
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6049101948738098, test loss 0.8558979034423828, train auc 0.574, test auc 0.542 train f1 0.411, test f1 0.368 train mcc -0.039, test mcc 0.084 train aupr 0.761, test aupr 0.500 train acc 0.698, test acc 0.478 confusion_matrix [[ 26 433]
+ [  9 378]]
+    [IBS/datasize_result_1/subset_table_16w/PRJEB11419] Job on GPU-7 completed.
+    [IBS/datasize_result_5/subset_table_16w/PRJEB11419] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_5/subset_table_16w/PRJEB11419
+train loss 0.5782421827316284, test loss 0.851099967956543, train auc 0.677, test auc 0.549 train f1 0.423, test f1 0.367 train mcc 0.037, test mcc 0.095 train aupr 0.807, test aupr 0.512 train acc 0.701, test acc 0.479 confusion_matrix [[ 25 434]
+ [  7 380]]
+    [IBS/datasize_result_2/subset_table_16w/PRJEB11419] Job on GPU-5 completed.
+    [IBS/datasize_result_5/subset_table_16w/PRJNA268708] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/IBS/datasize_result_5/subset_table_16w/PRJNA268708
+Processing disease: MS
+Found studies for MS: PRJEB22970 PRJEB22977 PRJEB32763
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6859517097473145, test loss 0.7350142598152161, train auc 0.561, test auc 0.617 train f1 0.338, test f1 0.447 train mcc 0.063, test mcc 0.117 train aupr 0.520, test aupr 0.779 train acc 0.467, test acc 0.708 confusion_matrix [[  3  83]
+ [  1 201]]
+    [IBS/datasize_result_1/subset_table_16w/PRJNA268708] Job on GPU-3 completed.
+    [MS/datasize_result_1/subset_table_16w/PRJEB22970] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_1/subset_table_16w/PRJEB22970
+train loss 0.6279397010803223, test loss 0.7777035236358643, train auc 0.697, test auc 0.624 train f1 0.644, test f1 0.411 train mcc 0.335, test mcc -0.039 train aupr 0.628, test aupr 0.796 train acc 0.648, test acc 0.698 confusion_matrix [[  0  86]
+ [  1 201]]
+    [IBS/datasize_result_2/subset_table_16w/PRJNA268708] Job on GPU-6 completed.
+    [MS/datasize_result_1/subset_table_16w/PRJEB22977] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_1/subset_table_16w/PRJEB22977
+train loss 0.4937816262245178, test loss 1.2110313177108765, train auc 0.772, test auc 0.551 train f1 0.752, test f1 0.321 train mcc 0.508, test mcc 0.029 train aupr 0.856, test aupr 0.490 train acc 0.785, test acc 0.460 confusion_matrix [[  3 456]
+ [  1 386]]
+    [IBS/datasize_result_3/subset_table_16w/PRJEB11419] Job on GPU-0 completed.
+    [MS/datasize_result_1/subset_table_16w/PRJEB32763] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_1/subset_table_16w/PRJEB32763
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.5630137324333191, test loss 0.8856369853019714, train auc 0.704, test auc 0.543 train f1 0.544, test f1 0.323 train mcc 0.212, test mcc 0.040 train aupr 0.837, test aupr 0.497 train acc 0.722, test acc 0.461 confusion_matrix [[  4 455]
+ [  1 386]]
+    [IBS/datasize_result_4/subset_table_16w/PRJEB11419] Job on GPU-1 completed.
+    [MS/datasize_result_2/subset_table_16w/PRJEB22970] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_2/subset_table_16w/PRJEB22970
+train loss 0.6890078783035278, test loss 0.7399247288703918, train auc 0.520, test auc 0.633 train f1 0.320, test f1 0.566 train mcc 0.009, test mcc 0.214 train aupr 0.473, test aupr 0.797 train acc 0.459, test acc 0.719 confusion_matrix [[ 18  68]
+ [ 13 189]]
+    [IBS/datasize_result_3/subset_table_16w/PRJNA268708] Job on GPU-2 completed.
+    [MS/datasize_result_2/subset_table_16w/PRJEB22977] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_2/subset_table_16w/PRJEB22977
+train loss 0.692427933216095, test loss 0.7620493769645691, train auc 0.512, test auc 0.653 train f1 0.343, test f1 0.609 train mcc 0.040, test mcc 0.284 train aupr 0.458, test aupr 0.795 train acc 0.466, test acc 0.736 confusion_matrix [[ 24  62]
+ [ 14 188]]
+    [IBS/datasize_result_4/subset_table_16w/PRJNA268708] Job on GPU-4 completed.
+    [MS/datasize_result_2/subset_table_16w/PRJEB32763] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_2/subset_table_16w/PRJEB32763
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.541445255279541, test loss 0.8976491093635559, train auc 0.802, test auc 0.697 train f1 0.697, test f1 0.641 train mcc 0.431, test mcc 0.335 train aupr 0.854, test aupr 0.910 train acc 0.724, test acc 0.845 confusion_matrix [[ 5 14]
+ [ 3 88]]
+    [MS/datasize_result_1/subset_table_16w/PRJEB22970] Job on GPU-3 completed.
+    [MS/datasize_result_3/subset_table_16w/PRJEB22970] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_3/subset_table_16w/PRJEB22970
+train loss 0.47532233595848083, test loss 0.8645586967468262, train auc 0.813, test auc 0.657 train f1 0.766, test f1 0.537 train mcc 0.547, test mcc 0.211 train aupr 0.857, test aupr 0.764 train acc 0.807, test acc 0.667 confusion_matrix [[ 6 26]
+ [ 3 52]]
+    [MS/datasize_result_1/subset_table_16w/PRJEB22977] Job on GPU-6 completed.
+    [MS/datasize_result_3/subset_table_16w/PRJEB22977] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_3/subset_table_16w/PRJEB22977
+train loss 0.5487442016601562, test loss 0.8325479626655579, train auc 0.730, test auc 0.545 train f1 0.516, test f1 0.367 train mcc 0.205, test mcc 0.069 train aupr 0.850, test aupr 0.500 train acc 0.722, test acc 0.475 confusion_matrix [[ 26 433]
+ [ 11 376]]
+    [IBS/datasize_result_5/subset_table_16w/PRJEB11419] Job on GPU-7 completed.
+    [MS/datasize_result_3/subset_table_16w/PRJEB32763] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_3/subset_table_16w/PRJEB32763
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.4809192419052124, test loss 0.735914409160614, train auc 0.759, test auc 0.636 train f1 0.518, test f1 0.571 train mcc 0.232, test mcc 0.243 train aupr 0.892, test aupr 0.594 train acc 0.761, test acc 0.619 confusion_matrix [[19 43]
+ [ 8 64]]
+    [MS/datasize_result_1/subset_table_16w/PRJEB32763] Job on GPU-0 completed.
+    [MS/datasize_result_4/subset_table_16w/PRJEB22970] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_4/subset_table_16w/PRJEB22970
+train loss 0.6950482130050659, test loss 0.7556362152099609, train auc 0.493, test auc 0.630 train f1 0.316, test f1 0.435 train mcc -0.004, test mcc 0.083 train aupr 0.449, test aupr 0.792 train acc 0.457, test acc 0.705 confusion_matrix [[  2  84]
+ [  1 201]]
+    [IBS/datasize_result_5/subset_table_16w/PRJNA268708] Job on GPU-5 completed.
+    [MS/datasize_result_4/subset_table_16w/PRJEB22977] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_4/subset_table_16w/PRJEB22977
+train loss 0.5643253922462463, test loss 0.7679551839828491, train auc 0.776, test auc 0.650 train f1 0.728, test f1 0.450 train mcc 0.458, test mcc -0.044 train aupr 0.851, test aupr 0.902 train acc 0.738, test acc 0.818 confusion_matrix [[ 0 19]
+ [ 1 90]]
+    [MS/datasize_result_2/subset_table_16w/PRJEB22970] Job on GPU-1 completed.
+    [MS/datasize_result_4/subset_table_16w/PRJEB32763] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_4/subset_table_16w/PRJEB32763
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.32412999868392944, test loss 0.8833949565887451, train auc 0.927, test auc 0.718 train f1 0.866, test f1 0.577 train mcc 0.733, test mcc 0.220 train aupr 0.964, test aupr 0.839 train acc 0.881, test acc 0.667 confusion_matrix [[ 9 23]
+ [ 6 49]]
+    [MS/datasize_result_2/subset_table_16w/PRJEB22977] Job on GPU-2 completed.
+    [MS/datasize_result_5/subset_table_16w/PRJEB22970] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_5/subset_table_16w/PRJEB22970
+train loss 0.49867182970046997, test loss 0.656728208065033, train auc 0.705, test auc 0.683 train f1 0.444, test f1 0.594 train mcc 0.056, test mcc 0.250 train aupr 0.872, test aupr 0.644 train acc 0.741, test acc 0.627 confusion_matrix [[23 39]
+ [11 61]]
+    [MS/datasize_result_2/subset_table_16w/PRJEB32763] Job on GPU-4 completed.
+    [MS/datasize_result_5/subset_table_16w/PRJEB22977] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_5/subset_table_16w/PRJEB22977
+train loss 0.516781747341156, test loss 1.238908052444458, train auc 0.829, test auc 0.799 train f1 0.745, test f1 0.579 train mcc 0.495, test mcc 0.247 train aupr 0.869, test aupr 0.943 train acc 0.756, test acc 0.836 confusion_matrix [[ 3 16]
+ [ 2 89]]
+    [MS/datasize_result_3/subset_table_16w/PRJEB22970] Job on GPU-3 completed.
+    [MS/datasize_result_5/subset_table_16w/PRJEB32763] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/MS/datasize_result_5/subset_table_16w/PRJEB32763
+Processing disease: OB
+Found studies for OB: PRJEB11419 PRJEB28687
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.2996440827846527, test loss 0.8364613056182861, train auc 0.940, test auc 0.664 train f1 0.862, test f1 0.415 train mcc 0.727, test mcc 0.042 train aupr 0.968, test aupr 0.770 train acc 0.881, test acc 0.632 confusion_matrix [[ 1 31]
+ [ 1 54]]
+train loss 0.39791423082351685, test loss 2.046663761138916, train auc 0.901, test auc 0.809 train f1 0.815, test f1 0.651 train mcc 0.638, test mcc 0.373 train aupr 0.933, test aupr 0.954 train acc 0.824, test acc 0.855 confusion_matrix [[ 5 14]
+ [ 2 89]]
+    [MS/datasize_result_3/subset_table_16w/PRJEB22977] Job on GPU-6 completed.
+    [OB/datasize_result_1/subset_table_16w/PRJEB11419] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_1/subset_table_16w/PRJEB11419
+    [MS/datasize_result_4/subset_table_16w/PRJEB22970] Job on GPU-0 completed.
+    [OB/datasize_result_1/subset_table_16w/PRJEB28687] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_1/subset_table_16w/PRJEB28687
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.4731560945510864, test loss 0.6543781161308289, train auc 0.767, test auc 0.687 train f1 0.641, test f1 0.652 train mcc 0.332, test mcc 0.399 train aupr 0.885, test aupr 0.637 train acc 0.777, test acc 0.687 confusion_matrix [[25 37]
+ [ 5 67]]
+    [MS/datasize_result_3/subset_table_16w/PRJEB32763] Job on GPU-7 completed.
+    [OB/datasize_result_2/subset_table_16w/PRJEB11419] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_2/subset_table_16w/PRJEB11419
+train loss 0.4109252095222473, test loss 0.8289920687675476, train auc 0.877, test auc 0.684 train f1 0.826, test f1 0.574 train mcc 0.653, test mcc 0.248 train aupr 0.923, test aupr 0.791 train acc 0.848, test acc 0.678 confusion_matrix [[ 8 24]
+ [ 4 51]]
+    [MS/datasize_result_4/subset_table_16w/PRJEB22977] Job on GPU-5 completed.
+    [OB/datasize_result_2/subset_table_16w/PRJEB28687] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_2/subset_table_16w/PRJEB28687
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.5483826994895935, test loss 1.2498801946640015, train auc 0.798, test auc 0.733 train f1 0.741, test f1 0.626 train mcc 0.495, test mcc 0.362 train aupr 0.839, test aupr 0.916 train acc 0.756, test acc 0.855 confusion_matrix [[ 4 15]
+ [ 1 90]]
+    [MS/datasize_result_5/subset_table_16w/PRJEB22970] Job on GPU-2 completed.
+    [OB/datasize_result_3/subset_table_16w/PRJEB11419] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_3/subset_table_16w/PRJEB11419
+train loss 0.4860149323940277, test loss 0.6523858904838562, train auc 0.831, test auc 0.700 train f1 0.765, test f1 0.578 train mcc 0.534, test mcc 0.325 train aupr 0.937, test aupr 0.646 train acc 0.812, test acc 0.642 confusion_matrix [[17 45]
+ [ 3 69]]
+    [MS/datasize_result_4/subset_table_16w/PRJEB32763] Job on GPU-1 completed.
+    [OB/datasize_result_3/subset_table_16w/PRJEB28687] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_3/subset_table_16w/PRJEB28687
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.3271750807762146, test loss 0.7886313199996948, train auc 0.914, test auc 0.698 train f1 0.877, test f1 0.595 train mcc 0.756, test mcc 0.282 train aupr 0.936, test aupr 0.803 train acc 0.893, test acc 0.690 confusion_matrix [[ 9 23]
+ [ 4 51]]
+    [MS/datasize_result_5/subset_table_16w/PRJEB22977] Job on GPU-4 completed.
+    [OB/datasize_result_4/subset_table_16w/PRJEB11419] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_4/subset_table_16w/PRJEB11419
+train loss 0.4723159670829773, test loss 0.6419820785522461, train auc 0.793, test auc 0.677 train f1 0.544, test f1 0.600 train mcc 0.233, test mcc 0.269 train aupr 0.921, test aupr 0.630 train acc 0.761, test acc 0.634 confusion_matrix [[23 39]
+ [10 62]]
+    [MS/datasize_result_5/subset_table_16w/PRJEB32763] Job on GPU-3 completed.
+    [OB/datasize_result_4/subset_table_16w/PRJEB28687] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_4/subset_table_16w/PRJEB28687
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.48459839820861816, test loss 1.2477253675460815, train auc 0.846, test auc 0.681 train f1 0.758, test f1 0.597 train mcc 0.522, test mcc 0.240 train aupr 0.841, test aupr 0.284 train acc 0.758, test acc 0.694 confusion_matrix [[301 118]
+ [ 38  52]]
+    [OB/datasize_result_1/subset_table_16w/PRJEB28687] Job on GPU-0 completed.
+    [OB/datasize_result_5/subset_table_16w/PRJEB11419] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_5/subset_table_16w/PRJEB11419
+train loss 0.39230358600616455, test loss 1.0783439874649048, train auc 0.766, test auc 0.664 train f1 0.686, test f1 0.495 train mcc 0.385, test mcc 0.168 train aupr 0.456, test aupr 0.655 train acc 0.792, test acc 0.549 confusion_matrix [[ 77 284]
+ [ 31 307]]
+    [OB/datasize_result_1/subset_table_16w/PRJEB11419] Job on GPU-6 completed.
+    [OB/datasize_result_5/subset_table_16w/PRJEB28687] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/OB/datasize_result_5/subset_table_16w/PRJEB28687
+Processing disease: PD
+Found studies for PD: PRJEB14674 PRJEB27564 PRJEB30615 PRJNA510730 PRJNA594156 PRJNA742875
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.394275426864624, test loss 1.183746337890625, train auc 0.734, test auc 0.669 train f1 0.710, test f1 0.589 train mcc 0.422, test mcc 0.248 train aupr 0.458, test aupr 0.656 train acc 0.841, test acc 0.605 confusion_matrix [[143 218]
+ [ 58 280]]
+    [OB/datasize_result_2/subset_table_16w/PRJEB11419] Job on GPU-7 completed.
+    [PD/datasize_result_1/subset_table_16w/PRJEB14674] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_1/subset_table_16w/PRJEB14674
+train loss 0.6289001107215881, test loss 0.779562771320343, train auc 0.706, test auc 0.672 train f1 0.606, test f1 0.606 train mcc 0.295, test mcc 0.223 train aupr 0.673, test aupr 0.306 train acc 0.624, test acc 0.737 confusion_matrix [[334  85]
+ [ 49  41]]
+    [OB/datasize_result_2/subset_table_16w/PRJEB28687] Job on GPU-5 completed.
+    [PD/datasize_result_1/subset_table_16w/PRJEB27564] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_1/subset_table_16w/PRJEB27564
+train loss 0.32318541407585144, test loss 1.468274712562561, train auc 0.868, test auc 0.677 train f1 0.758, test f1 0.591 train mcc 0.527, test mcc 0.257 train aupr 0.577, test aupr 0.650 train acc 0.841, test acc 0.608 confusion_matrix [[141 220]
+ [ 54 284]]
+    [OB/datasize_result_3/subset_table_16w/PRJEB11419] Job on GPU-2 completed.
+    [PD/datasize_result_1/subset_table_16w/PRJEB30615] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_1/subset_table_16w/PRJEB30615
+train loss 0.4092409014701843, test loss 1.1227012872695923, train auc 0.745, test auc 0.690 train f1 0.655, test f1 0.589 train mcc 0.345, test mcc 0.256 train aupr 0.422, test aupr 0.662 train acc 0.749, test acc 0.607 confusion_matrix [[139 222]
+ [ 53 285]]
+train loss 0.6049553751945496, test loss 0.8933431506156921, train auc 0.737, test auc 0.666 train f1 0.631, test f1 0.498 train mcc 0.338, test mcc 0.191 train aupr 0.693, test aupr 0.281 train acc 0.645, test acc 0.532 confusion_matrix [[202 217]
+ [ 21  69]]
+    [OB/datasize_result_4/subset_table_16w/PRJEB11419] Job on GPU-4 completed.
+    [PD/datasize_result_1/subset_table_16w/PRJNA510730] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_1/subset_table_16w/PRJNA510730
+    [OB/datasize_result_3/subset_table_16w/PRJEB28687] Job on GPU-1 completed.
+    [PD/datasize_result_1/subset_table_16w/PRJNA594156] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_1/subset_table_16w/PRJNA594156
+train loss 0.4855725169181824, test loss 1.5134904384613037, train auc 0.848, test auc 0.691 train f1 0.770, test f1 0.610 train mcc 0.552, test mcc 0.239 train aupr 0.827, test aupr 0.286 train acc 0.771, test acc 0.729 confusion_matrix [[326  93]
+ [ 45  45]]
+    [OB/datasize_result_4/subset_table_16w/PRJEB28687] Job on GPU-3 completed.
+    [PD/datasize_result_1/subset_table_16w/PRJNA742875] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_1/subset_table_16w/PRJNA742875
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.4258946180343628, test loss 0.9724701642990112, train auc 0.702, test auc 0.670 train f1 0.652, test f1 0.569 train mcc 0.305, test mcc 0.214 train aupr 0.380, test aupr 0.662 train acc 0.806, test acc 0.588 confusion_matrix [[132 229]
+ [ 59 279]]
+    [OB/datasize_result_5/subset_table_16w/PRJEB11419] Job on GPU-0 completed.
+    [PD/datasize_result_2/subset_table_16w/PRJEB14674] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_2/subset_table_16w/PRJEB14674
+train loss 0.6321183443069458, test loss 0.8330073356628418, train auc 0.703, test auc 0.676 train f1 0.611, test f1 0.600 train mcc 0.304, test mcc 0.211 train aupr 0.658, test aupr 0.304 train acc 0.628, test acc 0.733 confusion_matrix [[333  86]
+ [ 50  40]]
+    [OB/datasize_result_5/subset_table_16w/PRJEB28687] Job on GPU-6 completed.
+    [PD/datasize_result_2/subset_table_16w/PRJEB27564] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_2/subset_table_16w/PRJEB27564
+train loss 0.5305102467536926, test loss 0.7554503679275513, train auc 0.797, test auc 0.700 train f1 0.702, test f1 0.648 train mcc 0.423, test mcc 0.318 train aupr 0.839, test aupr 0.773 train acc 0.724, test acc 0.685 confusion_matrix [[ 59  71]
+ [ 32 165]]
+    [PD/datasize_result_1/subset_table_16w/PRJEB14674] Job on GPU-7 completed.
+    [PD/datasize_result_2/subset_table_16w/PRJEB30615] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_2/subset_table_16w/PRJEB30615
+train loss 0.4303675889968872, test loss 0.6888197660446167, train auc 0.871, test auc 0.739 train f1 0.757, test f1 0.634 train mcc 0.529, test mcc 0.387 train aupr 0.916, test aupr 0.742 train acc 0.779, test acc 0.664 confusion_matrix [[ 48  77]
+ [  8 120]]
+    [PD/datasize_result_1/subset_table_16w/PRJEB27564] Job on GPU-5 completed.
+    [PD/datasize_result_2/subset_table_16w/PRJNA510730] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_2/subset_table_16w/PRJNA510730
+train loss 0.6584203839302063, test loss 0.6653255820274353, train auc 0.634, test auc 0.724 train f1 0.388, test f1 0.537 train mcc 0.098, test mcc 0.213 train aupr 0.697, test aupr 0.827 train acc 0.577, test acc 0.694 confusion_matrix [[ 16  80]
+ [  8 184]]
+train loss 0.5234220027923584, test loss 1.3019627332687378, train auc 0.811, test auc 0.777 train f1 0.697, test f1 0.735 train mcc 0.429, test mcc 0.473 train aupr 0.858, test aupr 0.799 train acc 0.726, test acc 0.753 confusion_matrix [[ 63  37]
+ [ 26 129]]
+    [PD/datasize_result_1/subset_table_16w/PRJNA594156] Job on GPU-1 completed.
+    [PD/datasize_result_2/subset_table_16w/PRJNA594156] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_2/subset_table_16w/PRJNA594156
+train loss 0.57410728931427, test loss 0.6682594418525696, train auc 0.761, test auc 0.683 train f1 0.685, test f1 0.490 train mcc 0.389, test mcc 0.207 train aupr 0.818, test aupr 0.742 train acc 0.710, test acc 0.627 confusion_matrix [[ 11  72]
+ [  3 115]]
+    [PD/datasize_result_1/subset_table_16w/PRJEB30615] Job on GPU-2 completed.
+    [PD/datasize_result_2/subset_table_16w/PRJNA742875] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_2/subset_table_16w/PRJNA742875
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [PD/datasize_result_1/subset_table_16w/PRJNA510730] Job on GPU-4 completed.
+    [PD/datasize_result_3/subset_table_16w/PRJEB14674] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_3/subset_table_16w/PRJEB14674
+train loss 0.3634745478630066, test loss 1.5454320907592773, train auc 0.912, test auc 0.735 train f1 0.825, test f1 0.707 train mcc 0.652, test mcc 0.415 train aupr 0.941, test aupr 0.730 train acc 0.834, test acc 0.708 confusion_matrix [[58 26]
+ [24 63]]
+    [PD/datasize_result_1/subset_table_16w/PRJNA742875] Job on GPU-3 completed.
+    [PD/datasize_result_3/subset_table_16w/PRJEB27564] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_3/subset_table_16w/PRJEB27564
+train loss 0.5271120071411133, test loss 0.7461516857147217, train auc 0.797, test auc 0.708 train f1 0.655, test f1 0.624 train mcc 0.399, test mcc 0.324 train aupr 0.853, test aupr 0.773 train acc 0.706, test acc 0.688 confusion_matrix [[ 45  85]
+ [ 17 180]]
+    [PD/datasize_result_2/subset_table_16w/PRJEB14674] Job on GPU-0 completed.
+    [PD/datasize_result_3/subset_table_16w/PRJEB30615] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_3/subset_table_16w/PRJEB30615
+train loss 0.4460822343826294, test loss 0.6411838531494141, train auc 0.861, test auc 0.713 train f1 0.743, test f1 0.627 train mcc 0.511, test mcc 0.385 train aupr 0.908, test aupr 0.715 train acc 0.770, test acc 0.660 confusion_matrix [[ 46  79]
+ [  7 121]]
+    [PD/datasize_result_2/subset_table_16w/PRJEB27564] Job on GPU-6 completed.
+    [PD/datasize_result_3/subset_table_16w/PRJNA510730] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_3/subset_table_16w/PRJNA510730
+train loss 0.5729199051856995, test loss 0.9447846412658691, train auc 0.759, test auc 0.779 train f1 0.651, test f1 0.671 train mcc 0.343, test mcc 0.378 train aupr 0.820, test aupr 0.837 train acc 0.688, test acc 0.714 confusion_matrix [[ 45  55]
+ [ 18 137]]
+    [PD/datasize_result_2/subset_table_16w/PRJEB30615] Job on GPU-7 completed.
+    [PD/datasize_result_3/subset_table_16w/PRJNA594156] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_3/subset_table_16w/PRJNA594156
+train loss 0.5561484694480896, test loss 0.8240362405776978, train auc 0.781, test auc 0.674 train f1 0.659, test f1 0.529 train mcc 0.378, test mcc 0.224 train aupr 0.835, test aupr 0.721 train acc 0.703, test acc 0.637 confusion_matrix [[ 16  67]
+ [  6 112]]
+    [PD/datasize_result_2/subset_table_16w/PRJNA510730] Job on GPU-5 completed.
+    [PD/datasize_result_3/subset_table_16w/PRJNA742875] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_3/subset_table_16w/PRJNA742875
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6597080230712891, test loss 0.6606033444404602, train auc 0.634, test auc 0.713 train f1 0.447, test f1 0.468 train mcc 0.122, test mcc 0.148 train aupr 0.692, test aupr 0.822 train acc 0.588, test acc 0.681 confusion_matrix [[  7  89]
+ [  3 189]]
+train loss 0.5067869424819946, test loss 0.6780300140380859, train auc 0.818, test auc 0.726 train f1 0.647, test f1 0.655 train mcc 0.413, test mcc 0.352 train aupr 0.854, test aupr 0.806 train acc 0.707, test acc 0.700 confusion_matrix [[ 55  75]
+ [ 23 174]]
+    [PD/datasize_result_2/subset_table_16w/PRJNA594156] Job on GPU-1 completed.
+    [PD/datasize_result_4/subset_table_16w/PRJEB14674] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_4/subset_table_16w/PRJEB14674
+    [PD/datasize_result_3/subset_table_16w/PRJEB14674] Job on GPU-4 completed.
+    [PD/datasize_result_4/subset_table_16w/PRJEB27564] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_4/subset_table_16w/PRJEB27564
+train loss 0.6242120265960693, test loss 0.6592255234718323, train auc 0.684, test auc 0.714 train f1 0.467, test f1 0.607 train mcc 0.161, test mcc 0.342 train aupr 0.746, test aupr 0.711 train acc 0.622, test acc 0.643 confusion_matrix [[29 55]
+ [ 6 81]]
+    [PD/datasize_result_2/subset_table_16w/PRJNA742875] Job on GPU-2 completed.
+    [PD/datasize_result_4/subset_table_16w/PRJEB30615] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_4/subset_table_16w/PRJEB30615
+train loss 0.48655152320861816, test loss 0.7001596093177795, train auc 0.830, test auc 0.694 train f1 0.711, test f1 0.635 train mcc 0.462, test mcc 0.330 train aupr 0.885, test aupr 0.706 train acc 0.747, test acc 0.652 confusion_matrix [[ 55  70]
+ [ 18 110]]
+train loss 0.5738914012908936, test loss 0.847661554813385, train auc 0.758, test auc 0.830 train f1 0.672, test f1 0.611 train mcc 0.375, test mcc 0.395 train aupr 0.810, test aupr 0.882 train acc 0.702, test acc 0.706 confusion_matrix [[ 27  73]
+ [  2 153]]
+    [PD/datasize_result_3/subset_table_16w/PRJEB27564] Job on GPU-3 completed.
+    [PD/datasize_result_4/subset_table_16w/PRJNA510730] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_4/subset_table_16w/PRJNA510730
+    [PD/datasize_result_3/subset_table_16w/PRJEB30615] Job on GPU-0 completed.
+    [PD/datasize_result_4/subset_table_16w/PRJNA594156] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_4/subset_table_16w/PRJNA594156
+train loss 0.5893085598945618, test loss 0.6801992654800415, train auc 0.742, test auc 0.685 train f1 0.633, test f1 0.570 train mcc 0.324, test mcc 0.296 train aupr 0.795, test aupr 0.766 train acc 0.681, test acc 0.662 confusion_matrix [[ 20  63]
+ [  5 113]]
+    [PD/datasize_result_3/subset_table_16w/PRJNA510730] Job on GPU-6 completed.
+    [PD/datasize_result_4/subset_table_16w/PRJNA742875] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_4/subset_table_16w/PRJNA742875
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6294500827789307, test loss 0.7008529901504517, train auc 0.698, test auc 0.757 train f1 0.587, test f1 0.680 train mcc 0.266, test mcc 0.391 train aupr 0.732, test aupr 0.843 train acc 0.645, test acc 0.747 confusion_matrix [[ 42  54]
+ [ 19 173]]
+    [PD/datasize_result_3/subset_table_16w/PRJNA594156] Job on GPU-7 completed.
+    [PD/datasize_result_5/subset_table_16w/PRJEB14674] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_5/subset_table_16w/PRJEB14674
+train loss 0.5502369999885559, test loss 0.6668151617050171, train auc 0.780, test auc 0.729 train f1 0.665, test f1 0.639 train mcc 0.384, test mcc 0.331 train aupr 0.832, test aupr 0.748 train acc 0.711, test acc 0.655 confusion_matrix [[38 46]
+ [13 74]]
+    [PD/datasize_result_3/subset_table_16w/PRJNA742875] Job on GPU-5 completed.
+    [PD/datasize_result_5/subset_table_16w/PRJEB27564] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_5/subset_table_16w/PRJEB27564
+train loss 0.6158924102783203, test loss 0.8357511162757874, train auc 0.715, test auc 0.758 train f1 0.529, test f1 0.626 train mcc 0.233, test mcc 0.315 train aupr 0.751, test aupr 0.846 train acc 0.626, test acc 0.722 confusion_matrix [[ 31  65]
+ [ 15 177]]
+    [PD/datasize_result_4/subset_table_16w/PRJNA594156] Job on GPU-0 completed.
+    [PD/datasize_result_5/subset_table_16w/PRJEB30615] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_5/subset_table_16w/PRJEB30615
+train loss 0.46770474314689636, test loss 0.682211697101593, train auc 0.848, test auc 0.718 train f1 0.728, test f1 0.573 train mcc 0.488, test mcc 0.330 train aupr 0.885, test aupr 0.718 train acc 0.759, test acc 0.625 confusion_matrix [[ 35  90]
+ [  5 123]]
+train loss 0.5791467428207397, test loss 0.9891679286956787, train auc 0.753, test auc 0.808 train f1 0.665, test f1 0.669 train mcc 0.369, test mcc 0.400 train aupr 0.796, test aupr 0.858 train acc 0.699, test acc 0.722 confusion_matrix [[ 41  59]
+ [ 12 143]]
+train loss 0.4896368086338043, test loss 0.8580857515335083, train auc 0.831, test auc 0.715 train f1 0.682, test f1 0.625 train mcc 0.444, test mcc 0.307 train aupr 0.879, test aupr 0.779 train acc 0.726, test acc 0.682 confusion_matrix [[ 48  82]
+ [ 22 175]]
+    [PD/datasize_result_4/subset_table_16w/PRJEB27564] Job on GPU-4 completed.
+    [PD/datasize_result_5/subset_table_16w/PRJNA510730] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_5/subset_table_16w/PRJNA510730
+    [PD/datasize_result_4/subset_table_16w/PRJEB30615] Job on GPU-2 completed.
+    [PD/datasize_result_5/subset_table_16w/PRJNA594156] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_5/subset_table_16w/PRJNA594156
+    [PD/datasize_result_4/subset_table_16w/PRJEB14674] Job on GPU-1 completed.
+    [PD/datasize_result_5/subset_table_16w/PRJNA742875] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/PD/datasize_result_5/subset_table_16w/PRJNA742875
+Processing disease: SZ
+Found studies for SZ: PRJCA000673 PRJNA807473 PRJNA880407 PRJNA896324
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.5435863137245178, test loss 0.7761226892471313, train auc 0.791, test auc 0.681 train f1 0.655, test f1 0.461 train mcc 0.376, test mcc 0.180 train aupr 0.840, test aupr 0.717 train acc 0.702, test acc 0.617 confusion_matrix [[  8  75]
+ [  2 116]]
+    [PD/datasize_result_4/subset_table_16w/PRJNA510730] Job on GPU-3 completed.
+    [SZ/datasize_result_1/subset_table_16w/PRJCA000673] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_1/subset_table_16w/PRJCA000673
+train loss 0.4337471127510071, test loss 0.9224406480789185, train auc 0.868, test auc 0.717 train f1 0.762, test f1 0.674 train mcc 0.546, test mcc 0.362 train aupr 0.902, test aupr 0.742 train acc 0.784, test acc 0.678 confusion_matrix [[48 36]
+ [19 68]]
+    [PD/datasize_result_4/subset_table_16w/PRJNA742875] Job on GPU-6 completed.
+    [SZ/datasize_result_1/subset_table_16w/PRJNA807473] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_1/subset_table_16w/PRJNA807473
+train loss 0.5104997158050537, test loss 0.656974732875824, train auc 0.815, test auc 0.717 train f1 0.628, test f1 0.597 train mcc 0.402, test mcc 0.277 train aupr 0.854, test aupr 0.794 train acc 0.699, test acc 0.670 confusion_matrix [[ 40  90]
+ [ 18 179]]
+    [PD/datasize_result_5/subset_table_16w/PRJEB14674] Job on GPU-7 completed.
+    [SZ/datasize_result_1/subset_table_16w/PRJNA880407] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_1/subset_table_16w/PRJNA880407
+train loss 0.4450170695781708, test loss 0.6372283101081848, train auc 0.864, test auc 0.703 train f1 0.747, test f1 0.594 train mcc 0.525, test mcc 0.324 train aupr 0.903, test aupr 0.710 train acc 0.775, test acc 0.632 confusion_matrix [[ 41  84]
+ [  9 119]]
+    [PD/datasize_result_5/subset_table_16w/PRJEB27564] Job on GPU-5 completed.
+    [SZ/datasize_result_1/subset_table_16w/PRJNA896324] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_1/subset_table_16w/PRJNA896324
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.15088972449302673, test loss 0.7146166563034058, train auc 0.983, test auc 0.810 train f1 0.959, test f1 0.795 train mcc 0.919, test mcc 0.613 train aupr 0.985, test aupr 0.828 train acc 0.960, test acc 0.795 confusion_matrix [[48  5]
+ [19 45]]
+    [SZ/datasize_result_1/subset_table_16w/PRJCA000673] Job on GPU-3 completed.
+    [SZ/datasize_result_2/subset_table_16w/PRJCA000673] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_2/subset_table_16w/PRJCA000673
+train loss 0.3401762843132019, test loss 0.9858242869377136, train auc 0.930, test auc 0.679 train f1 0.873, test f1 0.661 train mcc 0.746, test mcc 0.325 train aupr 0.946, test aupr 0.760 train acc 0.874, test acc 0.671 confusion_matrix [[40 31]
+ [22 68]]
+train loss 0.5917580723762512, test loss 0.9763222932815552, train auc 0.740, test auc 0.838 train f1 0.631, test f1 0.697 train mcc 0.328, test mcc 0.510 train aupr 0.787, test aupr 0.873 train acc 0.680, test acc 0.757 confusion_matrix [[ 40  60]
+ [  2 153]]
+    [SZ/datasize_result_1/subset_table_16w/PRJNA807473] Job on GPU-6 completed.
+    [SZ/datasize_result_2/subset_table_16w/PRJNA807473] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_2/subset_table_16w/PRJNA807473
+    [PD/datasize_result_5/subset_table_16w/PRJEB30615] Job on GPU-0 completed.
+    [SZ/datasize_result_2/subset_table_16w/PRJNA880407] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_2/subset_table_16w/PRJNA880407
+train loss 0.5804834961891174, test loss 0.7446697354316711, train auc 0.759, test auc 0.743 train f1 0.644, test f1 0.523 train mcc 0.346, test mcc 0.198 train aupr 0.803, test aupr 0.841 train acc 0.682, test acc 0.691 confusion_matrix [[ 14  82]
+ [  7 185]]
+train loss 0.6063618063926697, test loss 0.6452731490135193, train auc 0.719, test auc 0.672 train f1 0.542, test f1 0.507 train mcc 0.283, test mcc 0.217 train aupr 0.775, test aupr 0.759 train acc 0.652, test acc 0.632 confusion_matrix [[ 13  70]
+ [  4 114]]
+    [PD/datasize_result_5/subset_table_16w/PRJNA594156] Job on GPU-2 completed.
+    [SZ/datasize_result_2/subset_table_16w/PRJNA896324] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_2/subset_table_16w/PRJNA896324
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [PD/datasize_result_5/subset_table_16w/PRJNA510730] Job on GPU-4 completed.
+    [SZ/datasize_result_3/subset_table_16w/PRJCA000673] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_3/subset_table_16w/PRJCA000673
+train loss 0.35921362042427063, test loss 2.0702481269836426, train auc 0.913, test auc 0.732 train f1 0.806, test f1 0.667 train mcc 0.623, test mcc 0.401 train aupr 0.941, test aupr 0.723 train acc 0.820, test acc 0.684 confusion_matrix [[39 45]
+ [ 9 78]]
+    [PD/datasize_result_5/subset_table_16w/PRJNA742875] Job on GPU-1 completed.
+    [SZ/datasize_result_3/subset_table_16w/PRJNA807473] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_3/subset_table_16w/PRJNA807473
+train loss 0.15186932682991028, test loss 1.6495028734207153, train auc 0.985, test auc 0.732 train f1 0.952, test f1 0.660 train mcc 0.908, test mcc 0.362 train aupr 0.991, test aupr 0.766 train acc 0.953, test acc 0.670 confusion_matrix [[25 25]
+ [ 8 42]]
+    [SZ/datasize_result_1/subset_table_16w/PRJNA880407] Job on GPU-7 completed.
+    [SZ/datasize_result_3/subset_table_16w/PRJNA880407] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_3/subset_table_16w/PRJNA880407
+train loss 0.3590353727340698, test loss 1.3566622734069824, train auc 0.931, test auc 0.705 train f1 0.870, test f1 0.698 train mcc 0.742, test mcc 0.396 train aupr 0.929, test aupr 0.773 train acc 0.870, test acc 0.717 confusion_matrix [[14  8]
+ [ 9 29]]
+    [SZ/datasize_result_1/subset_table_16w/PRJNA896324] Job on GPU-5 completed.
+    [SZ/datasize_result_3/subset_table_16w/PRJNA896324] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_3/subset_table_16w/PRJNA896324
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.2609364092350006, test loss 0.8312245011329651, train auc 0.964, test auc 0.788 train f1 0.894, test f1 0.733 train mcc 0.790, test mcc 0.466 train aupr 0.974, test aupr 0.824 train acc 0.894, test acc 0.735 confusion_matrix [[38 15]
+ [16 48]]
+    [SZ/datasize_result_2/subset_table_16w/PRJCA000673] Job on GPU-3 completed.
+    [SZ/datasize_result_4/subset_table_16w/PRJCA000673] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_4/subset_table_16w/PRJCA000673
+train loss 0.308851957321167, test loss 1.1332807540893555, train auc 0.946, test auc 0.680 train f1 0.875, test f1 0.658 train mcc 0.753, test mcc 0.368 train aupr 0.962, test aupr 0.694 train acc 0.879, test acc 0.670 confusion_matrix [[24 26]
+ [ 7 43]]
+    [SZ/datasize_result_2/subset_table_16w/PRJNA880407] Job on GPU-0 completed.
+    [SZ/datasize_result_4/subset_table_16w/PRJNA807473] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_4/subset_table_16w/PRJNA807473
+train loss 0.2832261621952057, test loss 1.2012265920639038, train auc 0.950, test auc 0.795 train f1 0.920, test f1 0.698 train mcc 0.842, test mcc 0.402 train aupr 0.957, test aupr 0.868 train acc 0.921, test acc 0.708 confusion_matrix [[42 29]
+ [18 72]]
+    [SZ/datasize_result_2/subset_table_16w/PRJNA807473] Job on GPU-6 completed.
+    [SZ/datasize_result_4/subset_table_16w/PRJNA880407] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_4/subset_table_16w/PRJNA880407
+train loss 0.5976471304893494, test loss 0.8126184344291687, train auc 0.813, test auc 0.720 train f1 0.721, test f1 0.722 train mcc 0.468, test mcc 0.480 train aupr 0.833, test aupr 0.753 train acc 0.733, test acc 0.767 confusion_matrix [[11 11]
+ [ 3 35]]
+    [SZ/datasize_result_2/subset_table_16w/PRJNA896324] Job on GPU-2 completed.
+    [SZ/datasize_result_4/subset_table_16w/PRJNA896324] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_4/subset_table_16w/PRJNA896324
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.2724594175815582, test loss 1.2146453857421875, train auc 0.957, test auc 0.640 train f1 0.905, test f1 0.356 train mcc 0.811, test mcc -0.070 train aupr 0.962, test aupr 0.762 train acc 0.906, test acc 0.553 confusion_matrix [[ 0 71]
+ [ 1 89]]
+train loss 0.36413946747779846, test loss 0.6746246814727783, train auc 0.964, test auc 0.757 train f1 0.903, test f1 0.667 train mcc 0.808, test mcc 0.359 train aupr 0.974, test aupr 0.777 train acc 0.904, test acc 0.684 confusion_matrix [[27 26]
+ [11 53]]
+    [SZ/datasize_result_3/subset_table_16w/PRJNA807473] Job on GPU-1 completed.
+    [SZ/datasize_result_5/subset_table_16w/PRJCA000673] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_5/subset_table_16w/PRJCA000673
+    [SZ/datasize_result_3/subset_table_16w/PRJCA000673] Job on GPU-4 completed.
+    [SZ/datasize_result_5/subset_table_16w/PRJNA807473] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_5/subset_table_16w/PRJNA807473
+train loss 0.12061327695846558, test loss 2.3298442363739014, train auc 0.990, test auc 0.727 train f1 0.958, test f1 0.630 train mcc 0.916, test mcc 0.338 train aupr 0.993, test aupr 0.764 train acc 0.959, test acc 0.650 confusion_matrix [[21 29]
+ [ 6 44]]
+    [SZ/datasize_result_3/subset_table_16w/PRJNA880407] Job on GPU-7 completed.
+    [SZ/datasize_result_5/subset_table_16w/PRJNA880407] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_5/subset_table_16w/PRJNA880407
+train loss 0.28913313150405884, test loss 1.7816153764724731, train auc 0.953, test auc 0.754 train f1 0.899, test f1 0.700 train mcc 0.798, test mcc 0.408 train aupr 0.959, test aupr 0.813 train acc 0.899, test acc 0.733 confusion_matrix [[12 10]
+ [ 6 32]]
+    [SZ/datasize_result_3/subset_table_16w/PRJNA896324] Job on GPU-5 completed.
+    [SZ/datasize_result_5/subset_table_16w/PRJNA896324] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/SZ/datasize_result_5/subset_table_16w/PRJNA896324
+Processing disease: T2DM
+Found studies for T2DM: PRJEB11419 PRJEB59916 PRJNA1000711 PRJNA588353 PRJNA646010 PRJNA668251 PRJNA734860 PRJNA766337 PRJNA788301 PRJNA807457 PRJNA819279 PRJNA879337 PRJNA978958
+Processing data size directory: datasize_result_1
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.3255283832550049, test loss 1.0955876111984253, train auc 0.936, test auc 0.697 train f1 0.876, test f1 0.356 train mcc 0.753, test mcc -0.070 train aupr 0.944, test aupr 0.814 train acc 0.878, test acc 0.553 confusion_matrix [[ 0 71]
+ [ 1 89]]
+train loss 0.20686382055282593, test loss 0.7204039096832275, train auc 0.982, test auc 0.850 train f1 0.930, test f1 0.810 train mcc 0.862, test mcc 0.620 train aupr 0.987, test aupr 0.851 train acc 0.932, test acc 0.812 confusion_matrix [[41 12]
+ [10 54]]
+    [SZ/datasize_result_4/subset_table_16w/PRJNA807473] Job on GPU-0 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJEB11419] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJEB11419
+    [SZ/datasize_result_4/subset_table_16w/PRJCA000673] Job on GPU-3 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJEB59916] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJEB59916
+train loss 0.10178789496421814, test loss 1.9442672729492188, train auc 0.995, test auc 0.706 train f1 0.964, test f1 0.609 train mcc 0.929, test mcc 0.293 train aupr 0.997, test aupr 0.740 train acc 0.965, test acc 0.630 confusion_matrix [[20 30]
+ [ 7 43]]
+    [SZ/datasize_result_4/subset_table_16w/PRJNA880407] Job on GPU-6 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA1000711] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA1000711
+train loss 0.3070625960826874, test loss 1.28922438621521, train auc 0.947, test auc 0.744 train f1 0.888, test f1 0.617 train mcc 0.776, test mcc 0.271 train aupr 0.955, test aupr 0.797 train acc 0.889, test acc 0.683 confusion_matrix [[ 8 14]
+ [ 5 33]]
+    [SZ/datasize_result_4/subset_table_16w/PRJNA896324] Job on GPU-2 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA588353] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA588353
+train loss 0.3327837884426117, test loss 1.1992970705032349, train auc 0.930, test auc 0.690 train f1 0.888, test f1 0.356 train mcc 0.775, test mcc -0.070 train aupr 0.944, test aupr 0.800 train acc 0.888, test acc 0.553 confusion_matrix [[ 0 71]
+ [ 1 89]]
+    [SZ/datasize_result_5/subset_table_16w/PRJNA807473] Job on GPU-4 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA646010] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA646010
+train loss 0.11598499864339828, test loss 0.7511191368103027, train auc 0.993, test auc 0.784 train f1 0.956, test f1 0.730 train mcc 0.913, test mcc 0.463 train aupr 0.995, test aupr 0.834 train acc 0.957, test acc 0.735 confusion_matrix [[35 18]
+ [13 51]]
+    [SZ/datasize_result_5/subset_table_16w/PRJCA000673] Job on GPU-1 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA668251] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA668251
+train loss 0.1719946265220642, test loss 1.5814719200134277, train auc 0.982, test auc 0.720 train f1 0.937, test f1 0.605 train mcc 0.874, test mcc 0.300 train aupr 0.988, test aupr 0.731 train acc 0.938, test acc 0.630 confusion_matrix [[19 31]
+ [ 6 44]]
+    [SZ/datasize_result_5/subset_table_16w/PRJNA880407] Job on GPU-7 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA734860] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA734860
+train loss 0.6477014422416687, test loss 0.7070644497871399, train auc 0.738, test auc 0.701 train f1 0.644, test f1 0.687 train mcc 0.324, test mcc 0.444 train aupr 0.766, test aupr 0.706 train acc 0.664, test acc 0.750 confusion_matrix [[ 9 13]
+ [ 2 36]]
+    [SZ/datasize_result_5/subset_table_16w/PRJNA896324] Job on GPU-5 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA766337] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA766337
+train loss 0.555034339427948, test loss 0.6733600497245789, train auc 0.769, test auc 0.705 train f1 0.657, test f1 0.505 train mcc 0.354, test mcc 0.286 train aupr 0.835, test aupr 0.598 train acc 0.709, test acc 0.536 confusion_matrix [[12 38]
+ [ 1 33]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJEB11419] Job on GPU-0 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA788301] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA788301
+train loss 0.5971710681915283, test loss 0.8036218881607056, train auc 0.719, test auc 0.528 train f1 0.585, test f1 0.560 train mcc 0.271, test mcc 0.250 train aupr 0.770, test aupr 0.513 train acc 0.669, test acc 0.600 confusion_matrix [[ 6 14]
+ [ 2 18]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJEB59916] Job on GPU-3 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA807457] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA807457
+train loss 0.5500735640525818, test loss 0.5150883793830872, train auc 0.773, test auc 0.777 train f1 0.668, test f1 0.684 train mcc 0.395, test mcc 0.370 train aupr 0.805, test aupr 0.932 train acc 0.713, test acc 0.791 confusion_matrix [[ 7  8]
+ [ 6 46]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA1000711] Job on GPU-6 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA819279] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA819279
+train loss 0.5142316818237305, test loss 0.7593331336975098, train auc 0.813, test auc 0.712 train f1 0.749, test f1 0.684 train mcc 0.500, test mcc 0.383 train aupr 0.868, test aupr 0.606 train acc 0.765, test acc 0.688 confusion_matrix [[14 10]
+ [ 5 19]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA588353] Job on GPU-2 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA879337] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA879337
+train loss 0.5029518604278564, test loss 0.6327799558639526, train auc 0.824, test auc 0.792 train f1 0.736, test f1 0.721 train mcc 0.477, test mcc 0.443 train aupr 0.872, test aupr 0.829 train acc 0.754, test acc 0.732 confusion_matrix [[11  6]
+ [ 5 19]]
+train loss 0.6451186537742615, test loss 0.7726653814315796, train auc 0.652, test auc 0.939 train f1 0.376, test f1 0.854 train mcc -0.024, test mcc 0.745 train aupr 0.724, test aupr 0.955 train acc 0.603, test acc 0.857 confusion_matrix [[7 0]
+ [2 5]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA646010] Job on GPU-4 completed.
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA978958] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_1/subset_table_16w/PRJNA978958
+Processing data size directory: datasize_result_2
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA668251] Job on GPU-1 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJEB11419] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJEB11419
+train loss 0.5626383423805237, test loss 0.6627292037010193, train auc 0.738, test auc 0.570 train f1 0.647, test f1 0.480 train mcc 0.324, test mcc 0.160 train aupr 0.839, test aupr 0.391 train acc 0.717, test acc 0.486 confusion_matrix [[ 41 100]
+ [ 11  64]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA734860] Job on GPU-7 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJEB59916] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJEB59916
+train loss 0.4960712790489197, test loss 0.652383029460907, train auc 0.835, test auc 0.612 train f1 0.760, test f1 0.435 train mcc 0.528, test mcc -0.024 train aupr 0.842, test aupr 0.825 train acc 0.760, test acc 0.769 confusion_matrix [[  0 114]
+ [  1 382]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA766337] Job on GPU-5 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA1000711] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA1000711
+train loss 0.37683019042015076, test loss 2.7168827056884766, train auc 0.908, test auc 0.623 train f1 0.827, test f1 0.512 train mcc 0.653, test mcc 0.133 train aupr 0.941, test aupr 0.602 train acc 0.835, test acc 0.549 confusion_matrix [[ 7 19]
+ [ 4 21]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA788301] Job on GPU-0 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA588353] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA588353
+train loss 0.5593459010124207, test loss 0.7935149669647217, train auc 0.769, test auc 0.612 train f1 0.676, test f1 0.697 train mcc 0.385, test mcc 0.408 train aupr 0.812, test aupr 0.571 train acc 0.716, test acc 0.700 confusion_matrix [[16  4]
+ [ 8 12]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA807457] Job on GPU-3 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA646010] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA646010
+train loss 0.5781447887420654, test loss 0.7902421951293945, train auc 0.747, test auc 0.819 train f1 0.560, test f1 0.780 train mcc 0.259, test mcc 0.568 train aupr 0.794, test aupr 0.775 train acc 0.664, test acc 0.780 confusion_matrix [[15  6]
+ [ 3 17]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA819279] Job on GPU-6 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA668251] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA668251
+train loss 0.6286051869392395, test loss 0.6258801221847534, train auc 0.672, test auc 1.000 train f1 0.437, test f1 0.948 train mcc 0.109, test mcc 0.901 train aupr 0.722, test aupr 1.000 train acc 0.615, test acc 0.952 confusion_matrix [[ 7  0]
+ [ 1 13]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA879337] Job on GPU-2 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA734860] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA734860
+train loss 0.5899537205696106, test loss 0.5848188996315002, train auc 0.732, test auc 0.747 train f1 0.654, test f1 0.655 train mcc 0.336, test mcc 0.346 train aupr 0.786, test aupr 0.821 train acc 0.693, test acc 0.724 confusion_matrix [[ 4  6]
+ [ 2 17]]
+train loss 0.6047292947769165, test loss 0.6739691495895386, train auc 0.701, test auc 0.672 train f1 0.478, test f1 0.607 train mcc 0.198, test mcc 0.254 train aupr 0.756, test aupr 0.544 train acc 0.648, test acc 0.607 confusion_matrix [[26 24]
+ [ 9 25]]
+    [T2DM/datasize_result_1/subset_table_16w/PRJNA978958] Job on GPU-4 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA766337] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA766337
+    [T2DM/datasize_result_2/subset_table_16w/PRJEB11419] Job on GPU-1 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA788301] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA788301
+train loss 0.6013049483299255, test loss 0.8069748282432556, train auc 0.710, test auc 0.508 train f1 0.526, test f1 0.525 train mcc 0.188, test mcc 0.197 train aupr 0.770, test aupr 0.561 train acc 0.641, test acc 0.575 confusion_matrix [[ 5 15]
+ [ 2 18]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJEB59916] Job on GPU-7 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA807457] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA807457
+train loss 0.49302807450294495, test loss 0.4193407893180847, train auc 0.834, test auc 0.829 train f1 0.712, test f1 0.495 train mcc 0.461, test mcc 0.116 train aupr 0.877, test aupr 0.950 train acc 0.743, test acc 0.776 confusion_matrix [[ 1 14]
+ [ 1 51]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA1000711] Job on GPU-5 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA819279] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA819279
+train loss 0.4762430787086487, test loss 0.7540490627288818, train auc 0.842, test auc 0.726 train f1 0.768, test f1 0.618 train mcc 0.547, test mcc 0.347 train aupr 0.883, test aupr 0.657 train acc 0.788, test acc 0.646 confusion_matrix [[ 9 15]
+ [ 2 22]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA588353] Job on GPU-0 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA879337] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA879337
+train loss 0.4663529396057129, test loss 0.6417412757873535, train auc 0.851, test auc 0.676 train f1 0.770, test f1 0.418 train mcc 0.541, test mcc 0.039 train aupr 0.897, test aupr 0.755 train acc 0.783, test acc 0.585 confusion_matrix [[ 1 16]
+ [ 1 23]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA646010] Job on GPU-3 completed.
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA978958] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_2/subset_table_16w/PRJNA978958
+Processing data size directory: datasize_result_3
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6112591624259949, test loss 0.7745839357376099, train auc 0.701, test auc 0.959 train f1 0.550, test f1 0.854 train mcc 0.211, test mcc 0.745 train aupr 0.767, test aupr 0.966 train acc 0.647, test acc 0.857 confusion_matrix [[7 0]
+ [2 5]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA668251] Job on GPU-6 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJEB11419] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJEB11419
+train loss 0.5646399855613708, test loss 0.6723079085350037, train auc 0.734, test auc 0.572 train f1 0.653, test f1 0.397 train mcc 0.339, test mcc 0.165 train aupr 0.831, test aupr 0.400 train acc 0.724, test acc 0.431 confusion_matrix [[ 21 120]
+ [  3  72]]
+train loss 0.6360670328140259, test loss 0.5292249321937561, train auc 0.694, test auc 0.580 train f1 0.642, test f1 0.483 train mcc 0.302, test mcc 0.113 train aupr 0.684, test aupr 0.796 train acc 0.645, test acc 0.773 confusion_matrix [[  6 108]
+ [  5 378]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA734860] Job on GPU-2 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJEB59916] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJEB59916
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA766337] Job on GPU-4 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA1000711] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA1000711
+train loss 0.40352651476860046, test loss 1.690418004989624, train auc 0.892, test auc 0.592 train f1 0.809, test f1 0.320 train mcc 0.621, test mcc -0.144 train aupr 0.927, test aupr 0.692 train acc 0.822, test acc 0.471 confusion_matrix [[ 0 26]
+ [ 1 24]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA788301] Job on GPU-1 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA588353] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA588353
+train loss 0.3735543191432953, test loss 1.3056058883666992, train auc 0.908, test auc 0.605 train f1 0.826, test f1 0.447 train mcc 0.651, test mcc 0.076 train aupr 0.943, test aupr 0.633 train acc 0.834, test acc 0.525 confusion_matrix [[ 3 17]
+ [ 2 18]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA807457] Job on GPU-7 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA646010] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA646010
+train loss 0.5055137872695923, test loss 0.9437791109085083, train auc 0.819, test auc 0.795 train f1 0.744, test f1 0.699 train mcc 0.500, test mcc 0.455 train aupr 0.854, test aupr 0.769 train acc 0.767, test acc 0.707 confusion_matrix [[11 10]
+ [ 2 18]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA819279] Job on GPU-5 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA668251] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA668251
+train loss 0.6272274255752563, test loss 0.6112515330314636, train auc 0.670, test auc 1.000 train f1 0.503, test f1 0.948 train mcc 0.172, test mcc 0.901 train aupr 0.715, test aupr 1.000 train acc 0.632, test acc 0.952 confusion_matrix [[ 7  0]
+ [ 1 13]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA879337] Job on GPU-0 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA734860] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA734860
+train loss 0.5314933657646179, test loss 0.5505874752998352, train auc 0.800, test auc 0.747 train f1 0.720, test f1 0.623 train mcc 0.461, test mcc 0.341 train aupr 0.836, test aupr 0.839 train acc 0.747, test acc 0.724 confusion_matrix [[ 3  7]
+ [ 1 18]]
+    [T2DM/datasize_result_2/subset_table_16w/PRJNA978958] Job on GPU-3 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA766337] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA766337
+train loss 0.6080526113510132, test loss 0.6661151647567749, train auc 0.690, test auc 0.697 train f1 0.619, test f1 0.697 train mcc 0.286, test mcc 0.398 train aupr 0.752, test aupr 0.577 train acc 0.681, test acc 0.714 confusion_matrix [[40 10]
+ [14 20]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJEB11419] Job on GPU-6 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA788301] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA788301
+train loss 0.611405611038208, test loss 0.8049799203872681, train auc 0.701, test auc 0.485 train f1 0.626, test f1 0.420 train mcc 0.297, test mcc 0.095 train aupr 0.751, test aupr 0.551 train acc 0.680, test acc 0.525 confusion_matrix [[ 2 18]
+ [ 1 19]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJEB59916] Job on GPU-2 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA807457] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA807457
+train loss 0.5774380564689636, test loss 0.5239689350128174, train auc 0.752, test auc 0.765 train f1 0.598, test f1 0.601 train mcc 0.264, test mcc 0.318 train aupr 0.813, test aupr 0.924 train acc 0.660, test acc 0.806 confusion_matrix [[ 3 12]
+ [ 1 51]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA1000711] Job on GPU-4 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA819279] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA819279
+train loss 0.4820787012577057, test loss 0.9590796232223511, train auc 0.840, test auc 0.743 train f1 0.759, test f1 0.670 train mcc 0.530, test mcc 0.422 train aupr 0.886, test aupr 0.745 train acc 0.780, test acc 0.688 confusion_matrix [[11 13]
+ [ 2 22]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA588353] Job on GPU-1 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA879337] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA879337
+train loss 0.6087795495986938, test loss 0.6444540023803711, train auc 0.704, test auc 0.708 train f1 0.487, test f1 0.641 train mcc 0.185, test mcc 0.329 train aupr 0.768, test aupr 0.803 train acc 0.635, test acc 0.683 confusion_matrix [[ 7 10]
+ [ 3 21]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA646010] Job on GPU-7 completed.
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA978958] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_3/subset_table_16w/PRJNA978958
+Processing data size directory: datasize_result_4
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+train loss 0.6258060336112976, test loss 0.7659846544265747, train auc 0.669, test auc 0.959 train f1 0.404, test f1 0.854 train mcc 0.076, test mcc 0.745 train aupr 0.718, test aupr 0.966 train acc 0.610, test acc 0.857 confusion_matrix [[7 0]
+ [2 5]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA668251] Job on GPU-5 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJEB11419] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJEB11419
+train loss 0.5399472117424011, test loss 0.9278831481933594, train auc 0.767, test auc 0.569 train f1 0.608, test f1 0.513 train mcc 0.314, test mcc 0.175 train aupr 0.842, test aupr 0.377 train acc 0.718, test acc 0.514 confusion_matrix [[50 91]
+ [14 61]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA734860] Job on GPU-0 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJEB59916] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJEB59916
+train loss 0.6344281435012817, test loss 0.5396388173103333, train auc 0.690, test auc 0.576 train f1 0.451, test f1 0.444 train mcc 0.195, test mcc 0.041 train aupr 0.694, test aupr 0.793 train acc 0.539, test acc 0.771 confusion_matrix [[  1 113]
+ [  1 382]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA766337] Job on GPU-3 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA1000711] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA1000711
+train loss 0.5462899208068848, test loss 0.9669268131256104, train auc 0.783, test auc 0.603 train f1 0.673, test f1 0.539 train mcc 0.379, test mcc 0.174 train aupr 0.832, test aupr 0.624 train acc 0.714, test acc 0.569 confusion_matrix [[ 8 18]
+ [ 4 21]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA788301] Job on GPU-6 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA588353] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA588353
+train loss 0.580345869064331, test loss 0.8460888862609863, train auc 0.743, test auc 0.595 train f1 0.647, test f1 0.560 train mcc 0.326, test mcc 0.250 train aupr 0.799, test aupr 0.572 train acc 0.691, test acc 0.600 confusion_matrix [[ 6 14]
+ [ 2 18]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA807457] Job on GPU-2 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA646010] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA646010
+train loss 0.4579826891422272, test loss 1.074066400527954, train auc 0.857, test auc 0.755 train f1 0.786, test f1 0.778 train mcc 0.576, test mcc 0.581 train aupr 0.895, test aupr 0.648 train acc 0.801, test acc 0.780 confusion_matrix [[14  7]
+ [ 2 18]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA819279] Job on GPU-4 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA668251] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA668251
+train loss 0.6248626112937927, test loss 0.6223932504653931, train auc 0.674, test auc 1.000 train f1 0.634, test f1 0.948 train mcc 0.294, test mcc 0.901 train aupr 0.722, test aupr 1.000 train acc 0.675, test acc 0.952 confusion_matrix [[ 7  0]
+ [ 1 13]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA879337] Job on GPU-1 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA734860] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA734860
+train loss 0.5003199577331543, test loss 0.5464422106742859, train auc 0.825, test auc 0.816 train f1 0.761, test f1 0.771 train mcc 0.533, test mcc 0.542 train aupr 0.859, test aupr 0.884 train acc 0.780, test acc 0.793 confusion_matrix [[ 7  3]
+ [ 3 16]]
+    [T2DM/datasize_result_3/subset_table_16w/PRJNA978958] Job on GPU-7 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA766337] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA766337
+train loss 0.5045323967933655, test loss 0.7275061011314392, train auc 0.815, test auc 0.698 train f1 0.722, test f1 0.668 train mcc 0.461, test mcc 0.336 train aupr 0.864, test aupr 0.567 train acc 0.753, test acc 0.679 confusion_matrix [[36 14]
+ [13 21]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJEB11419] Job on GPU-5 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA788301] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA788301
+train loss 0.38934746384620667, test loss 0.7837786674499512, train auc 0.901, test auc 0.593 train f1 0.825, test f1 0.464 train mcc 0.650, test mcc 0.167 train aupr 0.935, test aupr 0.676 train acc 0.832, test acc 0.550 confusion_matrix [[ 3 17]
+ [ 1 19]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJEB59916] Job on GPU-0 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA807457] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA807457
+train loss 0.50216144323349, test loss 0.49026259779930115, train auc 0.832, test auc 0.800 train f1 0.745, test f1 0.495 train mcc 0.503, test mcc 0.116 train aupr 0.876, test aupr 0.935 train acc 0.764, test acc 0.776 confusion_matrix [[ 1 14]
+ [ 1 51]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA1000711] Job on GPU-3 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA819279] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA819279
+train loss 0.5517292618751526, test loss 0.7939361929893494, train auc 0.776, test auc 0.755 train f1 0.668, test f1 0.729 train mcc 0.382, test mcc 0.459 train aupr 0.810, test aupr 0.780 train acc 0.715, test acc 0.729 confusion_matrix [[17  7]
+ [ 6 18]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA588353] Job on GPU-6 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA879337] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA879337
+train loss 0.3761504590511322, test loss 0.6591511964797974, train auc 0.908, test auc 0.652 train f1 0.843, test f1 0.418 train mcc 0.689, test mcc 0.039 train aupr 0.937, test aupr 0.747 train acc 0.848, test acc 0.585 confusion_matrix [[ 1 16]
+ [ 1 23]]
+train loss 0.6443852782249451, test loss 0.5390466451644897, train auc 0.682, test auc 0.616 train f1 0.569, test f1 0.461 train mcc 0.247, test mcc 0.089 train aupr 0.652, test aupr 0.829 train acc 0.595, test acc 0.773 confusion_matrix [[  3 111]
+ [  2 381]]
+train loss 0.6504331827163696, test loss 0.7887051105499268, train auc 0.634, test auc 0.980 train f1 0.389, test f1 0.857 train mcc 0.039, test mcc 0.714 train aupr 0.704, test aupr 0.981 train acc 0.606, test acc 0.857 confusion_matrix [[6 1]
+ [1 6]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA646010] Job on GPU-2 completed.
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA978958] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_4/subset_table_16w/PRJNA978958
+Processing data size directory: datasize_result_5
+  Processing embedding: subset_table_16w_100 (short name: subset_table_16w)
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA766337] Job on GPU-7 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJEB11419] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJEB11419
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA668251] Job on GPU-4 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJEB59916] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJEB59916
+train loss 0.5827046036720276, test loss 0.6665971279144287, train auc 0.701, test auc 0.542 train f1 0.507, test f1 0.380 train mcc 0.210, test mcc 0.090 train aupr 0.790, test aupr 0.360 train acc 0.688, test acc 0.412 confusion_matrix [[ 20 121]
+ [  6  69]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA734860] Job on GPU-1 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA1000711] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA1000711
+train loss 0.535146176815033, test loss 1.1989566087722778, train auc 0.792, test auc 0.574 train f1 0.716, test f1 0.454 train mcc 0.447, test mcc 0.115 train aupr 0.836, test aupr 0.570 train acc 0.743, test acc 0.529 confusion_matrix [[ 4 22]
+ [ 2 23]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA788301] Job on GPU-5 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA588353] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA588353
+train loss 0.5929511189460754, test loss 0.8762121796607971, train auc 0.724, test auc 0.593 train f1 0.543, test f1 0.699 train mcc 0.220, test mcc 0.402 train aupr 0.777, test aupr 0.566 train acc 0.651, test acc 0.700 confusion_matrix [[15  5]
+ [ 7 13]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA807457] Job on GPU-0 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA646010] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA646010
+train loss 0.5687552690505981, test loss 0.8387759327888489, train auc 0.757, test auc 0.793 train f1 0.660, test f1 0.726 train mcc 0.351, test mcc 0.497 train aupr 0.814, test aupr 0.787 train acc 0.702, test acc 0.732 confusion_matrix [[12  9]
+ [ 2 18]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA819279] Job on GPU-3 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA668251] Starting job on GPU-3. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA668251
+train loss 0.6044066548347473, test loss 0.5326697826385498, train auc 0.709, test auc 1.000 train f1 0.554, test f1 0.948 train mcc 0.223, test mcc 0.901 train aupr 0.766, test aupr 1.000 train acc 0.649, test acc 0.952 confusion_matrix [[ 7  0]
+ [ 1 13]]
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA879337] Job on GPU-6 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA734860] Starting job on GPU-6. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA734860
+train loss 0.6176775693893433, test loss 0.6704918742179871, train auc 0.678, test auc 0.722 train f1 0.600, test f1 0.643 train mcc 0.260, test mcc 0.322 train aupr 0.743, test aupr 0.642 train acc 0.672, test acc 0.643 confusion_matrix [[28 22]
+ [ 8 26]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJEB11419] Job on GPU-7 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA766337] Starting job on GPU-7. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA766337
+train loss 0.41679248213768005, test loss 1.1168192625045776, train auc 0.886, test auc 0.472 train f1 0.803, test f1 0.573 train mcc 0.608, test mcc 0.231 train aupr 0.921, test aupr 0.542 train acc 0.815, test acc 0.600 confusion_matrix [[ 7 13]
+ [ 3 17]]
+train loss 0.5491197109222412, test loss 0.5015407800674438, train auc 0.777, test auc 0.837 train f1 0.659, test f1 0.655 train mcc 0.374, test mcc 0.346 train aupr 0.815, test aupr 0.920 train acc 0.709, test acc 0.724 confusion_matrix [[ 4  6]
+ [ 2 17]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJEB59916] Job on GPU-4 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA788301] Starting job on GPU-4. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA788301
+    [T2DM/datasize_result_4/subset_table_16w/PRJNA978958] Job on GPU-2 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA807457] Starting job on GPU-2. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA807457
+train loss 0.5930045247077942, test loss 0.5141340494155884, train auc 0.728, test auc 0.763 train f1 0.668, test f1 0.647 train mcc 0.349, test mcc 0.392 train aupr 0.780, test aupr 0.911 train acc 0.693, test acc 0.821 confusion_matrix [[ 4 11]
+ [ 1 51]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA1000711] Job on GPU-1 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA819279] Starting job on GPU-1. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA819279
+train loss 0.49930933117866516, test loss 0.8076609969139099, train auc 0.826, test auc 0.693 train f1 0.751, test f1 0.657 train mcc 0.506, test mcc 0.354 train aupr 0.868, test aupr 0.631 train acc 0.769, test acc 0.667 confusion_matrix [[12 12]
+ [ 4 20]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA588353] Job on GPU-5 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA879337] Starting job on GPU-5. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA879337
+train loss 0.4185549020767212, test loss 0.6905742883682251, train auc 0.885, test auc 0.672 train f1 0.782, test f1 0.586 train mcc 0.573, test mcc 0.214 train aupr 0.921, test aupr 0.755 train acc 0.799, test acc 0.634 confusion_matrix [[ 6 11]
+ [ 4 20]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA646010] Job on GPU-0 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA978958] Starting job on GPU-0. Output: /home/cjj/projects/microbial-embeddings/analysis/Disease_classification_loo/Data/pretraining_datasize/result/T2DM/datasize_result_5/subset_table_16w/PRJNA978958
+train loss 0.6269960403442383, test loss 0.7699898481369019, train auc 0.669, test auc 0.959 train f1 0.540, test f1 0.854 train mcc 0.210, test mcc 0.745 train aupr 0.719, test aupr 0.966 train acc 0.646, test acc 0.857 confusion_matrix [[7 0]
+ [2 5]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA668251] Job on GPU-3 completed.
+train loss 0.6288902163505554, test loss 0.5389899611473083, train auc 0.698, test auc 0.594 train f1 0.505, test f1 0.435 train mcc 0.220, test mcc -0.024 train aupr 0.686, test aupr 0.825 train acc 0.564, test acc 0.769 confusion_matrix [[  0 114]
+ [  1 382]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA766337] Job on GPU-7 completed.
+train loss 0.5526730418205261, test loss 0.7990469336509705, train auc 0.748, test auc 0.585 train f1 0.595, test f1 0.498 train mcc 0.295, test mcc 0.155 train aupr 0.840, test aupr 0.401 train acc 0.712, test acc 0.500 confusion_matrix [[47 94]
+ [14 61]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA734860] Job on GPU-6 completed.
+train loss 0.5818806290626526, test loss 0.85539710521698, train auc 0.739, test auc 0.620 train f1 0.645, test f1 0.649 train mcc 0.325, test mcc 0.302 train aupr 0.787, test aupr 0.613 train acc 0.691, test acc 0.650 confusion_matrix [[12  8]
+ [ 6 14]]
+train loss 0.410239577293396, test loss 1.5398893356323242, train auc 0.888, test auc 0.658 train f1 0.800, test f1 0.625 train mcc 0.607, test mcc 0.263 train aupr 0.922, test aupr 0.716 train acc 0.815, test acc 0.627 confusion_matrix [[14 12]
+ [ 7 18]]
+train loss 0.5666669607162476, test loss 0.8094229698181152, train auc 0.761, test auc 0.857 train f1 0.679, test f1 0.780 train mcc 0.390, test mcc 0.568 train aupr 0.817, test aupr 0.837 train acc 0.719, test acc 0.780 confusion_matrix [[15  6]
+ [ 3 17]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA807457] Job on GPU-2 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA788301] Job on GPU-4 completed.
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA819279] Job on GPU-1 completed.
+train loss 0.6296802759170532, test loss 0.6191033720970154, train auc 0.664, test auc 1.000 train f1 0.479, test f1 0.948 train mcc 0.142, test mcc 0.901 train aupr 0.717, test aupr 1.000 train acc 0.623, test acc 0.952 confusion_matrix [[ 7  0]
+ [ 1 13]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA879337] Job on GPU-5 completed.
+train loss 0.4413672983646393, test loss 0.6147227883338928, train auc 0.869, test auc 0.805 train f1 0.792, test f1 0.780 train mcc 0.588, test mcc 0.569 train aupr 0.905, test aupr 0.880 train acc 0.805, test acc 0.793 confusion_matrix [[ 8  2]
+ [ 4 15]]
+    [T2DM/datasize_result_5/subset_table_16w/PRJNA978958] Job on GPU-0 completed.
+All background jobs finished.
+Script finished.
