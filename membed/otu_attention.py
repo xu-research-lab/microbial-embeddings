@@ -1232,11 +1232,103 @@ class Timer:
         return np.array(self.times).cumsum().tolist()
 
 
-def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices):
+def criterion_value(loss, logits, targets):
+    """Evaluate a criterion on whichever of logits or probabilities it expects.
+
+    :class:`torch.nn.BCEWithLogitsLoss` folds the sigmoid into the loss and
+    must be handed raw logits; :class:`torch.nn.BCELoss` and :class:`FocalLoss`
+    both consume probabilities. This picks the right one so the training and
+    evaluation paths do not each need to know which criterion is in play.
+
+    Parameters
+    ----------
+    loss : torch.nn.Module
+        The criterion.
+    logits : torch.Tensor
+        Raw model outputs of shape ``(batch,)``.
+    targets : torch.Tensor
+        Binary targets of shape ``(batch,)``, as floats.
+
+    Returns
+    -------
+    torch.Tensor
+        Scalar loss.
+
+    Notes
+    -----
+    Handing logits to ``BCEWithLogitsLoss`` is not merely tidier than applying
+    the sigmoid first. The fused form evaluates the loss through
+    ``log(1 + exp(-|x|))``, which stays finite at any logit, whereas a
+    separate sigmoid saturates to exactly 0 or 1 in float32 and leaves
+    ``BCELoss`` to clamp its logarithm at -100 -- a clamp that returns a
+    gradient of zero for the samples the model is most wrong about.
+    """
+    if isinstance(loss, nn.BCEWithLogitsLoss):
+        return loss(logits.float(), targets)
+    return loss(torch.sigmoid(logits).float(), targets)
+
+
+def build_lr_scheduler(trainer, kind, num_epochs, warmup_epochs=0):
+    """Build the per-epoch learning rate schedule.
+
+    Parameters
+    ----------
+    trainer : torch.optim.Optimizer
+        Optimizer whose learning rate is scheduled.
+    kind : {'none', 'cosine'}
+        ``'none'`` holds the learning rate constant. ``'cosine'`` decays it to
+        zero over `num_epochs` following a half cosine, after an optional
+        linear warmup.
+    num_epochs : int
+        Total number of epochs the schedule spans.
+    warmup_epochs : int, optional
+        Epochs of linear warmup from zero to the base rate. Default is 0.
+
+    Returns
+    -------
+    torch.optim.lr_scheduler.LRScheduler or None
+        None when `kind` is ``'none'``, which the training loop reads as "do
+        not step".
+
+    Raises
+    ------
+    ValueError
+        If `kind` is not one of the supported values.
+
+    Notes
+    -----
+    A decaying rate matters here beyond whatever it does for the final loss.
+    The epoch to keep is chosen by taking the minimum of a noisy validation
+    loss over every epoch, so how far that minimum overshoots the model's true
+    quality depends on how much the validation loss moves between epochs. Under
+    a constant rate the late epochs keep bouncing and the minimum is taken over
+    that bounce; decaying the rate quiets them and takes some of the noise out
+    of the selection.
+    """
+    if kind == 'none':
+        return None
+    if kind != 'cosine':
+        raise ValueError(f"unsupported lr_schedule {kind!r}; expected 'none' "
+                         f"or 'cosine'")
+
+    def lr_lambda(epoch):
+        if warmup_epochs and epoch < warmup_epochs:
+            return float(epoch + 1) / float(warmup_epochs)
+        progress = ((epoch - warmup_epochs)
+                    / max(num_epochs - warmup_epochs, 1))
+        return float(0.5 * (1.0 + np.cos(np.pi * min(progress, 1.0))))
+
+    return torch.optim.lr_scheduler.LambdaLR(trainer, lr_lambda)
+
+
+def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices,
+                     grad_clip=None):
     """Run one training step on a minibatch.
 
-    The model output is squeezed to shape ``(batch,)`` and squashed with a
-    sigmoid, so `loss` must be a criterion that consumes probabilities.
+    The model output is squeezed to shape ``(batch,)``. Whether the criterion
+    sees those logits directly or their sigmoid is decided by
+    :func:`criterion_value`; the probabilities are returned either way, since
+    the caller needs them for the running AUC.
 
     Parameters
     ----------
@@ -1249,8 +1341,7 @@ def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices):
     abundance : torch.Tensor
         Relative abundance weights of shape ``(batch, seq_len)``.
     loss : torch.nn.Module
-        Loss criterion operating on probabilities, e.g.
-        :class:`torch.nn.BCELoss` or :class:`FocalLoss`.
+        Loss criterion, on either logits or probabilities.
     mask : torch.Tensor
         Attention mask of shape ``(batch, seq_len)``, where 1 marks a valid
         position and 0 marks padding.
@@ -1258,13 +1349,16 @@ def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices):
         Optimizer used to apply the gradient step.
     devices : list of torch.device
         Devices to use; only ``devices[0]`` is used.
+    grad_clip : float, optional
+        Clip the total gradient norm to this value before stepping. Default is
+        None, which leaves gradients unclipped.
 
     Returns
     -------
     train_loss_sum : torch.Tensor
         Scalar loss for the minibatch.
-    pred : torch.Tensor
-        Predicted probabilities of shape ``(batch,)``.
+    prob : torch.Tensor
+        Predicted probabilities of shape ``(batch,)``, detached.
     """
     if isinstance(X, list):
         X = [x.to(devices[0]) for x in X]
@@ -1275,14 +1369,15 @@ def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices):
     mask = mask.to(devices[0])
     net.train()
     trainer.zero_grad()
-    pred, _ = net(X, abundance, mask)
-    pred = torch.squeeze(pred, dim=1)
-    pred = torch.sigmoid(pred)
-    l = loss(pred.float(), y.float())
+    logits, _ = net(X, abundance, mask)
+    logits = torch.squeeze(logits, dim=1)
+    l = criterion_value(loss, logits, y.float())
     l.backward()
+    if grad_clip is not None:
+        nn.utils.clip_grad_norm_(net.parameters(), grad_clip)
     trainer.step()
-    train_loss_sum = l.sum()
-    return train_loss_sum, pred
+    train_loss_sum = l.sum().detach()
+    return train_loss_sum, torch.sigmoid(logits).detach()
 
 
 def set_axes(axes, xlabel, ylabel, xlim, ylim, xscale, yscale, legend):
@@ -1438,12 +1533,12 @@ def predict_iter(net, data_iter, devices, loss=None):
             abundance = abundance.to(devices[0])
             mask = mask.to(devices[0])
             pred, _ = net(X, abundance, mask)
-            pred = torch.squeeze(pred, dim=1)
-            pred = torch.sigmoid(pred)
+            logits = torch.squeeze(pred, dim=1)
+            prob = torch.sigmoid(logits)
             if loss is not None:
                 y = labels.to(devices[0], dtype=torch.int64)
-                total_loss += float(loss(pred.float(), y.float()))
-            probs.append(to_numpy(pred))
+                total_loss += float(criterion_value(loss, logits, y.float()))
+            probs.append(to_numpy(prob))
             labels_all.append(to_numpy(labels))
             n_batches += 1
 
@@ -1490,23 +1585,26 @@ def evaluate_on_test(net, ckpt_path, test_iter, threshold, devices):
 
 
 def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
-              devices, ckpt_path, plotfile_loss, plotfile_auc):
-    """Train a binary classifier, selecting the best epoch on the validation set.
+              devices, ckpt_path, plotfile_loss, plotfile_auc,
+              patience=10, min_delta=0.001, swa_start=None, grad_clip=None):
+    """Train a binary classifier, selecting the best epoch by validation loss.
 
     The test set is deliberately absent from this function's signature. Every
     decision made here -- which epoch to keep and which decision threshold to
     use -- is made on `valid_iter` alone, so the held-out test set stays
     untouched until :func:`evaluate_on_test` runs afterwards.
 
-    After each epoch the validation AUC is computed; when it improves on the
-    best seen so far, the ``state_dict`` is written to `ckpt_path` and the
-    optimal threshold **of that same epoch** is recorded, so the returned
-    threshold always matches the returned weights.
+    After each epoch the validation loss is computed; when it drops below the
+    best seen so far by at least `min_delta`, the ``state_dict`` is written to
+    `ckpt_path` and the optimal threshold **of that same epoch** is recorded,
+    so the returned threshold always matches the returned weights. Under
+    `swa_start` that single epoch is replaced at the end by an average over
+    the later epochs.
 
     Parameters
     ----------
     net : torch.nn.Module
-        Model to train. Its logits pass through a sigmoid before `loss`.
+        Model to train.
     train_iter : torch.utils.data.DataLoader
         Loader yielding ``(features, abundance, labels, mask)`` batches, with
         `features`, `abundance`, and `mask` of shape ``(batch, seq_len)`` and
@@ -1514,36 +1612,68 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
     valid_iter : torch.utils.data.DataLoader
         Validation loader with the same structure as `train_iter`.
     loss : torch.nn.Module
-        Loss criterion operating on probabilities, e.g.
-        :class:`torch.nn.BCELoss` or :class:`FocalLoss`.
+        Loss criterion, on either logits or probabilities; see
+        :func:`criterion_value`.
     trainer : torch.optim.Optimizer
         Optimizer used for parameter updates.
-    scheduler : torch.optim.lr_scheduler.LRScheduler
-        Learning rate scheduler. Accepted but never stepped, so the learning
-        rate stays constant.
+    scheduler : torch.optim.lr_scheduler.LRScheduler or None
+        Learning rate scheduler, stepped once per epoch. None holds the rate
+        constant.
     num_epochs : int
-        Number of training epochs.
+        Maximum number of training epochs.
     devices : list of torch.device
         Devices to use; only ``devices[0]`` is used.
     ckpt_path : str
-        Path the best epoch's ``state_dict`` is saved to.
+        Path the selected ``state_dict`` is saved to.
     plotfile_loss : str
         Path for the train/validation loss curve plot.
     plotfile_auc : str
         Path for the train/validation AUC curve plot.
+    patience : int, optional
+        Stop once the validation loss has not improved by at least `min_delta`
+        for this many epochs. Default is 10.
+    min_delta : float, optional
+        Minimum absolute decrease in validation loss that counts as an
+        improvement. Default is 0.001.
+    swa_start : int or float, optional
+        Epoch from which to accumulate a running average of the weights, as a
+        1-based epoch number or, if below 1, a fraction of `num_epochs`.
+        Default is None, which disables the averaging.
+    grad_clip : float, optional
+        Clip the total gradient norm to this value before each step. Default
+        is None.
 
     Returns
     -------
     dict
-        Record of the selected epoch, with keys ``epoch``, ``threshold``,
+        Record of the selected model, with keys ``epoch``, ``threshold``,
         ``valid_auc``, ``valid_prob``, ``valid_label``, ``train_loss``,
-        ``valid_loss``, and ``train_auc``.
+        ``valid_loss``, ``train_auc``, and ``swa_n`` (0 unless the weights
+        were averaged).
 
     Raises
     ------
     ValueError
         Propagated from scikit-learn if a split contains only one class, which
         makes the AUC undefined.
+
+    Notes
+    -----
+    Weight averaging is worth separating from the ensembling of independently
+    trained models. Those differ in initialization and so land in different
+    basins, and averaging their *predictions* only helps to the extent their
+    errors are uncorrelated. The epochs averaged here are consecutive points
+    along one trajectory in one basin, so averaging their *weights* is a
+    different operation: it cancels the noise of the individual steps and
+    tends to land somewhere flatter than any single epoch. It also removes the
+    epoch selection, which is otherwise a minimum taken over a hundred noisy
+    validation scores and overstates the model by roughly the noise in them.
+
+    The averaged weights are used whenever `swa_start` is set, without checking
+    whether they beat the best single epoch on validation. Both validation
+    metrics are printed, but picking the winner between them would put the
+    selection back on the validation set -- which is the thing the averaging
+    was meant to get away from.
     """
     animator_1 = Animator(xlabel='epoch', xlim=[1, num_epochs],
                           legend=['train loss', 'valid loss'])
@@ -1551,14 +1681,27 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
                           legend=['train auc', 'valid auc'])
     net = net.to(devices[0])
     best = None
+    stale = 0
+
+    swa_from = None
+    if swa_start is not None:
+        # A fraction means "start once this much of training has elapsed", so
+        # 0.75 of 100 epochs averages epochs 76-100 -- the last quarter.
+        swa_from = (int(swa_start * num_epochs) + 1 if swa_start < 1
+                    else int(swa_start))
+        swa_from = max(1, min(swa_from, num_epochs))
+    swa_state, swa_n = None, 0
+    last_epoch = 0
 
     for epoch in range(num_epochs):
+        last_epoch = epoch + 1
         train_loss = 0.0
         n_batches = 0
         train_probs, train_labels = [], []
         for features, abundance, labels, mask in train_iter:
             l, pred = train_batch_ch13(
-                net, features, labels, abundance, loss, mask, trainer, devices)
+                net, features, labels, abundance, loss, mask, trainer, devices,
+                grad_clip)
             train_loss += float(l)
             train_probs.append(to_numpy(pred))
             train_labels.append(to_numpy(labels))
@@ -1575,7 +1718,10 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
         animator_1.add(epoch + 1, (train_loss, valid_loss), plotfile_loss)
         animator_2.add(epoch + 1, (train_auc, valid_auc), plotfile_auc)
 
-        if best is None or valid_auc > best['valid_auc']:
+        # Select the epoch with the lowest validation loss. An improvement is
+        # counted only when the drop exceeds min_delta, so tiny fluctuations do
+        # not reset the early-stopping counter.
+        if best is None or (best['valid_loss'] - valid_loss) > min_delta:
             best = {'epoch': epoch + 1,
                     'threshold': fit_threshold(valid_label, valid_prob),
                     'valid_auc': valid_auc,
@@ -1583,8 +1729,55 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
                     'valid_label': valid_label,
                     'train_loss': train_loss,
                     'valid_loss': valid_loss,
-                    'train_auc': train_auc}
+                    'train_auc': train_auc,
+                    'swa_n': 0}
             torch.save(net.state_dict(), ckpt_path)
+            stale = 0
+        else:
+            stale += 1
+
+        if swa_from is not None and epoch + 1 >= swa_from:
+            swa_n += 1
+            current = net.state_dict()
+            if swa_state is None:
+                swa_state = {k: v.detach().clone() for k, v in current.items()}
+            else:
+                for key, value in current.items():
+                    value = value.detach()
+                    if swa_state[key].is_floating_point():
+                        # Running mean, so memory stays at one extra copy of
+                        # the weights however many epochs are averaged.
+                        swa_state[key] += (value - swa_state[key]) / swa_n
+                    else:
+                        swa_state[key] = value.clone()
+
+        if scheduler is not None:
+            scheduler.step()
+
+        # Early stopping: halt when validation loss has not improved by at
+        # least min_delta for patience consecutive epochs.
+        if patience is not None and stale >= patience:
+            print(f"[early] no valid loss improvement >= {min_delta} for "
+                  f"{patience} epochs; stopping at epoch {epoch + 1}/{num_epochs} "
+                  f"(best was epoch {best['epoch']})")
+            break
+
+    if swa_state is not None:
+        net.load_state_dict(swa_state)
+        swa_loss, swa_prob, swa_label = predict_iter(net, valid_iter, devices, loss)
+        swa_auc = metrics.roc_auc_score(swa_label, swa_prob)
+        torch.save(net.state_dict(), ckpt_path)
+        print(f"[swa  ] averaged {swa_n} epochs, {swa_from}-{last_epoch} | "
+              f"valid loss {swa_loss:.4f}, valid auc {swa_auc:.3f} (best single "
+              f"epoch {best['valid_loss']:.4f} at {best['epoch']})")
+        best = dict(best,
+                    epoch=f"swa {swa_from}-{last_epoch}",
+                    threshold=fit_threshold(swa_label, swa_prob),
+                    valid_auc=swa_auc,
+                    valid_prob=swa_prob,
+                    valid_label=swa_label,
+                    valid_loss=swa_loss,
+                    swa_n=swa_n)
 
     v_auc, v_aupr, v_cm, v_f1, v_mcc, v_acc = evaluate_cls(
         best['valid_label'], best['valid_prob'], best['threshold'])
@@ -1782,8 +1975,15 @@ def Attention_biom(
         pred_out=None,
         d_ff=None,
         head_hidden=None,
-        abund_mode='multiply',12·
-        model_seed=11,):
+        abund_mode='multiply',
+        model_seed=11,
+        lr_schedule='none',
+        warmup_epochs=0,
+        patience=10,
+        min_delta=0.001,
+        swa_start=None,
+        grad_clip=None,
+        pos_weight=None,):
     """Run the end-to-end training pipeline for OTU-based microbiome analysis.
 
     The training table is split into a training and a validation part. Training
@@ -1835,8 +2035,10 @@ def Attention_biom(
         L2 regularization strength. Default is 0.
     num_epochs : int, optional
         Number of training epochs. Default is 100.
-    loss : {'BCE_loss', 'FocalLoss'}, optional
+    loss : {'BCE_loss', 'BCEWithLogits', 'FocalLoss'}, optional
         Which criterion to build. Default is ``'BCE_loss'``.
+        ``'BCEWithLogits'`` is the same objective computed in its numerically
+        stable fused form, and is the only one that accepts `pos_weight`.
     alpha : float, optional
         Positive-class weight, used only by ``'FocalLoss'``. Default is 0.6.
     glove_embedding : str, optional
@@ -1876,6 +2078,33 @@ def Attention_biom(
         `split_seed`, which controls only the train/validation partition, so
         varying `model_seed` alone re-runs the same split with a different
         model -- which is what averaging or ensembling over seeds needs.
+    lr_schedule : {'none', 'cosine'}, optional
+        Learning rate schedule, stepped once per epoch. Default is ``'none'``,
+        which holds the rate constant and reproduces the earlier behaviour.
+    warmup_epochs : int, optional
+        Epochs of linear warmup before the cosine decay. Default is 0. Unused
+        under ``lr_schedule='none'``.
+    patience : int, optional
+        Stop once the validation loss has not improved by at least `min_delta`
+        for this many epochs. Default is 10.
+    min_delta : float, optional
+        Minimum absolute decrease in validation loss that counts as an
+        improvement for model selection and early stopping. Default is 0.001.
+    swa_start : int or float, optional
+        Average the weights of every epoch from here on, and use that average
+        instead of the single best epoch. Given as a 1-based epoch number, or
+        as the fraction of training to run first if below 1 -- ``0.75`` of 100
+        epochs averages epochs 76-100. Default is None, which disables it.
+    grad_clip : float, optional
+        Clip the total gradient norm to this value before each step. Default
+        is None.
+    pos_weight : float or {'auto'}, optional
+        Weight applied to the positive class, valid only with
+        ``loss='BCEWithLogits'``. ``'auto'`` uses the ratio of negatives to
+        positives in the training part. Default is None, which weights the
+        classes equally. Note this shifts where the probabilities sit rather
+        than how the samples are ordered, so it moves the thresholded metrics
+        far more than it moves the AUC.
 
     Returns
     -------
@@ -1987,18 +2216,46 @@ def Attention_biom(
 
     trainer = torch.optim.Adam(
         net.parameters(), lr=lr, weight_decay=weight_decay)
-    scheduler = torch.optim.lr_scheduler.ExponentialLR(trainer, gamma=0.9)
+    scheduler = build_lr_scheduler(trainer, lr_schedule, num_epochs,
+                                   warmup_epochs)
+
+    if pos_weight is not None and loss != "BCEWithLogits":
+        raise ValueError(f"pos_weight applies only to loss='BCEWithLogits', "
+                         f"not {loss!r}")
     if loss == "FocalLoss":
         loss = FocalLoss(alpha=alpha, devices=devices)
+    elif loss == "BCEWithLogits":
+        pw = None
+        if pos_weight is not None:
+            if pos_weight == 'auto':
+                fitted = train_labels[train_idx]
+                n_pos = int((fitted == 1).sum())
+                n_neg = int((fitted == 0).sum())
+                if n_pos == 0:
+                    raise ValueError("pos_weight='auto' needs at least one "
+                                     "positive sample in the training part")
+                pw_value = n_neg / n_pos
+            else:
+                pw_value = float(pos_weight)
+            print(f"[loss ] BCEWithLogits, pos_weight {pw_value:.3f}")
+            pw = torch.tensor(pw_value, device=devices[0])
+        loss = nn.BCEWithLogitsLoss(pos_weight=pw)
     elif loss == "BCE_loss" or loss is None:
         loss = nn.BCELoss(weight=None, reduction='mean')
     else:
-        raise ValueError(f"unsupported loss {loss!r}; expected 'BCE_loss' or "
-                         f"'FocalLoss'")
+        raise ValueError(f"unsupported loss {loss!r}; expected 'BCE_loss', "
+                         f"'BCEWithLogits', or 'FocalLoss'")
+
+    print(f"[train] lr {lr} schedule {lr_schedule}"
+          f"{f' (warmup {warmup_epochs})' if warmup_epochs else ''}, "
+          f"epochs {num_epochs}, patience {patience}, min_delta {min_delta}, "
+          f"swa_start {swa_start}, grad_clip {grad_clip}")
 
     valid_record = train_cls(net, train_iter, valid_iter, loss, trainer,
                              scheduler, num_epochs, devices, embedding_birnn,
-                             plotfile_loss, plotfile_auc)
+                             plotfile_loss, plotfile_auc,
+                             patience=patience, min_delta=min_delta,
+                             swa_start=swa_start, grad_clip=grad_clip)
 
     threshold = valid_record['threshold']
     test_metrics, test_prob, test_label = evaluate_on_test(
