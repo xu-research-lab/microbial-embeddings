@@ -103,7 +103,7 @@ for number in {16..20}; do
                 # 创建结果目录
                 mkdir -p "$result_dir"
 
-                membed class-attention -g "suffle_embedding/${glove_embedding}_${number}" \
+                membed class-attention -g "shuffle_embedding/${glove_embedding}_${number}" \
                     -tra_otu "$data_dir/train_loo.biom" \
                     -tes_otu "$data_dir/test_loo.biom" \
                     -m "$disease_dir/metadata.tsv" \

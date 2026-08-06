@@ -12,7 +12,7 @@ are intentionally excluded.
 | Pretraining-size ablation | `pretraining_size_ablation/IBD_CRC_datasize_attention.ipynb`, `attention/`, `pretraining/` | `data/pretraining_datasize/` | `pretraining_size_ablation/results/` |
 | Shuffled-embedding ablation | `shuffled_embedding_ablation/attention_IBD_CRC.sh` | `data/shuffle_embedding/` | `shuffled_embedding_ablation/results/` |
 | IBD subtype classification | `ibd_subtype/IBD_subtype_loo.ipynb`, `attention_UC_CD.sh` | `data/IBD_subtype_data/` | `ibd_subtype/results/` |
-| All-disease leave-one-out | `all_disease_loo/all_diesease_loo.ipynb`, `attention/`, `random_forest/` | `data/disease_data/`, `data/loo_all_*` | `all_disease_loo/results/` |
+| All-disease leave-one-out | `all_disease_loo/all_disease_loo.ipynb`, `attention/`, `random_forest/` | `data/disease_data/`, `data/loo_all_*` | `all_disease_loo/results/` |
 | Biomarker analysis | `biomarker_analysis/Dimension_reduction.ipynb`, `linda_all_disease.R`, `run_shap_python_{ibd,crc}.py`, `plot_MDS.R` | `data/IBD_CRC_model/`, `data/biomark/` | `biomarker_analysis/results/` |
 | Shared support | `shared/random_forest_model/`, `shared/statistics/delong.py` | caller-owned | caller-owned |
 
