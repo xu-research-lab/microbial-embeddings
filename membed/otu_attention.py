@@ -749,11 +749,19 @@ class MultiHeadAttention(nn.Module):
 
 
 class EncoderLayer(nn.Module):
-    """Attention-only transformer encoder layer.
+    """Transformer encoder layer: self-attention followed by a feed-forward net.
 
-    Applies multi-head self-attention with dropout and a residual connection
-    followed by layer normalization. There is no position-wise feed-forward
-    sub-layer, so each layer mixes information across OTUs but applies no
+    Two residual sub-layers, each in post-norm form. The first is multi-head
+    self-attention, which mixes information *across* OTUs. The second is a
+    position-wise feed-forward network, which applies a nonlinearity *within*
+    each OTU position independently.
+
+    Both sub-layers are needed for the layer to be more than a linear map.
+    Attention alone reweights and averages value vectors; every operation it
+    applies to the representation is linear apart from the softmax over the
+    weights, so a stack of attention-only layers followed by mean pooling and a
+    linear head collapses to something very close to a linear model on the
+    input embeddings. The feed-forward sub-layer is what gives each layer its
     per-OTU nonlinearity.
 
     Parameters
@@ -763,18 +771,45 @@ class EncoderLayer(nn.Module):
     n_heads : int
         Number of attention heads.
     p_drop : float
-        Dropout probability.
+        Dropout probability, applied to both sub-layers and inside the
+        feed-forward network.
+    d_ff : int, optional
+        Width of the feed-forward hidden layer. Default is None, which uses
+        ``4 * d_model``, the usual transformer ratio. Pass 0 to drop the
+        feed-forward sub-layer entirely, which reduces the layer to
+        attention-only and is there to run as the ablation.
+
+    Attributes
+    ----------
+    mha : MultiHeadAttention
+        The self-attention sub-layer.
+    ffn : torch.nn.Sequential or None
+        The position-wise feed-forward sub-layer,
+        ``Linear -> GELU -> Dropout -> Linear``, or None when ``d_ff`` is 0.
     """
 
-    def __init__(self, d_model, n_heads, p_drop):
-        """Build the attention sub-layer, its dropout, and its norm."""
+    def __init__(self, d_model, n_heads, p_drop, d_ff=None):
+        """Build the attention and feed-forward sub-layers with their norms."""
         super(EncoderLayer, self).__init__()
+        d_ff = 4 * d_model if d_ff is None else d_ff
+        self.d_ff = d_ff
         self.mha = MultiHeadAttention(d_model, n_heads)
         self.dropout1 = nn.Dropout(p_drop)
         self.layernorm1 = nn.LayerNorm(d_model, eps=1e-6)
+        if d_ff:
+            self.ffn = nn.Sequential(
+                nn.Linear(d_model, d_ff),
+                nn.GELU(),
+                nn.Dropout(p_drop),
+                nn.Linear(d_ff, d_model),
+            )
+            self.dropout2 = nn.Dropout(p_drop)
+            self.layernorm2 = nn.LayerNorm(d_model, eps=1e-6)
+        else:
+            self.ffn = None
 
     def forward(self, inputs, attn_mask):
-        """Run the attention sub-layer with a residual connection.
+        """Run the attention and feed-forward sub-layers, each with a residual.
 
         Parameters
         ----------
@@ -786,16 +821,30 @@ class EncoderLayer(nn.Module):
 
         Returns
         -------
-        attn_outputs : torch.Tensor
+        outputs : torch.Tensor
             Normalized output of shape ``(batch, seq_len, d_model)``.
         attn_weights : torch.Tensor
             Attention weights of shape ``(batch, n_heads, seq_len, seq_len)``.
+
+        Notes
+        -----
+        The feed-forward sub-layer runs on masked-out positions too, since it
+        acts on each position independently and cannot leak anything between
+        them. Those positions are dropped later, at the pooling step, so what
+        the network computes there never reaches the output.
         """
         attn_outputs, attn_weights = self.mha(inputs, inputs, inputs,
                                               attn_mask)
         attn_outputs = self.dropout1(attn_outputs)
         attn_outputs = self.layernorm1(inputs + attn_outputs)
-        return attn_outputs, attn_weights
+
+        if self.ffn is None:
+            return attn_outputs, attn_weights
+
+        ffn_outputs = self.ffn(attn_outputs)
+        ffn_outputs = self.dropout2(ffn_outputs)
+        outputs = self.layernorm2(attn_outputs + ffn_outputs)
+        return outputs, attn_weights
 
 
 class OtuAttentionEncoder(nn.Module):
@@ -803,15 +852,13 @@ class OtuAttentionEncoder(nn.Module):
 
     Each sample is treated as a *set* of OTUs rather than a sequence. OTU
     embeddings are scaled by their relative abundance, refined by a stack of
-    attention-only :class:`EncoderLayer`, mean-pooled over the unmasked
-    positions into a sample representation, and mapped to a single output by
-    a linear head.
+    :class:`EncoderLayer`, mean-pooled over the unmasked positions into a
+    sample representation, and mapped to a single output by an MLP head.
 
-    This departs from a standard transformer encoder in two ways: there is no
+    This departs from a standard transformer encoder in one way: there is no
     positional encoding, so the model is invariant to the order in which the
-    OTUs are listed; and the encoder layers carry no position-wise
-    feed-forward sub-layer, so each layer mixes information across OTUs
-    without applying a per-OTU nonlinearity.
+    OTUs are listed. The encoder layers themselves are standard, each pairing
+    self-attention with a position-wise feed-forward sub-layer.
 
     Parameters
     ----------
@@ -827,6 +874,17 @@ class OtuAttentionEncoder(nn.Module):
         Dropout probability. Default is 0.1.
     pad_id : int, optional
         Index of the padding token. Default is 0.
+    d_ff : int, optional
+        Width of the feed-forward hidden layer inside each encoder layer.
+        Default is None, which uses ``4 * d_model``.
+    head_hidden : int, optional
+        Width of the hidden layer in the output head. Default is None, which
+        uses ``d_model // 2``. Pass 0 to fall back to a single linear layer.
+    abund_mode : {'multiply', 'none'}, optional
+        How abundance enters the input representation. ``'multiply'``, the
+        default, scales each OTU embedding by its abundance. ``'none'``
+        ignores abundance entirely, reducing the input to the presence or
+        absence of each covered taxon.
 
     Attributes
     ----------
@@ -835,7 +893,28 @@ class OtuAttentionEncoder(nn.Module):
     layers : torch.nn.ModuleList
         The `n_layers` encoder layers.
     mlp : torch.nn.Sequential
-        Linear head mapping the pooled embedding to a scalar.
+        Output head mapping the pooled embedding to a scalar logit, with one
+        hidden layer unless `head_hidden` is 0.
+
+    Notes
+    -----
+    The head reads a single pooled vector, so a bare linear layer there makes
+    the last thing the model does a linear function of the community
+    representation. One hidden layer with a nonlinearity lets the head
+    respond to combinations of the pooled dimensions -- which is where the
+    interactions between taxa that the encoder assembled actually get used.
+
+    Abundance is applied as a scale rather than an added vector, and the
+    scale does not survive the first :class:`torch.nn.LayerNorm`, which
+    normalizes each position over `d_model`: ``LayerNorm(c * x)`` equals
+    ``LayerNorm(x)`` exactly, for any positive ``c``. That is deliberate.
+    Under the rank-over-max normalization the abundance at a position is
+    close to a function of the position's index and the sample's richness, so
+    a channel that carried it faithfully would mostly carry richness -- a
+    study-level batch effect. Dropping the magnitude and keeping the
+    direction leaves the pretrained OTU codes, whose information is entirely
+    directional, uncontaminated. Abundance still reaches the model through
+    the attention logits, which scale with it.
     """
 
     def __init__(self,
@@ -844,20 +923,37 @@ class OtuAttentionEncoder(nn.Module):
                  n_layers=6,
                  n_heads=8,
                  p_drop=0.1,
-                 pad_id=0):
+                 pad_id=0,
+                 d_ff=None,
+                 head_hidden=None,
+                 abund_mode='multiply'):
         """Build the embedding table, the encoder stack, and the output head."""
         super(OtuAttentionEncoder, self).__init__()
+        if abund_mode not in ('multiply', 'none'):
+            raise ValueError(f"unsupported abund_mode {abund_mode!r}; expected "
+                             f"'multiply' or 'none'")
+        self.abund_mode = abund_mode
+
         self.embedding = nn.Embedding(otu_size, d_model, padding_idx=pad_id)
         self.layers = nn.ModuleList([
-            EncoderLayer(d_model, n_heads, p_drop)
+            EncoderLayer(d_model, n_heads, p_drop, d_ff)
             for _ in range(n_layers)
         ])
         self.sigmoid = nn.Sigmoid()
         self.pad_id = pad_id
         self.dropout = nn.Dropout(p=p_drop)
-        self.mlp = nn.Sequential(
-                    nn.Linear(d_model, 1), 
-                    )
+        head_hidden = max(d_model // 2, 1) if head_hidden is None else head_hidden
+        if head_hidden:
+            self.mlp = nn.Sequential(
+                nn.Linear(d_model, head_hidden),
+                nn.GELU(),
+                nn.Dropout(p_drop),
+                nn.Linear(head_hidden, 1),
+            )
+        else:
+            self.mlp = nn.Sequential(
+                nn.Linear(d_model, 1),
+            )
 
     def forward(self, x, weight, mask, encoder=False):
         """Encode a batch of samples and produce a scalar logit per sample.
@@ -867,8 +963,8 @@ class OtuAttentionEncoder(nn.Module):
         x : torch.Tensor
             Token indices of shape ``(batch, seq_len)``.
         weight : torch.Tensor
-            Abundance weights of shape ``(batch, seq_len)``, multiplied into the
-            token embeddings.
+            Abundance weights of shape ``(batch, seq_len)``, multiplied into
+            the token embeddings unless `abund_mode` is ``'none'``.
         mask : torch.Tensor
             Attention mask of shape ``(batch, seq_len)``, where 1 marks a
             position to attend over and to include in the mean pooling, and 0
@@ -899,28 +995,38 @@ class OtuAttentionEncoder(nn.Module):
         from the other. Deriving the attention mask from `pad_id` instead would
         let ``'<unk>'`` positions -- padding's counterpart for taxa the
         vocabulary does not cover -- slip into both.
+
+        Under ``abund_mode='none'`` the scaling is simply skipped, which is
+        equivalent to an abundance of 1 everywhere. Padding and ``'<unk>'``
+        positions stay at zero regardless, since their embedding rows are
+        zero.
         """
+        # The abundance arrives as float64 from the dataset. Cast it once here
+        # rather than letting it promote the embeddings to float64 and
+        # materializing the whole batch at double width.
+        weight = weight.float()
+        mask_f = mask.unsqueeze(-1).float()
+
         inputs = self.embedding(x)
-        inputs = inputs.permute(2, 0, 1) * weight
-        inputs = inputs.permute(1, 2, 0)
+        if self.abund_mode == 'multiply':
+            inputs = inputs * weight.unsqueeze(-1)
         inputs_1 = inputs.clone()
         attn_pad_mask = self.get_attention_padding_mask(mask)
 
         for layer in self.layers:
-            inputs, attn_weights = layer(inputs.float(), attn_pad_mask)
+            inputs, attn_weights = layer(inputs, attn_pad_mask)
 
-        embedding_sum = inputs * mask.unsqueeze(-1)
+        embedding_sum = inputs * mask_f
         # A sample can in principle carry no covered OTU at all; clamping keeps
         # the pooling finite instead of handing NaNs to the loss.
         n_valid = mask.sum(1, keepdim=True).clamp(min=1)
         embedding = embedding_sum.sum(dim=1, keepdim=False) / n_valid
         outputs = self.dropout(embedding)
-        outputs = self.mlp(outputs.float())
+        outputs = self.mlp(outputs)
 
-        if encoder == False:
-            return outputs, attn_weights
-        else:
+        if encoder:
             return inputs_1, embedding
+        return outputs, attn_weights
 
     def get_attention_padding_mask(self, mask):
         """Build the boolean mask that hides masked-out keys from every query.
@@ -1673,7 +1779,11 @@ def Attention_biom(
         valid_ratio=0.2,
         split_seed=11,
         group_col=None,
-        pred_out=None,):
+        pred_out=None,
+        d_ff=None,
+        head_hidden=None,
+        abund_mode='multiply',12·
+        model_seed=11,):
     """Run the end-to-end training pipeline for OTU-based microbiome analysis.
 
     The training table is split into a training and a validation part. Training
@@ -1746,6 +1856,26 @@ def Attention_biom(
         Prefix for the prediction files, written as ``<pred_out>_valid.csv``
         and ``<pred_out>_test.csv``. Default is None, which derives the prefix
         from `embedding_birnn`.
+    d_ff : int, optional
+        Width of the feed-forward hidden layer inside each encoder layer.
+        Default is None, which uses ``4 * d_model``. This is the widest tensor
+        in the model, so it is also the first knob to turn down if the encoder
+        overfits or runs out of memory.
+    head_hidden : int, optional
+        Width of the hidden layer in the output head. Default is None, which
+        uses ``d_model // 2``. Pass 0 for the single-linear-layer head.
+    abund_mode : {'multiply', 'none'}, optional
+        How abundance enters the input representation. Default is
+        ``'multiply'``, which scales each OTU embedding by its abundance.
+        ``'none'`` ignores abundance, leaving the model only the presence or
+        absence of each covered taxon; comparing the two measures what
+        abundance is contributing under the current normalization.
+    model_seed : int, optional
+        Seed for weight initialization, dropout, batch shuffling, and the
+        random embedding draw. Default is 11. This is separate from
+        `split_seed`, which controls only the train/validation partition, so
+        varying `model_seed` alone re-runs the same split with a different
+        model -- which is what averaging or ensembling over seeds needs.
 
     Returns
     -------
@@ -1762,10 +1892,9 @@ def Attention_biom(
     sample encode identically and the classifier could only learn a constant,
     so `glove_embedding=None` fills it with fixed random codes instead: the
     taxa stay distinguishable, they just carry no learned relationships to each
-    other. The random draw comes from the seed set at the top of this function,
-    so a rerun reproduces it.
+    other. The random draw comes from `model_seed`, so a rerun reproduces it.
     """
-    set_seed(11)
+    set_seed(model_seed)
     devices = try_all_gpus(numb)
 
     # if glove_embedding is not None:
@@ -1822,7 +1951,10 @@ def Attention_biom(
                               n_layers=n_layers,
                               n_heads=n_heads,
                               p_drop=p_drop,
-                              pad_id=fid_dict['<pad>'])
+                              pad_id=fid_dict['<pad>'],
+                              d_ff=d_ff,
+                              head_hidden=head_hidden,
+                              abund_mode=abund_mode)
     init_transformer_weights(net)
 
     if glove_embedding is not None:
@@ -1844,6 +1976,14 @@ def Attention_biom(
     embeds[fid_dict.unk] = 0
     net.embedding.weight.data.copy_(embeds)
     net.embedding.weight.requires_grad = False
+
+    # Counted after the embedding is frozen, so this is the number of weights
+    # the optimizer actually moves.
+    n_trainable = sum(p.numel() for p in net.parameters() if p.requires_grad)
+    print(f"[model] d_model {d_model}, layers {n_layers}, heads {n_heads}, "
+          f"d_ff {net.layers[0].d_ff}, dropout {p_drop} | "
+          f"abundance {abund_mode}, model_seed {model_seed} | "
+          f"{n_trainable} trainable parameters")
 
     trainer = torch.optim.Adam(
         net.parameters(), lr=lr, weight_decay=weight_decay)
