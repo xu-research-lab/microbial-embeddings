@@ -10,7 +10,7 @@ from torch import nn
 import matplotlib.pyplot as plt
 
 import torch
-from torch.utils.data import Dataset, DataLoader, Subset
+from torch.utils.data import Dataset, DataLoader
 from sklearn.metrics import confusion_matrix, f1_score, matthews_corrcoef, accuracy_score
 from sklearn.model_selection import StratifiedShuffleSplit, GroupShuffleSplit
 from sklearn import metrics
@@ -452,84 +452,6 @@ class load_data_imdb(Dataset):
             Number of samples in the dataset.
         """
         return self.otu.shape[0]
-
-
-def split_train_valid(labels, valid_ratio=0.2, seed=11, groups=None):
-    """Split sample indices into a training and a validation part.
-
-    The split is stratified on `labels`, so the class balance of the training
-    table is preserved in both parts. When `groups` is given, the split is made
-    at the group level instead, keeping every sample of a group on the same
-    side; this is what stops repeated samples from one subject appearing in
-    both parts.
-
-    Parameters
-    ----------
-    labels : array_like
-        Class label per sample, of shape ``(n_samples,)``.
-    valid_ratio : float, optional
-        Fraction of samples held out for validation. Default is 0.2.
-    seed : int, optional
-        Seed for the split, kept separate from the model seed so the partition
-        can be held fixed while the model is reseeded. Default is 11.
-    groups : array_like, optional
-        Group label per sample, e.g. a subject ID. Default is None, which
-        splits at the sample level. Stratification is dropped when groups are
-        used, since a group carries whole samples rather than single labels.
-        Note that `valid_ratio` then applies to the number of *groups*, not the
-        number of samples, so the two parts rarely split the samples in exactly
-        that ratio.
-
-    Returns
-    -------
-    train_idx : numpy.ndarray
-        Indices of the training part.
-    valid_idx : numpy.ndarray
-        Indices of the validation part.
-
-    Raises
-    ------
-    ValueError
-        If the split would leave the validation part empty, or if a class is
-        too rare to appear in both parts.
-    """
-    labels = np.asarray(labels)
-    n_samples = len(labels)
-    n_valid = int(round(n_samples * valid_ratio))
-    if n_valid < 1 or n_valid >= n_samples:
-        raise ValueError(
-            f"valid_ratio={valid_ratio} yields {n_valid} validation samples "
-            f"out of {n_samples}; choose a ratio that leaves both parts "
-            f"non-empty")
-
-    if groups is not None:
-        # GroupShuffleSplit applies test_size to the groups, so the sample-level
-        # check above says nothing about whether this split is viable.
-        groups = np.asarray(groups)
-        n_groups = len(np.unique(groups))
-        n_valid_groups = int(round(n_groups * valid_ratio))
-        if n_valid_groups < 1 or n_valid_groups >= n_groups:
-            raise ValueError(
-                f"valid_ratio={valid_ratio} yields {n_valid_groups} validation "
-                f"groups out of {n_groups}; with `groups` the ratio applies to "
-                f"groups rather than samples, so it must leave both parts "
-                f"holding at least one group")
-        splitter = GroupShuffleSplit(n_splits=1, test_size=valid_ratio,
-                                     random_state=seed)
-        train_idx, valid_idx = next(
-            splitter.split(np.zeros(n_samples), labels, groups))
-    else:
-        _, class_counts = np.unique(labels, return_counts=True)
-        if class_counts.min() < 2:
-            raise ValueError(
-                "every class needs at least 2 samples to be stratified across "
-                "the split; the rarest class has "
-                f"{int(class_counts.min())}")
-        splitter = StratifiedShuffleSplit(n_splits=1, test_size=valid_ratio,
-                                          random_state=seed)
-        train_idx, valid_idx = next(splitter.split(np.zeros(n_samples), labels))
-
-    return train_idx, valid_idx
 
 
 class otuEmbedding:
@@ -1052,8 +974,8 @@ class OtuAttentionEncoder(nn.Module):
             # abundance vector. If training turns out unstable, divide by
             # `n_valid` instead -- that makes the term a mean and so invariant
             # to sample richness, which is a study-level batch effect.
-            coef = self.lin_w[x]                                # (batch, len)
-            lin = (coef * weight * mask.float()).sum(1, keepdim=True)
+            z = self.lin_w[x] * weight
+            lin = (z * mask.float()).sum(1, keepdim=True)
             outputs = outputs + lin + self.lin_b
 
         if encoder:
@@ -1855,6 +1777,7 @@ def set_seed(seed=11):
 def Attention_biom(
         metadata,
         train_biom,
+        valid_biom,
         test_biom,
         embedding_birnn,
         plotfile_loss,
@@ -1874,9 +1797,6 @@ def Attention_biom(
         loss="BCE_loss",
         alpha=0.6,
         glove_embedding=None,
-        valid_ratio=0.2,
-        split_seed=11,
-        group_col=None,
         pred_out=None,
         d_ff=None,
         head_hidden=None,
@@ -1906,7 +1826,12 @@ def Attention_biom(
         Path to a TSV metadata file. Must contain `sample_id_col` and
         `labels_col`, and its sample IDs must match the BIOM tables.
     train_biom : str
-        Path to the training BIOM file (features x samples).
+        Path to the training BIOM file (features x samples). Used in full --
+        there is no internal split; the caller decides the partition.
+    valid_biom : str
+        Path to the validation BIOM file, in the same format. This cohort
+        drives early stopping, checkpoint selection and the decision
+        threshold; it is never trained on.
     test_biom : str
         Path to the test BIOM file, in the same format as `train_biom`.
     embedding_birnn : str
@@ -1949,15 +1874,6 @@ def Attention_biom(
         Path to a pretrained embedding file used to initialize the OTU
         embedding table; its vector width must equal `d_model`. Default is
         None, which fills the table with fixed random codes instead.
-    valid_ratio : float, optional
-        Fraction of the training table held out for validation. Default is 0.2.
-    split_seed : int, optional
-        Seed for the train/validation split, independent of the model seed.
-        Default is 11.
-    group_col : str, optional
-        Metadata column holding a grouping key, e.g. a subject ID. Default is
-        None. When given, the split keeps all samples of a group on one side,
-        which is what you need if one subject contributed several samples.
     pred_out : str, optional
         Prefix for the prediction files, written as ``<pred_out>_valid.csv``
         and ``<pred_out>_test.csv``. Default is None, which derives the prefix
@@ -1978,10 +1894,10 @@ def Attention_biom(
         abundance is contributing under the current normalization.
     model_seed : int, optional
         Seed for weight initialization, dropout, batch shuffling, and the
-        random embedding draw. Default is 11. This is separate from
-        `split_seed`, which controls only the train/validation partition, so
-        varying `model_seed` alone re-runs the same split with a different
-        model -- which is what averaging or ensembling over seeds needs.
+        random embedding draw. Default is 11. Since the partition is now fixed
+        by the input files rather than by a seed, varying `model_seed` alone
+        re-runs the same three cohorts with a different model -- which is what
+        averaging or ensembling over seeds needs.
     patience : int, optional
         Stop once the validation loss has not improved by at least `min_delta`
         for this many epochs. Default is 10.
@@ -2025,8 +1941,14 @@ def Attention_biom(
                                 sample_id_col,
                                 num_steps)
     fid_dict = full_train()
-    # Encode the test table with the training vocabulary, so both sides share
-    # one index space and the model's embedding rows mean the same OTU.
+    # Encode the held-out tables with the training vocabulary, so all three
+    # share one index space and the model's embedding rows mean the same OTU.
+    valid_data = load_data_imdb(valid_biom,
+                                metadata,
+                                labels_col,
+                                sample_id_col,
+                                num_steps,
+                                fid=fid_dict)
     test_data = load_data_imdb(test_biom,
                                metadata,
                                labels_col,
@@ -2035,25 +1957,18 @@ def Attention_biom(
                                fid=fid_dict)
 
     train_labels = to_numpy(full_train.labels)
-    groups = None
-    if group_col is not None:
-        group_map = pd.read_csv(metadata, sep="\t", index_col=sample_id_col,
-                                dtype={sample_id_col: str}, low_memory=False)
-        groups = group_map.loc[full_train.sample_ids, group_col].to_numpy()
-    train_idx, valid_idx = split_train_valid(train_labels, valid_ratio,
-                                             split_seed, groups)
 
-    train_iter = DataLoader(Subset(full_train, train_idx),
+    train_iter = DataLoader(full_train,
                             batch_size=batch_size,
                             shuffle=True)
-    valid_iter = DataLoader(Subset(full_train, valid_idx),
+    valid_iter = DataLoader(valid_data,
                             batch_size=batch_size,
                             shuffle=False)
     test_iter = DataLoader(test_data,
                            batch_size=batch_size,
                            shuffle=False)
-    print(f"[split] train {len(train_idx)}, valid {len(valid_idx)}, "
-          f"test {len(test_data)}")
+    print(f"[split] train {len(full_train)}, valid {len(valid_data)}, "
+          f"test {len(test_data)} (all three from separate tables)")
 
     # How much of the test cohort the training vocabulary actually covers. These
     # positions are masked out of attention and pooling, so a high share here
@@ -2131,7 +2046,7 @@ def Attention_biom(
         pw = None
         if pos_weight is not None:
             if pos_weight == 'auto':
-                fitted = train_labels[train_idx]
+                fitted = train_labels
                 n_pos = int((fitted == 1).sum())
                 n_neg = int((fitted == 0).sum())
                 if n_pos == 0:
@@ -2169,7 +2084,7 @@ def Attention_biom(
     if pred_out is None:
         pred_out = os.path.splitext(embedding_birnn)[0]
     save_predictions(f"{pred_out}_valid.csv",
-                     full_train.sample_ids[valid_idx],
+                     valid_data.sample_ids,
                      valid_record['valid_label'],
                      valid_record['valid_prob'],
                      threshold)
