@@ -10,7 +10,7 @@ from torch import nn
 import matplotlib.pyplot as plt
 
 import torch
-from torch.utils.data import Dataset, DataLoader, Subset
+from torch.utils.data import Dataset, DataLoader
 from sklearn.metrics import confusion_matrix, f1_score, matthews_corrcoef, accuracy_score
 from sklearn.model_selection import StratifiedShuffleSplit, GroupShuffleSplit
 from sklearn import metrics
@@ -454,84 +454,6 @@ class load_data_imdb(Dataset):
         return self.otu.shape[0]
 
 
-def split_train_valid(labels, valid_ratio=0.2, seed=11, groups=None):
-    """Split sample indices into a training and a validation part.
-
-    The split is stratified on `labels`, so the class balance of the training
-    table is preserved in both parts. When `groups` is given, the split is made
-    at the group level instead, keeping every sample of a group on the same
-    side; this is what stops repeated samples from one subject appearing in
-    both parts.
-
-    Parameters
-    ----------
-    labels : array_like
-        Class label per sample, of shape ``(n_samples,)``.
-    valid_ratio : float, optional
-        Fraction of samples held out for validation. Default is 0.2.
-    seed : int, optional
-        Seed for the split, kept separate from the model seed so the partition
-        can be held fixed while the model is reseeded. Default is 11.
-    groups : array_like, optional
-        Group label per sample, e.g. a subject ID. Default is None, which
-        splits at the sample level. Stratification is dropped when groups are
-        used, since a group carries whole samples rather than single labels.
-        Note that `valid_ratio` then applies to the number of *groups*, not the
-        number of samples, so the two parts rarely split the samples in exactly
-        that ratio.
-
-    Returns
-    -------
-    train_idx : numpy.ndarray
-        Indices of the training part.
-    valid_idx : numpy.ndarray
-        Indices of the validation part.
-
-    Raises
-    ------
-    ValueError
-        If the split would leave the validation part empty, or if a class is
-        too rare to appear in both parts.
-    """
-    labels = np.asarray(labels)
-    n_samples = len(labels)
-    n_valid = int(round(n_samples * valid_ratio))
-    if n_valid < 1 or n_valid >= n_samples:
-        raise ValueError(
-            f"valid_ratio={valid_ratio} yields {n_valid} validation samples "
-            f"out of {n_samples}; choose a ratio that leaves both parts "
-            f"non-empty")
-
-    if groups is not None:
-        # GroupShuffleSplit applies test_size to the groups, so the sample-level
-        # check above says nothing about whether this split is viable.
-        groups = np.asarray(groups)
-        n_groups = len(np.unique(groups))
-        n_valid_groups = int(round(n_groups * valid_ratio))
-        if n_valid_groups < 1 or n_valid_groups >= n_groups:
-            raise ValueError(
-                f"valid_ratio={valid_ratio} yields {n_valid_groups} validation "
-                f"groups out of {n_groups}; with `groups` the ratio applies to "
-                f"groups rather than samples, so it must leave both parts "
-                f"holding at least one group")
-        splitter = GroupShuffleSplit(n_splits=1, test_size=valid_ratio,
-                                     random_state=seed)
-        train_idx, valid_idx = next(
-            splitter.split(np.zeros(n_samples), labels, groups))
-    else:
-        _, class_counts = np.unique(labels, return_counts=True)
-        if class_counts.min() < 2:
-            raise ValueError(
-                "every class needs at least 2 samples to be stratified across "
-                "the split; the rarest class has "
-                f"{int(class_counts.min())}")
-        splitter = StratifiedShuffleSplit(n_splits=1, test_size=valid_ratio,
-                                          random_state=seed)
-        train_idx, valid_idx = next(splitter.split(np.zeros(n_samples), labels))
-
-    return train_idx, valid_idx
-
-
 class otuEmbedding:
     """Pretrained embedding vectors for OTUs, loaded from a text file.
 
@@ -749,11 +671,19 @@ class MultiHeadAttention(nn.Module):
 
 
 class EncoderLayer(nn.Module):
-    """Attention-only transformer encoder layer.
+    """Transformer encoder layer: self-attention followed by a feed-forward net.
 
-    Applies multi-head self-attention with dropout and a residual connection
-    followed by layer normalization. There is no position-wise feed-forward
-    sub-layer, so each layer mixes information across OTUs but applies no
+    Two residual sub-layers, each in post-norm form. The first is multi-head
+    self-attention, which mixes information *across* OTUs. The second is a
+    position-wise feed-forward network, which applies a nonlinearity *within*
+    each OTU position independently.
+
+    Both sub-layers are needed for the layer to be more than a linear map.
+    Attention alone reweights and averages value vectors; every operation it
+    applies to the representation is linear apart from the softmax over the
+    weights, so a stack of attention-only layers followed by mean pooling and a
+    linear head collapses to something very close to a linear model on the
+    input embeddings. The feed-forward sub-layer is what gives each layer its
     per-OTU nonlinearity.
 
     Parameters
@@ -763,18 +693,45 @@ class EncoderLayer(nn.Module):
     n_heads : int
         Number of attention heads.
     p_drop : float
-        Dropout probability.
+        Dropout probability, applied to both sub-layers and inside the
+        feed-forward network.
+    d_ff : int, optional
+        Width of the feed-forward hidden layer. Default is None, which uses
+        ``4 * d_model``, the usual transformer ratio. Pass 0 to drop the
+        feed-forward sub-layer entirely, which reduces the layer to
+        attention-only and is there to run as the ablation.
+
+    Attributes
+    ----------
+    mha : MultiHeadAttention
+        The self-attention sub-layer.
+    ffn : torch.nn.Sequential or None
+        The position-wise feed-forward sub-layer,
+        ``Linear -> GELU -> Dropout -> Linear``, or None when ``d_ff`` is 0.
     """
 
-    def __init__(self, d_model, n_heads, p_drop):
-        """Build the attention sub-layer, its dropout, and its norm."""
+    def __init__(self, d_model, n_heads, p_drop, d_ff=None):
+        """Build the attention and feed-forward sub-layers with their norms."""
         super(EncoderLayer, self).__init__()
+        d_ff = 4 * d_model if d_ff is None else d_ff
+        self.d_ff = d_ff
         self.mha = MultiHeadAttention(d_model, n_heads)
         self.dropout1 = nn.Dropout(p_drop)
         self.layernorm1 = nn.LayerNorm(d_model, eps=1e-6)
+        if d_ff:
+            self.ffn = nn.Sequential(
+                nn.Linear(d_model, d_ff),
+                nn.GELU(),
+                nn.Dropout(p_drop),
+                nn.Linear(d_ff, d_model),
+            )
+            self.dropout2 = nn.Dropout(p_drop)
+            self.layernorm2 = nn.LayerNorm(d_model, eps=1e-6)
+        else:
+            self.ffn = None
 
     def forward(self, inputs, attn_mask):
-        """Run the attention sub-layer with a residual connection.
+        """Run the attention and feed-forward sub-layers, each with a residual.
 
         Parameters
         ----------
@@ -786,16 +743,30 @@ class EncoderLayer(nn.Module):
 
         Returns
         -------
-        attn_outputs : torch.Tensor
+        outputs : torch.Tensor
             Normalized output of shape ``(batch, seq_len, d_model)``.
         attn_weights : torch.Tensor
             Attention weights of shape ``(batch, n_heads, seq_len, seq_len)``.
+
+        Notes
+        -----
+        The feed-forward sub-layer runs on masked-out positions too, since it
+        acts on each position independently and cannot leak anything between
+        them. Those positions are dropped later, at the pooling step, so what
+        the network computes there never reaches the output.
         """
         attn_outputs, attn_weights = self.mha(inputs, inputs, inputs,
                                               attn_mask)
         attn_outputs = self.dropout1(attn_outputs)
         attn_outputs = self.layernorm1(inputs + attn_outputs)
-        return attn_outputs, attn_weights
+
+        if self.ffn is None:
+            return attn_outputs, attn_weights
+
+        ffn_outputs = self.ffn(attn_outputs)
+        ffn_outputs = self.dropout2(ffn_outputs)
+        outputs = self.layernorm2(attn_outputs + ffn_outputs)
+        return outputs, attn_weights
 
 
 class OtuAttentionEncoder(nn.Module):
@@ -803,15 +774,13 @@ class OtuAttentionEncoder(nn.Module):
 
     Each sample is treated as a *set* of OTUs rather than a sequence. OTU
     embeddings are scaled by their relative abundance, refined by a stack of
-    attention-only :class:`EncoderLayer`, mean-pooled over the unmasked
-    positions into a sample representation, and mapped to a single output by
-    a linear head.
+    :class:`EncoderLayer`, mean-pooled over the unmasked positions into a
+    sample representation, and mapped to a single output by an MLP head.
 
-    This departs from a standard transformer encoder in two ways: there is no
+    This departs from a standard transformer encoder in one way: there is no
     positional encoding, so the model is invariant to the order in which the
-    OTUs are listed; and the encoder layers carry no position-wise
-    feed-forward sub-layer, so each layer mixes information across OTUs
-    without applying a per-OTU nonlinearity.
+    OTUs are listed. The encoder layers themselves are standard, each pairing
+    self-attention with a position-wise feed-forward sub-layer.
 
     Parameters
     ----------
@@ -827,6 +796,17 @@ class OtuAttentionEncoder(nn.Module):
         Dropout probability. Default is 0.1.
     pad_id : int, optional
         Index of the padding token. Default is 0.
+    d_ff : int, optional
+        Width of the feed-forward hidden layer inside each encoder layer.
+        Default is None, which uses ``4 * d_model``.
+    head_hidden : int, optional
+        Width of the hidden layer in the output head. Default is None, which
+        uses ``d_model // 2``. Pass 0 to fall back to a single linear layer.
+    abund_mode : {'multiply', 'none'}, optional
+        How abundance enters the input representation. ``'multiply'``, the
+        default, scales each OTU embedding by its abundance. ``'none'``
+        ignores abundance entirely, reducing the input to the presence or
+        absence of each covered taxon.
 
     Attributes
     ----------
@@ -835,7 +815,28 @@ class OtuAttentionEncoder(nn.Module):
     layers : torch.nn.ModuleList
         The `n_layers` encoder layers.
     mlp : torch.nn.Sequential
-        Linear head mapping the pooled embedding to a scalar.
+        Output head mapping the pooled embedding to a scalar logit, with one
+        hidden layer unless `head_hidden` is 0.
+
+    Notes
+    -----
+    The head reads a single pooled vector, so a bare linear layer there makes
+    the last thing the model does a linear function of the community
+    representation. One hidden layer with a nonlinearity lets the head
+    respond to combinations of the pooled dimensions -- which is where the
+    interactions between taxa that the encoder assembled actually get used.
+
+    Abundance is applied as a scale rather than an added vector, and the
+    scale does not survive the first :class:`torch.nn.LayerNorm`, which
+    normalizes each position over `d_model`: ``LayerNorm(c * x)`` equals
+    ``LayerNorm(x)`` exactly, for any positive ``c``. That is deliberate.
+    Under the rank-over-max normalization the abundance at a position is
+    close to a function of the position's index and the sample's richness, so
+    a channel that carried it faithfully would mostly carry richness -- a
+    study-level batch effect. Dropping the magnitude and keeping the
+    direction leaves the pretrained OTU codes, whose information is entirely
+    directional, uncontaminated. Abundance still reaches the model through
+    the attention logits, which scale with it.
     """
 
     def __init__(self,
@@ -844,20 +845,55 @@ class OtuAttentionEncoder(nn.Module):
                  n_layers=6,
                  n_heads=8,
                  p_drop=0.1,
-                 pad_id=0):
+                 pad_id=0,
+                 d_ff=None,
+                 head_hidden=None,
+                 abund_mode='multiply',
+                 linear_branch=False):
         """Build the embedding table, the encoder stack, and the output head."""
         super(OtuAttentionEncoder, self).__init__()
+        if abund_mode not in ('multiply', 'none'):
+            raise ValueError(f"unsupported abund_mode {abund_mode!r}; expected "
+                             f"'multiply' or 'none'")
+        self.abund_mode = abund_mode
+
         self.embedding = nn.Embedding(otu_size, d_model, padding_idx=pad_id)
         self.layers = nn.ModuleList([
-            EncoderLayer(d_model, n_heads, p_drop)
+            EncoderLayer(d_model, n_heads, p_drop, d_ff)
             for _ in range(n_layers)
         ])
         self.sigmoid = nn.Sigmoid()
         self.pad_id = pad_id
         self.dropout = nn.Dropout(p=p_drop)
-        self.mlp = nn.Sequential(
-                    nn.Linear(d_model, 1), 
-                    )
+        head_hidden = max(d_model // 2, 1) if head_hidden is None else head_hidden
+        if head_hidden:
+            self.mlp = nn.Sequential(
+                nn.Linear(d_model, head_hidden),
+                nn.GELU(),
+                nn.Dropout(p_drop),
+                nn.Linear(head_hidden, 1),
+            )
+        else:
+            self.mlp = nn.Sequential(
+                nn.Linear(d_model, 1),
+            )
+
+        # Linear residual branch: one scalar coefficient per OTU, applied to
+        # the abundance directly. This is the pathway the pooled encoder cannot
+        # express -- mean pooling collapses the per-OTU values into a single
+        # d_model vector, so a coefficient attached to an individual taxon has
+        # nowhere to live. A linear probe on the raw abundances reaches 0.767
+        # on IBD where the pooled representation reaches 0.733, and that gap is
+        # what this branch exists to close.
+        #
+        # A plain Parameter rather than nn.Embedding: Embedding draws its rows
+        # from the RNG on construction, which would shift the stream for every
+        # layer initialized afterwards and stop linear_branch=True/False from
+        # being a clean ablation. torch.zeros consumes no random numbers.
+        self.linear_branch = linear_branch
+        if linear_branch:
+            self.lin_w = nn.Parameter(torch.zeros(otu_size))
+            self.lin_b = nn.Parameter(torch.zeros(1))
 
     def forward(self, x, weight, mask, encoder=False):
         """Encode a batch of samples and produce a scalar logit per sample.
@@ -867,8 +903,8 @@ class OtuAttentionEncoder(nn.Module):
         x : torch.Tensor
             Token indices of shape ``(batch, seq_len)``.
         weight : torch.Tensor
-            Abundance weights of shape ``(batch, seq_len)``, multiplied into the
-            token embeddings.
+            Abundance weights of shape ``(batch, seq_len)``, multiplied into
+            the token embeddings unless `abund_mode` is ``'none'``.
         mask : torch.Tensor
             Attention mask of shape ``(batch, seq_len)``, where 1 marks a
             position to attend over and to include in the mean pooling, and 0
@@ -899,28 +935,52 @@ class OtuAttentionEncoder(nn.Module):
         from the other. Deriving the attention mask from `pad_id` instead would
         let ``'<unk>'`` positions -- padding's counterpart for taxa the
         vocabulary does not cover -- slip into both.
+
+        Under ``abund_mode='none'`` the scaling is simply skipped, which is
+        equivalent to an abundance of 1 everywhere. Padding and ``'<unk>'``
+        positions stay at zero regardless, since their embedding rows are
+        zero.
         """
+        # The abundance arrives as float64 from the dataset. Cast it once here
+        # rather than letting it promote the embeddings to float64 and
+        # materializing the whole batch at double width.
+        weight = weight.float()
+        mask_f = mask.unsqueeze(-1).float()
+
         inputs = self.embedding(x)
-        inputs = inputs.permute(2, 0, 1) * weight
-        inputs = inputs.permute(1, 2, 0)
+        if self.abund_mode == 'multiply':
+            inputs = inputs * weight.unsqueeze(-1)
         inputs_1 = inputs.clone()
         attn_pad_mask = self.get_attention_padding_mask(mask)
 
         for layer in self.layers:
-            inputs, attn_weights = layer(inputs.float(), attn_pad_mask)
+            inputs, attn_weights = layer(inputs, attn_pad_mask)
 
-        embedding_sum = inputs * mask.unsqueeze(-1)
+        embedding_sum = inputs * mask_f
         # A sample can in principle carry no covered OTU at all; clamping keeps
         # the pooling finite instead of handing NaNs to the loss.
         n_valid = mask.sum(1, keepdim=True).clamp(min=1)
         embedding = embedding_sum.sum(dim=1, keepdim=False) / n_valid
         outputs = self.dropout(embedding)
-        outputs = self.mlp(outputs.float())
+        outputs = self.mlp(outputs)
 
-        if encoder == False:
-            return outputs, attn_weights
-        else:
+        if self.linear_branch:
+            # Abundance enters here at full magnitude whatever abund_mode says:
+            # this branch exists precisely to carry the per-taxon abundance the
+            # LayerNorm strips out of the attention path. Set
+            # linear_branch=False to ablate it.
+            #
+            # The positions are summed, matching a logistic regression on the
+            # abundance vector. If training turns out unstable, divide by
+            # `n_valid` instead -- that makes the term a mean and so invariant
+            # to sample richness, which is a study-level batch effect.
+            z = self.lin_w[x] * weight
+            lin = (z * mask.float()).sum(1, keepdim=True)
+            outputs = outputs + lin + self.lin_b
+
+        if encoder:
             return inputs_1, embedding
+        return outputs, attn_weights
 
     def get_attention_padding_mask(self, mask):
         """Build the boolean mask that hides masked-out keys from every query.
@@ -1126,11 +1186,49 @@ class Timer:
         return np.array(self.times).cumsum().tolist()
 
 
+def criterion_value(loss, logits, targets):
+    """Evaluate a criterion on whichever of logits or probabilities it expects.
+
+    :class:`torch.nn.BCEWithLogitsLoss` folds the sigmoid into the loss and
+    must be handed raw logits; :class:`torch.nn.BCELoss` and :class:`FocalLoss`
+    both consume probabilities. This picks the right one so the training and
+    evaluation paths do not each need to know which criterion is in play.
+
+    Parameters
+    ----------
+    loss : torch.nn.Module
+        The criterion.
+    logits : torch.Tensor
+        Raw model outputs of shape ``(batch,)``.
+    targets : torch.Tensor
+        Binary targets of shape ``(batch,)``, as floats.
+
+    Returns
+    -------
+    torch.Tensor
+        Scalar loss.
+
+    Notes
+    -----
+    Handing logits to ``BCEWithLogitsLoss`` is not merely tidier than applying
+    the sigmoid first. The fused form evaluates the loss through
+    ``log(1 + exp(-|x|))``, which stays finite at any logit, whereas a
+    separate sigmoid saturates to exactly 0 or 1 in float32 and leaves
+    ``BCELoss`` to clamp its logarithm at -100 -- a clamp that returns a
+    gradient of zero for the samples the model is most wrong about.
+    """
+    if isinstance(loss, nn.BCEWithLogitsLoss):
+        return loss(logits.float(), targets)
+    return loss(torch.sigmoid(logits).float(), targets)
+
+
 def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices):
     """Run one training step on a minibatch.
 
-    The model output is squeezed to shape ``(batch,)`` and squashed with a
-    sigmoid, so `loss` must be a criterion that consumes probabilities.
+    The model output is squeezed to shape ``(batch,)``. Whether the criterion
+    sees those logits directly or their sigmoid is decided by
+    :func:`criterion_value`; the probabilities are returned either way, since
+    the caller needs them for the running AUC.
 
     Parameters
     ----------
@@ -1143,8 +1241,7 @@ def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices):
     abundance : torch.Tensor
         Relative abundance weights of shape ``(batch, seq_len)``.
     loss : torch.nn.Module
-        Loss criterion operating on probabilities, e.g.
-        :class:`torch.nn.BCELoss` or :class:`FocalLoss`.
+        Loss criterion, on either logits or probabilities.
     mask : torch.Tensor
         Attention mask of shape ``(batch, seq_len)``, where 1 marks a valid
         position and 0 marks padding.
@@ -1157,8 +1254,8 @@ def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices):
     -------
     train_loss_sum : torch.Tensor
         Scalar loss for the minibatch.
-    pred : torch.Tensor
-        Predicted probabilities of shape ``(batch,)``.
+    prob : torch.Tensor
+        Predicted probabilities of shape ``(batch,)``, detached.
     """
     if isinstance(X, list):
         X = [x.to(devices[0]) for x in X]
@@ -1169,14 +1266,13 @@ def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices):
     mask = mask.to(devices[0])
     net.train()
     trainer.zero_grad()
-    pred, _ = net(X, abundance, mask)
-    pred = torch.squeeze(pred, dim=1)
-    pred = torch.sigmoid(pred)
-    l = loss(pred.float(), y.float())
+    logits, _ = net(X, abundance, mask)
+    logits = torch.squeeze(logits, dim=1)
+    l = criterion_value(loss, logits, y.float())
     l.backward()
     trainer.step()
-    train_loss_sum = l.sum()
-    return train_loss_sum, pred
+    train_loss_sum = l.sum().detach()
+    return train_loss_sum, torch.sigmoid(logits).detach()
 
 
 def set_axes(axes, xlabel, ylabel, xlim, ylim, xscale, yscale, legend):
@@ -1332,12 +1428,12 @@ def predict_iter(net, data_iter, devices, loss=None):
             abundance = abundance.to(devices[0])
             mask = mask.to(devices[0])
             pred, _ = net(X, abundance, mask)
-            pred = torch.squeeze(pred, dim=1)
-            pred = torch.sigmoid(pred)
+            logits = torch.squeeze(pred, dim=1)
+            prob = torch.sigmoid(logits)
             if loss is not None:
                 y = labels.to(devices[0], dtype=torch.int64)
-                total_loss += float(loss(pred.float(), y.float()))
-            probs.append(to_numpy(pred))
+                total_loss += float(criterion_value(loss, logits, y.float()))
+            probs.append(to_numpy(prob))
             labels_all.append(to_numpy(labels))
             n_batches += 1
 
@@ -1383,24 +1479,25 @@ def evaluate_on_test(net, ckpt_path, test_iter, threshold, devices):
     return metrics_, prob, label
 
 
-def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
-              devices, ckpt_path, plotfile_loss, plotfile_auc):
-    """Train a binary classifier, selecting the best epoch on the validation set.
+def train_cls(net, train_iter, valid_iter, loss, trainer, num_epochs,
+              devices, ckpt_path, plotfile_loss, plotfile_auc,
+              patience=10, min_delta=0.001, select_by='loss'):
+    """Train a binary classifier, selecting the best epoch by validation loss.
 
     The test set is deliberately absent from this function's signature. Every
     decision made here -- which epoch to keep and which decision threshold to
     use -- is made on `valid_iter` alone, so the held-out test set stays
     untouched until :func:`evaluate_on_test` runs afterwards.
 
-    After each epoch the validation AUC is computed; when it improves on the
-    best seen so far, the ``state_dict`` is written to `ckpt_path` and the
-    optimal threshold **of that same epoch** is recorded, so the returned
-    threshold always matches the returned weights.
+    After each epoch the validation loss is computed; when it drops below the
+    best seen so far by at least `min_delta`, the ``state_dict`` is written to
+    `ckpt_path` and the optimal threshold **of that same epoch** is recorded,
+    so the returned threshold always matches the returned weights.
 
     Parameters
     ----------
     net : torch.nn.Module
-        Model to train. Its logits pass through a sigmoid before `loss`.
+        Model to train.
     train_iter : torch.utils.data.DataLoader
         Loader yielding ``(features, abundance, labels, mask)`` batches, with
         `features`, `abundance`, and `mask` of shape ``(batch, seq_len)`` and
@@ -1408,28 +1505,31 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
     valid_iter : torch.utils.data.DataLoader
         Validation loader with the same structure as `train_iter`.
     loss : torch.nn.Module
-        Loss criterion operating on probabilities, e.g.
-        :class:`torch.nn.BCELoss` or :class:`FocalLoss`.
+        Loss criterion, on either logits or probabilities; see
+        :func:`criterion_value`.
     trainer : torch.optim.Optimizer
         Optimizer used for parameter updates.
-    scheduler : torch.optim.lr_scheduler.LRScheduler
-        Learning rate scheduler. Accepted but never stepped, so the learning
-        rate stays constant.
     num_epochs : int
-        Number of training epochs.
+        Maximum number of training epochs.
     devices : list of torch.device
         Devices to use; only ``devices[0]`` is used.
     ckpt_path : str
-        Path the best epoch's ``state_dict`` is saved to.
+        Path the selected ``state_dict`` is saved to.
     plotfile_loss : str
         Path for the train/validation loss curve plot.
     plotfile_auc : str
         Path for the train/validation AUC curve plot.
+    patience : int, optional
+        Stop once the validation loss has not improved by at least `min_delta`
+        for this many epochs. Default is 10.
+    min_delta : float, optional
+        Minimum absolute decrease in validation loss that counts as an
+        improvement. Default is 0.001.
 
     Returns
     -------
     dict
-        Record of the selected epoch, with keys ``epoch``, ``threshold``,
+        Record of the selected model, with keys ``epoch``, ``threshold``,
         ``valid_auc``, ``valid_prob``, ``valid_label``, ``train_loss``,
         ``valid_loss``, and ``train_auc``.
 
@@ -1445,7 +1545,12 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
                           legend=['train auc', 'valid auc'])
     net = net.to(devices[0])
     best = None
+    stale = 0
 
+    if select_by not in ('loss', 'auc'):
+        raise ValueError(f"unsupported select_by {select_by!r}; "
+                         f"expected 'loss' or 'auc'")
+        
     for epoch in range(num_epochs):
         train_loss = 0.0
         n_batches = 0
@@ -1469,7 +1574,17 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
         animator_1.add(epoch + 1, (train_loss, valid_loss), plotfile_loss)
         animator_2.add(epoch + 1, (train_auc, valid_auc), plotfile_auc)
 
-        if best is None or valid_auc > best['valid_auc']:
+        # Select the epoch with the lowest validation loss. An improvement is
+        # counted only when the drop exceeds min_delta, so tiny fluctuations do
+        # not reset the early-stopping counter.
+        if select_by == 'loss':
+            improved = (best is None
+                        or (best['valid_loss'] - valid_loss) > min_delta)
+        else:
+            improved = (best is None
+                        or (valid_auc - best['valid_auc']) > min_delta)
+
+        if improved:
             best = {'epoch': epoch + 1,
                     'threshold': fit_threshold(valid_label, valid_prob),
                     'valid_auc': valid_auc,
@@ -1479,6 +1594,17 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, scheduler, num_epochs,
                     'valid_loss': valid_loss,
                     'train_auc': train_auc}
             torch.save(net.state_dict(), ckpt_path)
+            stale = 0
+        else:
+            stale += 1
+
+        # Early stopping: halt when validation loss has not improved by at
+        # least min_delta for patience consecutive epochs.
+        if patience is not None and stale >= patience:
+            print(f"[early] no valid loss improvement >= {min_delta} for "
+                  f"{patience} epochs; stopping at epoch {epoch + 1}/{num_epochs} "
+                  f"(best was epoch {best['epoch']})")
+            break
 
     v_auc, v_aupr, v_cm, v_f1, v_mcc, v_acc = evaluate_cls(
         best['valid_label'], best['valid_prob'], best['threshold'])
@@ -1651,29 +1777,37 @@ def set_seed(seed=11):
 def Attention_biom(
         metadata,
         train_biom,
+        valid_biom,
         test_biom,
         embedding_birnn,
         plotfile_loss,
         plotfile_auc,
         labels_col="group",
         sample_id_col="sample_id",
-        num_steps=400,
+        num_steps=600,
         p_drop=0,
-        batch_size=128,
+        batch_size=64,
         d_model=100,
-        n_layers=2,
-        n_heads=2,
+        n_layers=1,
+        n_heads=1,
         numb=1,
-        lr=0.0005,
+        lr=0.001,
         weight_decay=0,
         num_epochs=100,
         loss="BCE_loss",
         alpha=0.6,
         glove_embedding=None,
-        valid_ratio=0.2,
-        split_seed=11,
-        group_col=None,
-        pred_out=None,):
+        pred_out=None,
+        d_ff=None,
+        head_hidden=None,
+        abund_mode='multiply',
+        model_seed=11,
+        patience=10,
+        min_delta=0.001,
+        pos_weight=None,
+        select_by='loss',
+        linear_branch=True,
+        lin_weight_decay=1e-3):
     """Run the end-to-end training pipeline for OTU-based microbiome analysis.
 
     The training table is split into a training and a validation part. Training
@@ -1692,7 +1826,12 @@ def Attention_biom(
         Path to a TSV metadata file. Must contain `sample_id_col` and
         `labels_col`, and its sample IDs must match the BIOM tables.
     train_biom : str
-        Path to the training BIOM file (features x samples).
+        Path to the training BIOM file (features x samples). Used in full --
+        there is no internal split; the caller decides the partition.
+    valid_biom : str
+        Path to the validation BIOM file, in the same format. This cohort
+        drives early stopping, checkpoint selection and the decision
+        threshold; it is never trained on.
     test_biom : str
         Path to the test BIOM file, in the same format as `train_biom`.
     embedding_birnn : str
@@ -1725,27 +1864,53 @@ def Attention_biom(
         L2 regularization strength. Default is 0.
     num_epochs : int, optional
         Number of training epochs. Default is 100.
-    loss : {'BCE_loss', 'FocalLoss'}, optional
+    loss : {'BCE_loss', 'BCEWithLogits', 'FocalLoss'}, optional
         Which criterion to build. Default is ``'BCE_loss'``.
+        ``'BCEWithLogits'`` is the same objective computed in its numerically
+        stable fused form, and is the only one that accepts `pos_weight`.
     alpha : float, optional
         Positive-class weight, used only by ``'FocalLoss'``. Default is 0.6.
     glove_embedding : str, optional
         Path to a pretrained embedding file used to initialize the OTU
         embedding table; its vector width must equal `d_model`. Default is
         None, which fills the table with fixed random codes instead.
-    valid_ratio : float, optional
-        Fraction of the training table held out for validation. Default is 0.2.
-    split_seed : int, optional
-        Seed for the train/validation split, independent of the model seed.
-        Default is 11.
-    group_col : str, optional
-        Metadata column holding a grouping key, e.g. a subject ID. Default is
-        None. When given, the split keeps all samples of a group on one side,
-        which is what you need if one subject contributed several samples.
     pred_out : str, optional
         Prefix for the prediction files, written as ``<pred_out>_valid.csv``
         and ``<pred_out>_test.csv``. Default is None, which derives the prefix
         from `embedding_birnn`.
+    d_ff : int, optional
+        Width of the feed-forward hidden layer inside each encoder layer.
+        Default is None, which uses ``4 * d_model``. This is the widest tensor
+        in the model, so it is also the first knob to turn down if the encoder
+        overfits or runs out of memory.
+    head_hidden : int, optional
+        Width of the hidden layer in the output head. Default is None, which
+        uses ``d_model // 2``. Pass 0 for the single-linear-layer head.
+    abund_mode : {'multiply', 'none'}, optional
+        How abundance enters the input representation. Default is
+        ``'multiply'``, which scales each OTU embedding by its abundance.
+        ``'none'`` ignores abundance, leaving the model only the presence or
+        absence of each covered taxon; comparing the two measures what
+        abundance is contributing under the current normalization.
+    model_seed : int, optional
+        Seed for weight initialization, dropout, batch shuffling, and the
+        random embedding draw. Default is 11. Since the partition is now fixed
+        by the input files rather than by a seed, varying `model_seed` alone
+        re-runs the same three cohorts with a different model -- which is what
+        averaging or ensembling over seeds needs.
+    patience : int, optional
+        Stop once the validation loss has not improved by at least `min_delta`
+        for this many epochs. Default is 10.
+    min_delta : float, optional
+        Minimum absolute decrease in validation loss that counts as an
+        improvement for model selection and early stopping. Default is 0.001.
+    pos_weight : float or {'auto'}, optional
+        Weight applied to the positive class, valid only with
+        ``loss='BCEWithLogits'``. ``'auto'`` uses the ratio of negatives to
+        positives in the training part. Default is None, which weights the
+        classes equally. Note this shifts where the probabilities sit rather
+        than how the samples are ordered, so it moves the thresholded metrics
+        far more than it moves the AUC.
 
     Returns
     -------
@@ -1762,10 +1927,9 @@ def Attention_biom(
     sample encode identically and the classifier could only learn a constant,
     so `glove_embedding=None` fills it with fixed random codes instead: the
     taxa stay distinguishable, they just carry no learned relationships to each
-    other. The random draw comes from the seed set at the top of this function,
-    so a rerun reproduces it.
+    other. The random draw comes from `model_seed`, so a rerun reproduces it.
     """
-    set_seed(11)
+    set_seed(model_seed)
     devices = try_all_gpus(numb)
 
     # if glove_embedding is not None:
@@ -1777,8 +1941,14 @@ def Attention_biom(
                                 sample_id_col,
                                 num_steps)
     fid_dict = full_train()
-    # Encode the test table with the training vocabulary, so both sides share
-    # one index space and the model's embedding rows mean the same OTU.
+    # Encode the held-out tables with the training vocabulary, so all three
+    # share one index space and the model's embedding rows mean the same OTU.
+    valid_data = load_data_imdb(valid_biom,
+                                metadata,
+                                labels_col,
+                                sample_id_col,
+                                num_steps,
+                                fid=fid_dict)
     test_data = load_data_imdb(test_biom,
                                metadata,
                                labels_col,
@@ -1787,25 +1957,18 @@ def Attention_biom(
                                fid=fid_dict)
 
     train_labels = to_numpy(full_train.labels)
-    groups = None
-    if group_col is not None:
-        group_map = pd.read_csv(metadata, sep="\t", index_col=sample_id_col,
-                                dtype={sample_id_col: str}, low_memory=False)
-        groups = group_map.loc[full_train.sample_ids, group_col].to_numpy()
-    train_idx, valid_idx = split_train_valid(train_labels, valid_ratio,
-                                             split_seed, groups)
 
-    train_iter = DataLoader(Subset(full_train, train_idx),
+    train_iter = DataLoader(full_train,
                             batch_size=batch_size,
                             shuffle=True)
-    valid_iter = DataLoader(Subset(full_train, valid_idx),
+    valid_iter = DataLoader(valid_data,
                             batch_size=batch_size,
                             shuffle=False)
     test_iter = DataLoader(test_data,
                            batch_size=batch_size,
                            shuffle=False)
-    print(f"[split] train {len(train_idx)}, valid {len(valid_idx)}, "
-          f"test {len(test_data)}")
+    print(f"[split] train {len(full_train)}, valid {len(valid_data)}, "
+          f"test {len(test_data)} (all three from separate tables)")
 
     # How much of the test cohort the training vocabulary actually covers. These
     # positions are masked out of attention and pooling, so a high share here
@@ -1822,7 +1985,11 @@ def Attention_biom(
                               n_layers=n_layers,
                               n_heads=n_heads,
                               p_drop=p_drop,
-                              pad_id=fid_dict['<pad>'])
+                              pad_id=fid_dict['<pad>'],
+                              d_ff=d_ff,
+                              head_hidden=head_hidden,
+                              abund_mode=abund_mode,
+                              linear_branch=linear_branch)
     init_transformer_weights(net)
 
     if glove_embedding is not None:
@@ -1845,20 +2012,66 @@ def Attention_biom(
     net.embedding.weight.data.copy_(embeds)
     net.embedding.weight.requires_grad = False
 
-    trainer = torch.optim.Adam(
-        net.parameters(), lr=lr, weight_decay=weight_decay)
-    scheduler = torch.optim.lr_scheduler.ExponentialLR(trainer, gamma=0.9)
+    # Counted after the embedding is frozen, so this is the number of weights
+    # the optimizer actually moves.
+    n_trainable = sum(p.numel() for p in net.parameters() if p.requires_grad)
+    print(f"[model] d_model {d_model}, layers {n_layers}, heads {n_heads}, "
+          f"d_ff {net.layers[0].d_ff}, dropout {p_drop} | "
+          f"abundance {abund_mode}, model_seed {model_seed} | "
+          f"{n_trainable} trainable parameters")
+
+    if linear_branch:
+        # The branch holds one free coefficient per OTU -- more parameters than
+        # the rest of the encoder combined -- so it needs its own, much
+        # stronger decay. Sharing `weight_decay` with the attention path would
+        # either leave the branch unregularized or over-regularize the encoder.
+        lin_p = [p for n, p in net.named_parameters()
+                 if n.startswith('lin_') and p.requires_grad]
+        oth_p = [p for n, p in net.named_parameters()
+                 if not n.startswith('lin_') and p.requires_grad]
+        print(f"[model] linear residual branch on | {len(lin_p)} branch "
+              f"tensors, lin_weight_decay {lin_weight_decay}")
+        trainer = torch.optim.Adam(
+            [{'params': oth_p, 'weight_decay': weight_decay},
+             {'params': lin_p, 'weight_decay': lin_weight_decay}], lr=lr)
+    else:
+        trainer = torch.optim.Adam(
+            net.parameters(), lr=lr, weight_decay=weight_decay)
+    if pos_weight is not None and loss != "BCEWithLogits":
+        raise ValueError(f"pos_weight applies only to loss='BCEWithLogits', "
+                         f"not {loss!r}")
     if loss == "FocalLoss":
         loss = FocalLoss(alpha=alpha, devices=devices)
+    elif loss == "BCEWithLogits":
+        pw = None
+        if pos_weight is not None:
+            if pos_weight == 'auto':
+                fitted = train_labels
+                n_pos = int((fitted == 1).sum())
+                n_neg = int((fitted == 0).sum())
+                if n_pos == 0:
+                    raise ValueError("pos_weight='auto' needs at least one "
+                                     "positive sample in the training part")
+                pw_value = n_neg / n_pos
+            else:
+                pw_value = float(pos_weight)
+            print(f"[loss ] BCEWithLogits, pos_weight {pw_value:.3f}")
+            pw = torch.tensor(pw_value, device=devices[0])
+        loss = nn.BCEWithLogitsLoss(pos_weight=pw)
     elif loss == "BCE_loss" or loss is None:
         loss = nn.BCELoss(weight=None, reduction='mean')
     else:
-        raise ValueError(f"unsupported loss {loss!r}; expected 'BCE_loss' or "
-                         f"'FocalLoss'")
+        raise ValueError(f"unsupported loss {loss!r}; expected 'BCE_loss', "
+                         f"'BCEWithLogits', or 'FocalLoss'")
+
+    print(f"[train] lr {lr}, epochs {num_epochs}, patience {patience}, "
+          f"min_delta {min_delta}, select_by {select_by}")
 
     valid_record = train_cls(net, train_iter, valid_iter, loss, trainer,
-                             scheduler, num_epochs, devices, embedding_birnn,
-                             plotfile_loss, plotfile_auc)
+                             num_epochs, devices, embedding_birnn,
+                             plotfile_loss, plotfile_auc,
+                             patience=patience, min_delta=min_delta,
+                             select_by=select_by)
 
     threshold = valid_record['threshold']
     test_metrics, test_prob, test_label = evaluate_on_test(
@@ -1871,7 +2084,7 @@ def Attention_biom(
     if pred_out is None:
         pred_out = os.path.splitext(embedding_birnn)[0]
     save_predictions(f"{pred_out}_valid.csv",
-                     full_train.sample_ids[valid_idx],
+                     valid_data.sample_ids,
                      valid_record['valid_label'],
                      valid_record['valid_prob'],
                      threshold)
