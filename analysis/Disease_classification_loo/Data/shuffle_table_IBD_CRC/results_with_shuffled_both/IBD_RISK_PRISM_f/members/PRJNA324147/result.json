@@ -1,0 +1,1 @@
+{"task": "shuffled_table", "fold": "IBD_RISK_PRISM_f", "member": 0, "valid_unit": "PRJNA324147", "inner_mode": "loso", "strategy": "loso", "epoch": 1, "valid_auc": 0.7547169811320753, "n_valid": 88, "test_auc": 0.5358803986710963, "abund_mode": "multiply", "out_dir": "Data/shuffle_table_IBD_CRC/results_with_shuffled_both/IBD_RISK_PRISM_f/members/PRJNA324147", "gpu": 1}

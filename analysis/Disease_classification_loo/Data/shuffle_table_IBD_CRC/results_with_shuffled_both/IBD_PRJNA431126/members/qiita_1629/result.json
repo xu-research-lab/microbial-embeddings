@@ -1,0 +1,1 @@
+{"task": "shuffled_table", "fold": "IBD_PRJNA431126", "member": 5, "valid_unit": "qiita_1629", "inner_mode": "loso", "strategy": "loso", "epoch": 3, "valid_auc": 0.8028534845436255, "n_valid": 552, "test_auc": 0.5927200667501042, "abund_mode": "multiply", "out_dir": "Data/shuffle_table_IBD_CRC/results_with_shuffled_both/IBD_PRJNA431126/members/qiita_1629", "gpu": 5}
