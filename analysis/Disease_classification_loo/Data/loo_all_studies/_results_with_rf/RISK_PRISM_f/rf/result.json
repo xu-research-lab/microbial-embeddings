@@ -1,0 +1,1 @@
+{"task": "loso_all", "fold": "RISK_PRISM_f", "seed": 11, "top_k": 600, "n_features": 13191, "n_train": 9725, "n_test": 551, "test_auc": 0.6356035437430787}

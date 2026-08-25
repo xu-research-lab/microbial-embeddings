@@ -1,0 +1,1 @@
+{"task": "lodo", "fold": "CRC", "member": 12, "valid_unit": "m12", "inner_mode": "disease_loso", "strategy": "disease_loso", "epoch": 2, "valid_auc": 0.6140645706534259, "n_valid": 2265, "test_auc": 0.527349930200093, "bag_frac": 0.6321205588285577, "feat_frac": 1.0, "abund_mode": "multiply", "out_dir": "Data/loo_all_diseases/results_with_SNEs/CRC/members/m12", "gpu": 7}

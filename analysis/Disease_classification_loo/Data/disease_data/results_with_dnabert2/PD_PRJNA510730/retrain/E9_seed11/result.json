@@ -1,0 +1,1 @@
+{"kind": "retrain", "task": "disease", "fold": "PD_PRJNA510730", "seed": 11, "E": 9, "test_auc": 0.6189503777823157, "gpu": 3}

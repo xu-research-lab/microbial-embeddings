@@ -1,0 +1,1 @@
+{"kind": "inner", "task": "disease", "fold": "CAD_PRJDB6472", "inner_mode": "cv", "valid_unit": "cv3", "epoch": 4, "valid_auc": 1.0, "n_valid": 12, "test_auc": 0.6502976190476191, "gpu": 3}

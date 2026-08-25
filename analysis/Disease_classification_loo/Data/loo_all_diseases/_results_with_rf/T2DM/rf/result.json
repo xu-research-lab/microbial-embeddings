@@ -1,0 +1,1 @@
+{"task": "lodo", "fold": "T2DM", "seed": 11, "top_k": 600, "n_features": 13191, "n_train": 9087, "n_test": 1189, "test_auc": 0.5817587187812335}

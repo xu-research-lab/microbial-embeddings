@@ -1,0 +1,1 @@
+{"kind": "inner", "task": "disease", "fold": "IBD_qiita_1629", "inner_mode": "loso", "valid_unit": "PRJNA422193", "epoch": 6, "valid_auc": 0.8041901692183723, "n_valid": 107, "test_auc": 0.7817450155478324, "gpu": 6}
