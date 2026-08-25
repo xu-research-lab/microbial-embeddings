@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "T2DM_PRJNA879337", "member": 5, "valid_unit": "PRJNA668251", "inner_mode": "loso", "strategy": "loso", "epoch": 11, "valid_auc": 1.0, "n_valid": 14, "test_auc": 1.0, "bag_frac": 0.6321205588285577, "feat_frac": 1.0, "abund_mode": "multiply", "out_dir": "Data/disease_data/results_with_dnabert2/T2DM_PRJNA879337/members/PRJNA668251", "gpu": 0}

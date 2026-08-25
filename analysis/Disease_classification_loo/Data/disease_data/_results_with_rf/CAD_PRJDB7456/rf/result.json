@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "CAD_PRJDB7456", "seed": 11, "top_k": 600, "n_features": 594, "n_train": 52, "n_test": 63, "test_auc": 0.7792929292929294}

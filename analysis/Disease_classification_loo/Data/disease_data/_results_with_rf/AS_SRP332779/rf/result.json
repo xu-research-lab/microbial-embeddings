@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "AS_SRP332779", "seed": 11, "top_k": 600, "n_features": 1434, "n_train": 59, "n_test": 84, "test_auc": 0.6913194444444445}

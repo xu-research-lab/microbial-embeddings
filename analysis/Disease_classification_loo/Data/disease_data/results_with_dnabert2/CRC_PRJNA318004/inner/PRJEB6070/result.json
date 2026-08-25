@@ -1,0 +1,1 @@
+{"kind": "inner", "task": "disease", "fold": "CRC_PRJNA318004", "inner_mode": "loso", "valid_unit": "PRJEB6070", "epoch": 6, "valid_auc": 0.7595121951219512, "n_valid": 91, "test_auc": 0.6996860282574567, "gpu": 2}

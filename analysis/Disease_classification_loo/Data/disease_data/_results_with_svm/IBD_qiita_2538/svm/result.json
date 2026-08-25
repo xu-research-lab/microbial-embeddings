@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "IBD_qiita_2538", "seed": 11, "top_k": 600, "n_features": 4766, "n_train": 1805, "n_test": 709, "test_auc": 0.7249204075135307}
