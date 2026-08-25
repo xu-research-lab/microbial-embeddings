@@ -352,10 +352,10 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
 
     # ---- SVM hyper-parameters -------------------------------------
-    ap.add_argument("--kernel", default="rbf",
+    ap.add_argument("--kernel", default="linear",
                     choices=["rbf", "linear", "poly", "sigmoid"])
     ap.add_argument("--C", type=float, default=1.0)
-    ap.add_argument("--gamma", type=_parse_gamma, default="scale",
+    ap.add_argument("--gamma", type=_parse_gamma, default="auto",
                     help="'scale', 'auto' or a float (rbf/poly/sigmoid)")
     ap.add_argument("--degree", type=int, default=3, help="poly kernel only")
     ap.add_argument("--coef0", type=float, default=0.0,

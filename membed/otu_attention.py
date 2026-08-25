@@ -10,7 +10,7 @@ from torch import nn
 import matplotlib.pyplot as plt
 
 import torch
-from torch.utils.data import Dataset, DataLoader, Sampler
+from torch.utils.data import Dataset, DataLoader
 from sklearn.metrics import confusion_matrix, f1_score, matthews_corrcoef, accuracy_score
 from sklearn.model_selection import StratifiedShuffleSplit, GroupShuffleSplit
 from sklearn import metrics
@@ -200,9 +200,9 @@ def read_strata(metadata, sample_id_col, strata_col, sample_ids):
     -----
     A blank stratum raises rather than falling back to an ``'<unknown>'``
     bucket. That bucket would become a disease of its own and, being small,
-    could end up setting the cap for every real one -- shrinking the whole
-    training set because of a few empty cells. This is the same strictness
-    :func:`read_imdb` applies to `labels_col`.
+    could end up carrying a full vote in a macro average or a base rate of its
+    own in the logit offsets -- both decided by a few empty cells. This is the
+    same strictness :func:`read_imdb` applies to `labels_col`.
     """
     try:
         mapping_file = pd.read_csv(
@@ -239,9 +239,8 @@ def read_strata(metadata, sample_id_col, strata_col, sample_ids):
         offenders = values.index[blank][:5].tolist()
         raise ValueError(
             f"column {strata_col!r} is empty for {int(blank.sum())} of "
-            f"{len(sample_ids)} samples; fill it, point `disease_col` at a "
-            f"different column, or leave `train_sampler='none'`. Offending "
-            f"samples: {offenders}")
+            f"{len(sample_ids)} samples; fill it, or point `disease_col` at a "
+            f"different column. Offending samples: {offenders}")
 
     return values.astype(str).to_numpy()
 
@@ -573,155 +572,6 @@ class load_data_imdb(Dataset):
         return self.otu.shape[0]
 
 
-def compute_disease_quotas(disease_counts, max_ratio=10.0):
-    """Cap every disease at a fixed multiple of the smallest one.
-
-    In the pooled multi-disease setting the training table is dominated by
-    whichever diseases happen to have been sequenced most, and a model can
-    score well on the pooled AUC by learning those cohorts alone. The cap
-    bounds how far that can go: no disease contributes more than `max_ratio`
-    times what the rarest one does.
-
-    Nothing here samples anything -- it maps counts to counts, so it can be
-    checked against hand-worked numbers without a table, a GPU, or a seed. It
-    is also the single entry point for a caller-supplied distribution, so an
-    injected count table and an observed one go through identical arithmetic.
-
-    Parameters
-    ----------
-    disease_counts : dict
-        Mapping from disease label to the number of training samples it holds.
-        Non-positive counts are dropped; they cannot be drawn from and would
-        otherwise pull the smallest count to zero and empty the cap.
-    max_ratio : float, optional
-        Largest allowed ratio between the biggest and the smallest disease
-        after capping. Default is 10, i.e. one order of magnitude.
-
-    Returns
-    -------
-    dict
-        Mapping from disease label to how many of its samples one epoch keeps,
-        always ``min(count, cap)`` -- so a disease at or below the cap is
-        passed through whole and only the majority ones are trimmed.
-
-    Raises
-    ------
-    ValueError
-        If `max_ratio` is not a finite positive number.
-
-    Examples
-    --------
-    >>> compute_disease_quotas({'CRC': 2400, 'IBD': 800, 'MS': 120}, 10)
-    {'CRC': 1200, 'IBD': 800, 'MS': 120}
-
-    One disease is a no-op at any ``max_ratio >= 1``, since the cap is then a
-    multiple of that disease's own count:
-
-    >>> compute_disease_quotas({'CRC': 2400}, 10)
-    {'CRC': 2400}
-
-    ``max_ratio < 1`` is a hard ceiling below the minority instead, and does
-    trim even the smallest disease:
-
-    >>> compute_disease_quotas({'CRC': 2400}, 0.5)
-    {'CRC': 1200}
-    """
-    if not np.isfinite(max_ratio):
-        raise ValueError(f"max_ratio must be a finite number, got {max_ratio!r}")
-    if max_ratio <= 0:
-        raise ValueError(
-            f"max_ratio must be positive, got {max_ratio!r}; it multiplies the "
-            f"smallest disease's count to give the cap, so a non-positive "
-            f"value would keep nothing")
-
-    counts = {d: int(n) for d, n in disease_counts.items() if int(n) > 0}
-    if not counts:
-        return {}
-
-    n_min = min(counts.values())
-    # The floor is clamped at 1 so that max_ratio < 1 -- an unusual request,
-    # but a coherent one: it asks for a per-disease ceiling below the minority
-    # -- cannot empty every stratum and hand the loader an empty epoch.
-    cap = max(int(np.floor(n_min * max_ratio)), 1)
-    return {d: min(n, cap) for d, n in counts.items()}
-
-
-def allocate_label_quotas(disease_quota, label_counts):
-    """Split one disease's quota across its labels, keeping its class ratio.
-
-    The cap is a statement about *disease* imbalance, not class imbalance, so
-    trimming a disease must not also change how many cases and controls it
-    contributes relative to each other -- that would silently re-weight the
-    very quantity `pos_weight` and :class:`FocalLoss` exist to control. The
-    split is therefore proportional to the disease's own case/control ratio.
-
-    Apportionment is largest-remainder: each label takes the floor of its
-    exact share, and the seats left over by rounding down go to the largest
-    fractional parts. Rounding each share independently would lose up to one
-    sample per label and make the parts sum to less than `disease_quota`, so
-    ``DiseaseUndersampler.__len__`` would disagree with what ``__iter__``
-    yields.
-
-    Parameters
-    ----------
-    disease_quota : int
-        Samples this disease contributes per epoch, from
-        :func:`compute_disease_quotas`.
-    label_counts : dict
-        Mapping from label to how many samples of that label the disease
-        holds. Non-positive entries are dropped.
-
-    Returns
-    -------
-    dict
-        Mapping from label to that label's per-epoch quota. The values sum to
-        ``min(disease_quota, sum(label_counts.values()))`` exactly, and no
-        label present in `label_counts` is given 0 unless the quota is too
-        small to go round.
-
-    Examples
-    --------
-    >>> allocate_label_quotas(1200, {0: 1400, 1: 1000})    # 2400 -> 1200
-    {0: 700, 1: 500}
-    >>> allocate_label_quotas(800, {0: 500, 1: 300})       # at quota already
-    {0: 500, 1: 300}
-    """
-    counts = {k: int(v) for k, v in label_counts.items() if int(v) > 0}
-    if not counts:
-        return {}
-
-    total = sum(counts.values())
-    if disease_quota >= total:
-        # At or under the cap: hand the disease back whole. Short-circuiting
-        # here rather than letting the arithmetic reproduce the counts keeps
-        # the untouched diseases provably identical to no undersampling.
-        return dict(counts)
-
-    keys = sorted(counts)                       # deterministic seat order
-    exact = [disease_quota * counts[k] / total for k in keys]
-    seats = [int(np.floor(e)) for e in exact]
-    remainder = disease_quota - sum(seats)
-    order = sorted(range(len(keys)),
-                   key=lambda i: (-(exact[i] - seats[i]), -counts[keys[i]],
-                                  str(keys[i])))
-    for i in order[:remainder]:
-        seats[i] += 1
-
-    # A label the disease actually has must never be sampled away entirely.
-    # Beyond distorting the disease, an epoch that lost a whole class would
-    # make roc_auc_score in train_cls raise "Only one class present" on the
-    # training curve. Take the seat back from the largest label, which by
-    # construction still has one to spare.
-    for i in range(len(keys)):
-        if seats[i] == 0:
-            donor = max(range(len(keys)), key=lambda j: seats[j])
-            if seats[donor] >= 2:
-                seats[donor] -= 1
-                seats[i] += 1
-    seats = [min(seats[i], counts[keys[i]]) for i in range(len(keys))]
-    return dict(zip(keys, seats))
-
-
 def logit_adjust_offsets(strata, labels, tau=1.0, verbose=True):
     """Per-sample logit offsets from each disease's own case/control base rate.
 
@@ -741,8 +591,8 @@ def logit_adjust_offsets(strata, labels, tau=1.0, verbose=True):
 
     which is worth being explicit about: this corrects each disease's
     **base rate**, not the fact that one disease has sixty times the samples
-    of another. The size imbalance survives in the gradient weighting, where
-    undersampling acts; the two address different things and compose.
+    of another. That size imbalance survives untouched in the gradient
+    weighting; the offsets address a different thing.
 
     What it buys here is that ``z`` stops carrying "cohorts like this one are
     usually cases". Under a left-out-disease split the test cohort's base rate
@@ -882,299 +732,6 @@ class LogitAdjustedLoss(nn.Module):
         return nn.functional.binary_cross_entropy_with_logits(
             logits.float(), targets.float(), pos_weight=self.pos_weight,
             reduction=self.reduction)
-
-
-class DiseaseUndersampler(Sampler):
-    """Draw a disease-balanced subset of the training set, fresh each epoch.
-
-    Strata are the joint ``(disease, label)`` cells. Each disease is capped at
-    ``min(n_d, floor(min_disease_count * max_ratio))`` samples per epoch and
-    that quota is split across its labels in proportion to its own class
-    ratio, so capping changes *which diseases* the model sees in what
-    proportion and leaves *what fraction of each disease is a case* alone.
-
-    ``__iter__`` re-draws every time it is called, and :func:`train_cls`
-    iterates the training loader afresh each epoch, so each epoch sees a
-    different slice of the majority diseases. Nothing is discarded
-    permanently: over enough epochs a majority disease's whole pool is
-    visited, which is the difference between this and deleting rows from the
-    BIOM table. ``__len__`` is constant -- the quotas do not move between
-    epochs -- so the batch count and the loss denominator stay stable.
-
-    Parameters
-    ----------
-    strata : array_like of str
-        Disease of each training sample, aligned with the dataset rows. See
-        :func:`read_strata`.
-    labels : array_like of int
-        0/1 class label of each training sample, same alignment.
-    max_ratio : float, optional
-        Largest allowed ratio between the biggest and smallest disease after
-        capping. Default is 10. Ignored when `disease_quotas` is given.
-    disease_counts : dict, optional
-        Per-disease sample counts to derive the cap from, instead of counting
-        `strata`. Default is None, which counts `strata`. Use this to hold the
-        cap fixed across folds whose training tables differ, so their quotas
-        stay comparable. It changes the *cap*, never how many samples actually
-        exist: a disease is still capped at its own observed count.
-    disease_quotas : dict, optional
-        Per-disease per-epoch quotas, stated outright. Default is None.
-        Bypasses `max_ratio` and `disease_counts` entirely.
-    seed : int, optional
-        Base seed for the draws. Default is 11. Epoch ``k`` draws from
-        ``np.random.default_rng([seed, k])``, so the whole schedule is
-        reproducible and epoch 3 of a rerun matches epoch 3 of the original.
-    verbose : bool, optional
-        Print the ``[under]`` before/after report at construction. Default is
-        True.
-
-    Attributes
-    ----------
-    observed_counts : dict
-        Per-disease sample counts actually present in `strata`.
-    quotas : dict
-        Per-``(disease, label)`` per-epoch quota, zero-quota strata dropped.
-    num_samples : int
-        Samples one epoch draws, i.e. ``sum(quotas.values())``. What
-        ``__len__`` returns.
-
-    Raises
-    ------
-    ValueError
-        If `strata` and `labels` differ in length, if both `disease_counts`
-        and `disease_quotas` are given, or if `max_ratio` is not finite and
-        positive.
-    KeyError
-        If an injected mapping omits a disease that `strata` contains.
-
-    Notes
-    -----
-    The draws come from a private ``numpy.random.Generator``, not from the
-    global ``numpy.random`` / ``torch`` streams that :func:`set_seed` seeds.
-    Adding this sampler therefore cannot perturb weight initialization,
-    dropout, or the random embedding draw -- and when it is not constructed at
-    all, which is the default, nothing about the existing runs changes.
-    """
-
-    def __init__(self, strata, labels, max_ratio=10.0, disease_counts=None,
-                 disease_quotas=None, seed=11, verbose=True):
-        """Bucket the samples by ``(disease, label)`` and resolve the quotas."""
-        super().__init__(None)
-        strata = np.asarray([str(s) for s in strata])
-        labels = np.asarray(labels).astype(int).ravel()
-        if len(strata) != len(labels):
-            raise ValueError(
-                f"strata has {len(strata)} entries but labels has "
-                f"{len(labels)}; they must be aligned with the same dataset")
-        if disease_counts is not None and disease_quotas is not None:
-            raise ValueError(
-                "pass disease_counts (which feed max_ratio) or disease_quotas "
-                "(which replace it), not both")
-
-        self.seed = int(seed)
-        self._epoch = 0
-
-        pools = {}
-        for i, (d, y) in enumerate(zip(strata, labels)):
-            pools.setdefault((d, int(y)), []).append(i)
-        self._pools = {k: np.asarray(v, dtype=np.int64)
-                       for k, v in sorted(pools.items(), key=lambda kv: kv[0])}
-
-        self.observed_counts = {}
-        for (d, _), idx in self._pools.items():
-            self.observed_counts[d] = self.observed_counts.get(d, 0) + len(idx)
-
-        self.quotas = self._resolve(max_ratio, disease_counts, disease_quotas)
-        self.num_samples = int(sum(self.quotas.values()))
-        if verbose:
-            self.report(max_ratio, disease_counts, disease_quotas)
-
-    def _resolve(self, max_ratio, disease_counts, disease_quotas):
-        """Turn disease-level quotas into per-``(disease, label)`` quotas."""
-        if disease_quotas is not None:
-            per_disease = {}
-            for d, n in self.observed_counts.items():
-                if d not in disease_quotas:
-                    raise KeyError(
-                        f"disease_quotas has no entry for {d!r}, which the "
-                        f"training table holds {n} samples of; every disease "
-                        f"present needs a quota")
-                q = int(disease_quotas[d])
-                if q > n:
-                    print(f"[under] WARNING: disease_quotas[{d!r}]={q} exceeds "
-                          f"the {n} samples present; clamped to {n}")
-                per_disease[d] = min(max(q, 0), n)
-            extra = set(disease_quotas) - set(self.observed_counts)
-            if extra:
-                print(f"[under] WARNING: disease_quotas names {sorted(extra)}, "
-                      f"absent from the training table; ignored")
-        else:
-            if disease_counts is None:
-                source = dict(self.observed_counts)
-            else:
-                source = {d: int(n) for d, n in disease_counts.items()}
-                for d, n in self.observed_counts.items():
-                    if d not in source:
-                        raise KeyError(
-                            f"disease_counts has no entry for {d!r}, which the "
-                            f"training table holds {n} samples of")
-                # An injected count that is absent from this table still sets
-                # the cap -- that is the point of injecting one, to keep folds
-                # comparable -- so it is worth saying out loud.
-                extra = set(source) - set(self.observed_counts)
-                if extra:
-                    print(f"[under] WARNING: disease_counts names "
-                          f"{sorted(extra)}, absent from this training table; "
-                          f"they still contribute to the smallest count and so "
-                          f"to the cap")
-                diffs = {d: (source[d], self.observed_counts[d])
-                         for d in self.observed_counts
-                         if source[d] != self.observed_counts[d]}
-                if diffs:
-                    print(f"[under] WARNING: injected counts disagree with the "
-                          f"training table for {len(diffs)} disease(s): "
-                          + ", ".join(f"{d} given {a}, observed {b}"
-                                      for d, (a, b) in sorted(diffs.items())[:5]))
-            capped = compute_disease_quotas(source, max_ratio)
-            # Never promise more than exists, whatever the cap says.
-            per_disease = {d: min(capped.get(d, 0), n)
-                           for d, n in self.observed_counts.items()}
-
-        out = {}
-        for d, q in per_disease.items():
-            label_counts = {y: len(idx) for (dd, y), idx in self._pools.items()
-                            if dd == d}
-            for y, qy in allocate_label_quotas(q, label_counts).items():
-                out[(d, y)] = int(qy)
-        # Strata whose quota came back 0 are dropped so __iter__ need not
-        # special-case them.
-        return {k: v for k, v in out.items() if v > 0}
-
-    def report(self, max_ratio, disease_counts, disease_quotas):
-        """Print the ``[under]`` before/after summary, once, at construction.
-
-        The reader needs the full table -- including the diseases the cap did
-        not touch -- to confirm the cap did what they intended, so untouched
-        diseases are listed rather than omitted.
-        """
-        n_disease = len(self.observed_counts)
-        total = sum(self.observed_counts.values())
-
-        if n_disease <= 1:
-            only = next(iter(self.observed_counts), None)
-            if self.num_samples >= total:
-                print(f"[under] one disease ({only!r}); undersampling is a "
-                      f"no-op, all {total} samples kept each epoch")
-            else:
-                # Only reachable via max_ratio < 1 or an explicit quota: with
-                # nothing to balance against, the cap is a bare ceiling.
-                print(f"[under] one disease ({only!r}); nothing to balance "
-                      f"against, but the cap still trims it "
-                      f"{total} -> {self.num_samples} per epoch")
-            return
-
-        if disease_quotas is not None:
-            source = "explicit disease_quotas"
-        elif disease_counts is not None:
-            source = f"max_ratio {max_ratio:g}, cap from injected disease_counts"
-        else:
-            source = f"max_ratio {max_ratio:g}"
-        print(f"[under] disease undersampling on | {source}, "
-              f"{n_disease} diseases")
-
-        if disease_quotas is None:
-            counts = (disease_counts if disease_counts is not None
-                      else self.observed_counts)
-            positive = {d: int(n) for d, n in counts.items() if int(n) > 0}
-            if positive:
-                n_min = min(positive.values())
-                smallest = min(sorted(positive), key=lambda d: positive[d])
-                cap = max(int(np.floor(n_min * max_ratio)), 1)
-                print(f"[under] cap {cap} = {max_ratio:g} x {n_min}, "
-                      f"the smallest disease ({smallest})")
-                if cap < n_min:
-                    print(f"[under] max_ratio < 1, so even the smallest "
-                          f"disease is trimmed ({n_min} -> {cap})")
-
-        # Biggest first, so whatever is actually being trimmed leads.
-        order = sorted(self.observed_counts,
-                       key=lambda d: (-self.observed_counts[d], d))
-        shown, hidden_kept = order, 0
-        if len(order) > 12:
-            shown, hidden = order[:10], order[10:]
-            hidden_kept = sum(self.observed_counts[d] for d in hidden)
-        width = max(len(str(d)) for d in shown)
-        for d in shown:
-            before = self.observed_counts[d]
-            after = sum(q for (dd, _), q in self.quotas.items() if dd == d)
-            if after >= before:
-                print(f"[under] {str(d):<{width}} {before:5d} -> {after:5d} | "
-                      f"under the cap, kept whole")
-            else:
-                pos_b = len(self._pools.get((d, 1), ()))
-                neg_b = len(self._pools.get((d, 0), ()))
-                pos_a = self.quotas.get((d, 1), 0)
-                neg_a = self.quotas.get((d, 0), 0)
-                print(f"[under] {str(d):<{width}} {before:5d} -> {after:5d} | "
-                      f"case {pos_b:5d} -> {pos_a:5d}, "
-                      f"ctrl {neg_b:5d} -> {neg_a:5d}")
-        if hidden_kept:
-            print(f"[under] ... and {len(order) - len(shown)} more, "
-                  f"{hidden_kept} samples")
-
-        drawn = self.label_counts()
-        pos_b = int(sum(len(i) for (_, y), i in self._pools.items() if y == 1))
-        neg_b = int(sum(len(i) for (_, y), i in self._pools.items() if y == 0))
-        print(f"[under] per epoch {self.num_samples}/{total} samples "
-              f"({100 * self.num_samples / max(total, 1):.1f}%) | "
-              f"labels 1/0 = {drawn.get(1, 0)}/{drawn.get(0, 0)} "
-              f"(was {pos_b}/{neg_b})")
-        print(f"[under] subset is redrawn every epoch, so no sample is "
-              f"permanently dropped; train loss and train AUC are now measured")
-        print(f"[under] on the epoch's draw, not the full training part, and a "
-              f"disease-balanced pooled train AUC is *harder* than the "
-              f"unbalanced one")
-
-    def label_counts(self):
-        """Expected class balance of one epoch's draw.
-
-        Returns
-        -------
-        dict
-            Mapping from label to how many samples of it an epoch holds. Fixed
-            across epochs, because the quotas are.
-        """
-        out = {}
-        for (_, y), q in self.quotas.items():
-            out[y] = out.get(y, 0) + q
-        return out
-
-    def set_epoch(self, epoch):
-        """Pin the next draw to a given epoch index, for reproducing one."""
-        self._epoch = int(epoch)
-
-    def __iter__(self):
-        """Draw one epoch's indices, without replacement within each stratum."""
-        rng = np.random.default_rng([self.seed, self._epoch])
-        self._epoch += 1
-        drawn = []
-        for key, quota in self.quotas.items():
-            pool = self._pools[key]
-            if quota >= len(pool):
-                drawn.append(pool)
-            else:
-                drawn.append(rng.choice(pool, size=quota, replace=False))
-        order = (np.concatenate(drawn) if drawn
-                 else np.empty(0, dtype=np.int64))
-        # Concatenating leaves the epoch sorted by stratum, which would hand
-        # the model a batch of one disease and one class at a time -- ordered
-        # batches, not the mixed ones shuffle=True gives.
-        rng.shuffle(order)
-        return iter(order.tolist())
-
-    def __len__(self):
-        """Samples drawn per epoch. Constant across epochs."""
-        return self.num_samples
 
 
 class otuEmbedding:
@@ -2440,10 +1997,10 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, num_epochs,
             valid_auc = metrics.roc_auc_score(valid_label, valid_prob)
             per_disease = None
         else:
-            # One AUC per disease, averaged. The quotas do not move between
-            # epochs and neither does the validation set, so which diseases
-            # can be scored is settled on the first epoch; report it once
-            # there rather than on all hundred.
+            # One AUC per disease, averaged. The validation set does not move
+            # between epochs, so which diseases can be scored is settled on
+            # the first epoch; report it once there rather than on all
+            # hundred.
             valid_auc, per_disease, skipped = macro_auc(
                 valid_label, valid_prob, valid_strata,
                 min_group_n=min_group_n)
@@ -2733,12 +2290,7 @@ def Attention_biom(
         select_by='loss',
         linear_branch=True,
         lin_weight_decay=1e-3,
-        train_sampler='none',
         disease_col='disease_name_ab',
-        max_ratio=10.0,
-        sample_seed=None,
-        disease_counts=None,
-        disease_quotas=None,
         valid_auc='pooled',
         min_group_n=0,
         logit_adjust_tau=1.0):
@@ -2845,41 +2397,10 @@ def Attention_biom(
         classes equally. Note this shifts where the probabilities sit rather
         than how the samples are ordered, so it moves the thresholded metrics
         far more than it moves the AUC.
-    train_sampler : {'none', 'disease_undersample'}, optional
-        Which sampler the training loader uses. Default is ``'none'``, the
-        plain ``shuffle=True`` loader over every training sample -- unchanged
-        from before this parameter existed, and the only path that touches no
-        new metadata column and no new RNG.
-        ``'disease_undersample'`` caps each disease's per-epoch contribution
-        at `max_ratio` times the smallest disease's, redrawing the subset
-        every epoch so nothing is permanently discarded. It applies to the
-        training loader only; validation and test are always scored on their
-        full cohorts. See :class:`DiseaseUndersampler`.
     disease_col : str, optional
-        Metadata column naming each sample's disease, read only when
-        `train_sampler='disease_undersample'`. Default is
-        ``'disease_name_ab'``. A training table holding one disease makes the
-        undersampling a no-op.
-    max_ratio : float, optional
-        Largest allowed ratio between the biggest and the smallest disease
-        after capping. Default is 10, i.e. one order of magnitude. Ignored
-        when `disease_quotas` is given.
-    sample_seed : int, optional
-        Seed for the per-epoch draws. Default is None, which uses
-        `model_seed`. Leaving it at None means an ensemble that varies
-        `model_seed` also varies each member's subsets -- diversity from the
-        draw as well as from the weights. Pin it to an integer to hold the
-        subsets fixed while the weights vary, which is the ablation that
-        isolates the draw's effect. Drawn from a private ``Generator``, so it
-        cannot disturb the streams `model_seed` seeds.
-    disease_counts : dict, optional
-        Per-disease sample counts to compute the cap from, instead of counting
-        this training table's metadata. Default is None. Use it to hold one
-        cap across folds whose training tables differ, so their quotas stay
-        comparable; a disease is still limited to the samples it actually has.
-    disease_quotas : dict, optional
-        Per-disease per-epoch quotas, stated outright. Default is None.
-        Overrides `max_ratio`; mutually exclusive with `disease_counts`.
+        Metadata column naming each sample's disease, read only under
+        ``valid_auc='macro'`` and ``loss='LogitAdjusted'``. Default is
+        ``'disease_name_ab'``.
     valid_auc : {'pooled', 'macro'}, optional
         How the validation AUC that selects the epoch is formed. ``'pooled'``
         (default) is one AUC over every validation sample at once -- unchanged
@@ -2955,32 +2476,9 @@ def Attention_biom(
 
     train_labels = to_numpy(full_train.labels)
 
-    train_sampler_obj = None
-    if train_sampler == 'none':
-        train_iter = DataLoader(full_train,
-                                batch_size=batch_size,
-                                shuffle=True)
-    elif train_sampler == 'disease_undersample':
-        # Read only now, and only for the training table: the disease is a
-        # sampling concern, so it stays out of the Dataset, whose contract
-        # ends at (features, abundance, label, mask).
-        strata = read_strata(metadata, sample_id_col, disease_col,
-                             full_train.sample_ids)
-        train_sampler_obj = DiseaseUndersampler(
-            strata, train_labels,
-            max_ratio=max_ratio,
-            disease_counts=disease_counts,
-            disease_quotas=disease_quotas,
-            seed=model_seed if sample_seed is None else sample_seed)
-        # DataLoader refuses shuffle=True alongside a sampler; the sampler
-        # shuffles its own draw, so the batches are mixed either way.
-        train_iter = DataLoader(full_train,
-                                batch_size=batch_size,
-                                sampler=train_sampler_obj)
-    else:
-        raise ValueError(
-            f"unsupported train_sampler {train_sampler!r}; expected 'none' or "
-            f"'disease_undersample'")
+    train_iter = DataLoader(full_train,
+                            batch_size=batch_size,
+                            shuffle=True)
     valid_iter = DataLoader(valid_data,
                             batch_size=batch_size,
                             shuffle=False)
@@ -3071,18 +2569,9 @@ def Attention_biom(
         if pos_weight is not None:
             if pos_weight == 'auto':
                 # 'auto' describes the class balance of what the loader
-                # actually yields. Under undersampling that is one epoch's
-                # draw, whose balance is fixed by the quotas -- so the weight
-                # is still a constant, just a different one from the full
-                # table's: each disease keeps its own case/control ratio, but
-                # the diseases are pooled in new proportions.
-                if train_sampler_obj is None:
-                    fitted = train_labels
-                    n_pos = int((fitted == 1).sum())
-                    n_neg = int((fitted == 0).sum())
-                else:
-                    drawn = train_sampler_obj.label_counts()
-                    n_pos, n_neg = drawn.get(1, 0), drawn.get(0, 0)
+                # actually yields, which is the whole training part.
+                n_pos = int((train_labels == 1).sum())
+                n_neg = int((train_labels == 0).sum())
                 if n_pos == 0:
                     raise ValueError("pos_weight='auto' needs at least one "
                                      "positive sample in the training part")
@@ -3094,7 +2583,7 @@ def Attention_biom(
         loss = nn.BCEWithLogitsLoss(pos_weight=pw)
     elif loss == "LogitAdjusted":
         # The offsets ride on the training dataset, so they follow each sample
-        # through shuffling and through the undersampler's redraw.
+        # through the loader's shuffling.
         la_strata = read_strata(metadata, sample_id_col, disease_col,
                                full_train.sample_ids)
         offsets, _ = logit_adjust_offsets(la_strata, train_labels,

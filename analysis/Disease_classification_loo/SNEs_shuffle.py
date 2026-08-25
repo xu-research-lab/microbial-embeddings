@@ -8,7 +8,7 @@ Usage:
     python shuffle_columns.py \
         --input ../../data/social_niche_embedding_removing_disease_samples_100.txt \
         --output ../../data/social_niche_embedding_removing_disease_samples_100_shuffled.txt \
-        --seed 11
+        --seed 5
 """
 
 import argparse

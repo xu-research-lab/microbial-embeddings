@@ -1,52 +1,31 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Bagged ensemble of Attention_biom across all LOSO tasks, on multiple GPUs.
+"""Ensemble of Attention_biom across all LOSO tasks, on multiple GPUs.
 
-One protocol, the random-forest one
------------------------------------
-Each fold trains --n-estimators members. A member differs from its siblings in
-two ways, and both are the ways a random forest's trees differ from each other:
+One protocol, cohort-held-out validation
+----------------------------------------
+Each fold trains several members, and every member's validation part is a whole
+held-out cohort rather than a random slice of the training table: see
+--inner-split for the modes. Selecting the epoch on a cohort the member never
+trained on is the same step the test table asks for, which is why the random
+in-distribution splits this script used to offer are gone. What separates a
+member from its siblings is therefore which cohorts it holds out, and nothing
+else: every member sees every taxon of whatever it does train on.
 
-  bagging          The member trains on a random --bag-frac of the fold's
-                   training table and validates on the rest. The draw is plain
-                   random, taking no account of study or label, which is what a
-                   forest's bootstrap does; the samples a member did not draw
-                   are exactly the samples it early-stops on -- its out-of-bag
-                   set, used here to choose an epoch and a threshold rather
-                   than to estimate error.
-
-  feature subsets  The member sees a random --feat-frac of the taxa that are
-                   non-zero in its own training part; taxa that are zero
-                   throughout it are kept whole, since they are not features it
-                   could learn from and dropping one only costs the vocabulary
-                   an SNE vector the test cohort can use. This needs nothing
-                   from the model: the vocabulary is built from the training
-                   table it is handed, so a dropped taxon is simply absent, and
-                   the held-out samples resolve it to '<unk>' and mask it out
-                   -- which is what a
-                   tree that never saw a feature does with it.
-
-Both draws are made here rather than in the library, which takes the training
-and validation cohorts as two separate BIOM tables and no longer partitions
+The split is made here rather than in the library, which takes the training and
+validation cohorts as two separate BIOM tables and no longer partitions
 anything itself. Each member therefore writes its own pair of tables into its
 job directory, and they are deleted once it succeeds unless --keep-tables.
 
 The fold's result is the ensemble of its members' test predictions, not any
-single member. A member trained on 63% of the data and 80% of the taxa is
-weaker than one trained on everything; --n-estimators is what buys that back,
-which is why a forest grows hundreds of trees rather than one.
-
---bag-frac defaults to 1 - 1/e = 0.6321, the fraction of *distinct* samples a
-bootstrap of the same size contains. Drawing without replacement at that rate
-matches a bootstrap's diversity while avoiding what with-replacement would cost
-here: BIOM sample ids must be unique, so duplicates would need renaming, and a
-renamed sample no longer finds its metadata row.
+single member. A member that gave a whole cohort up to validation is weaker
+than one trained on everything; the member count is what buys that back.
 
 Combining the members
 ---------------------
 AUC reads only the ordering of the scores, and the members are not on a common
-scale -- each one's probabilities come from a threshold fitted on its own
-out-of-bag set. Five combiners are therefore scored side by side, all recomputed
+scale -- each one's probabilities come from a threshold fitted on the cohort it
+held out. Several combiners are therefore scored side by side, all recomputed
 from the same pred_test.csv files at no cost:
 
   ens_logit   mean of log(p/(1-p)); the geometric mean of the odds, and how
@@ -63,9 +42,10 @@ from the same pred_test.csv files at no cost:
   ens_normal  ranks through the normal quantile (van der Waerden scores):
               scale-free like rank, but with the tails spaced apart.
   ens_rankmed median of the ranks -- scale-free and outlier-resistant at once.
-  ens_wauc    logits weighted by valid_auc - 0.5. Left NaN under
-              --inner-split loso, where each member was scored on a different
-              cohort and the weights would not be comparable.
+  ens_wauc    logits weighted by valid_auc - 0.5. Always NaN now: every
+              remaining --inner-split scores each member on a different set of
+              cohorts, so a higher valid_auc may only mean an easier one and
+              the weights would not be comparable.
 
 The middle group is there for what this data actually does: members calibrated
 on different cohorts produce probabilities on different scales, and a mean of
@@ -88,23 +68,20 @@ to recompute the combiners from predictions that are already there.
 Usage
 -----
   python run_attention_biom_with_SNEs.py --dry-run
-  python run_attention_biom_with_SNEs.py --tasks disease --n-estimators 100 \
-      --gpus 0 1 2 3 4 5 6 7 --run-name rf_bag
-  python run_attention_biom_with_SNEs.py --tasks all --n-estimators 100 \
-      --bag-frac 0.8 --feat-frac 0.8 --run-name rf_bag80
+  python run_attention_biom_with_SNEs.py --tasks disease \
+      --gpus 0 1 2 3 4 5 6 7 --run-name rf_loso
+  python run_attention_biom_with_SNEs.py --tasks lodo \
+      --inner-split disease_loso --n-estimators 8 --run-name rf_dloso
 """
 from __future__ import annotations
 
 import argparse
 import json
-import logging
-import math
 import multiprocessing as mp
 import os
 import shutil
 import time
 import traceback
-from collections import Counter
 
 import biom
 import numpy as np
@@ -122,7 +99,7 @@ from biom.util import biom_open
 # =====================================================================
 TASKS = {
     "disease": dict(
-        run_tsv="run_leave_one_study_out_each_diease_list.tsv",
+        run_tsv="run_test.tsv",
         train="Data/disease_data/{disease}/{study}/train_loo.biom",
         test="Data/disease_data/{disease}/{study}/test_loo.biom",
         meta="Data/disease_data/{disease}/metadata.tsv",
@@ -220,17 +197,9 @@ def parse_set(pairs):
                 f"has to read as {type(default).__name__}")
     return out
 
-#: Fraction of distinct samples a bootstrap of the same size contains.
-BAG_FRAC_DEFAULT = 1 - 1 / math.e
-
-#: How many training samples a feature subset may empty before the member is
-#: refused. A few emptied rows are the cost of random subspaces on a sparse
-#: table; past this share the subset is too small to be training on.
-EMPTY_SAMPLE_LIMIT = 0.05
-
 
 # =====================================================================
-# 1. Materialising a member's bag as two BIOM tables
+# 1. Materialising a member's split as two BIOM tables
 # =====================================================================
 def _write_table(tbl, path):
     """Write a BIOM table atomically.
@@ -254,73 +223,9 @@ def survey_training_table(train_biom, meta_path, study_col):
     return md.loc[sids, study_col].unique()
 
 
-def split_train_val_with_joint_stratification(pool, sample_to_study,
-                                              sample_to_label, test_size,
-                                              random_state):
-    """Split with a (study, label) stratified split, degrading as needed.
-
-    Three attempts in order -- the joint ``study||label`` stratum, then the
-    label alone, then a plain random split. Each fallback is taken only when a
-    stratum would carry a single sample, which is where ``train_test_split``
-    cannot place one on each side.
-
-    Returns ``(train_ids, val_ids, strategy)``. The strategy is worth
-    recording: a fold that fell through to ``'random'`` has a validation set
-    whose class balance is not controlled, and one that fell to
-    ``'label_only'`` has cohorts spread across the split by chance.
-    """
-    from sklearn.model_selection import train_test_split
-    joint, labels = [], []
-    for sid in pool:
-        study = sample_to_study.get(sid, "UNKNOWN_STUDY")
-        lab = sample_to_label.get(sid)
-        lab = "UNKNOWN_LABEL" if lab is None or str(lab).strip() == "" else str(lab)
-        labels.append(lab)
-        joint.append(f"{study}||{lab}")
-
-    for strata, name in ((joint, "joint_study_label"), (labels, "label_only")):
-        if min(Counter(strata).values()) < 2:
-            logging.warning("a %s stratum has fewer than two samples; "
-                            "degrading", name)
-            continue
-        try:
-            tr, va = train_test_split(pool, test_size=test_size, shuffle=True,
-                                      random_state=random_state,
-                                      stratify=strata)
-            return tr, va, name
-        except ValueError as exc:
-            logging.warning("%s stratification failed: %s", name, exc)
-    tr, va = train_test_split(pool, test_size=test_size, shuffle=True,
-                              random_state=random_state)
-    return tr, va, "random"
-
-
 def _valid_mask(job, sids, lab, md):
     """Boolean mask over `sids` (True = validation), plus a strategy label."""
     mode = job["inner_mode"]
-
-    if mode == "bag":
-        # A plain random draw, which is what a forest's bootstrap is: it takes
-        # no account of study or label. The samples not drawn are the member's
-        # out-of-bag set and become its validation table.
-        rng = np.random.default_rng(job["bag_seed"])
-        n_bag = max(1, int(round(len(sids) * job["bag_frac"])))
-        mask = np.ones(len(sids), dtype=bool)
-        mask[rng.permutation(len(sids))[:n_bag]] = False
-        return mask, "random_bag"
-
-    if mode == "joint":
-        # One split, stratified on (study, label), shared by every member --
-        # they differ only in model_seed. The validation samples come from the
-        # same cohorts as the training ones, so this selects for generalization
-        # within the training distribution rather than across cohorts.
-        pool = [str(x) for x in sids]
-        _, val_ids, strategy = split_train_val_with_joint_stratification(
-            pool,
-            md.loc[sids, job["study_col"]].astype(str).to_dict(),
-            md.loc[sids, LABELS_COL].to_dict(),
-            job["val_ratio"], job["split_seed"])
-        return np.isin(sids, np.asarray(val_ids, dtype=object)), strategy
 
     if mode == "same_disease":
         return _same_disease_mask(job, sids, lab, md)
@@ -470,11 +375,11 @@ def _disease_loso_mask(job, sids, md):
     training table -- holding that cohort out removes the disease from training
     altogether. The draw says so on its output line rather than skipping it.
 
-    The draw uses ``job['bag_seed']``, which is ``--bag-seed`` plus the member
-    index, so the members differ in which cohorts they hold out and their
-    predictions are worth ensembling.
+    The draw uses ``job['member_seed']``, which is ``--member-seed`` plus the
+    member index, so the members differ in which cohorts they hold out and
+    their predictions are worth ensembling.
     """
-    rng = np.random.default_rng(job["bag_seed"])
+    rng = np.random.default_rng(job["member_seed"])
     dis = _column(md, sids, job["disease_col"], "disease")
     stu = _column(md, sids, job["study_col"], "study")
 
@@ -499,8 +404,9 @@ def _disease_loso_mask(job, sids, md):
     if share > 0.5:
         # One cohort per disease is a large slice when the diseases have two or
         # three cohorts each, which is what this data mostly has. Not an error
-        # -- the members ensemble, so it trades the same way bagging does -- but
-        # a member training on under half its fold is worth knowing about.
+        # -- the members ensemble, so the fold gets back across members what
+        # each one gave up -- but a member training on under half its fold is
+        # worth knowing about.
         print(f"[dloso] {tag}: WARNING: that leaves only {1 - share:.0%} of the "
               f"fold to train on; the diseases here have few cohorts each")
     if lonely:
@@ -546,16 +452,8 @@ def member_split(job):
     --inner-split; see `_valid_mask`.
 
     Returns ``(train_path, valid_path, strategy)``. Existing files are reused,
-    so a retried job -- or, under 'joint', every member after the first -- does
-    not pay for the filtering again.
-
-    --feat-frac is applied to the training part only, and only to the taxa that
-    are non-zero somewhere in it. The validation and test tables keep every
-    taxon: the vocabulary is built from the training part, so a dropped taxon is
-    absent from it and the held-out samples resolve it to '<unk>' and mask it
-    out, which is what a tree that never saw a feature does with it. Training
-    samples the subset empties are dropped, up to EMPTY_SAMPLE_LIMIT of them;
-    beyond that the member is refused.
+    so a retried job -- or, under grouped 'loso', every repeat of a group after
+    the first -- does not pay for the filtering again.
     """
     split_dir = job["split_dir"]
     train_part, valid_part = split_paths(split_dir)
@@ -573,27 +471,6 @@ def member_split(job):
     if missing:
         raise KeyError(f"{len(missing)} training samples have no metadata row; "
                        f"first offenders: {missing[:5]}")
-    # Drop whole diseases from this fold before anything is split off. Removing
-    # them here rather than from the training part alone is deliberate: a
-    # disease that is not trained on has no business in the validation set
-    # either, where it would be scored as an unseen disease and drag the epoch
-    # selection around. The test table is a separate file and is untouched, so
-    # a dropped disease is still evaluated on its own fold.
-    if job["drop_disease"]:
-        dis = _column(md, sids, job["disease_col"], "disease")
-        keep = ~np.isin(dis, [str(d) for d in job["drop_disease"]])
-        n_drop = int((~keep).sum())
-        if n_drop:
-            if not keep.any():
-                raise ValueError(
-                    f"--drop-disease {job['drop_disease']} removed every "
-                    f"sample of {job['fold']}'s training table")
-            gone = sorted(set(dis[~keep]))
-            print(f"[drop] {job['fold']}/{job['valid_unit']}: removed "
-                  f"{n_drop}/{len(sids)} samples of {', '.join(gone)} from "
-                  f"this fold's training and validation pool")
-            table = table.filter(sids[keep], axis="sample", inplace=False)
-            sids = np.asarray(table.ids(axis="sample"))
 
     lab = pd.to_numeric(md.loc[sids, LABELS_COL], errors="coerce")
     if lab.isna().any():
@@ -603,10 +480,10 @@ def member_split(job):
 
     is_v, strategy = _valid_mask(job, sids, lab, md)
 
-    # Nothing in a plain random or leave-one-study-out draw guarantees both
-    # classes land on both sides. A part that lost a class cannot be trained on
-    # or early-stopped against, so the member fails here rather than training
-    # on a meaningless validation curve.
+    # Nothing in a leave-one-cohort-out draw guarantees both classes land on
+    # both sides. A part that lost a class cannot be trained on or
+    # early-stopped against, so the member fails here rather than training on a
+    # meaningless validation curve.
     for name, m in (("training", ~is_v), ("validation", is_v)):
         if m.sum() == 0:
             hint = ""
@@ -623,60 +500,12 @@ def member_split(job):
                 f"under --inner-split {job['inner_mode']}")
 
     train_tbl = table.filter(sids[~is_v], axis="sample", inplace=False)
-    if job["feat_frac"] < 1.0:
-        obs = np.asarray(train_tbl.ids(axis="observation"))
-        # The tables are aligned on feature IDs, so the training part carries a
-        # row for every taxon in the study -- including taxa that are zero
-        # across all of its samples and only appear in the held-out cohort.
-        # Those rows are not features to subsample: they teach the member
-        # nothing, and dropping one costs the vocabulary an SNE vector that the
-        # test cohort does have a use for. Draw the subset from the taxa the
-        # member can actually learn from, and keep the all-zero rows whole.
-        present = np.asarray((train_tbl.matrix_data > 0).sum(axis=1)).ravel() > 0
-        pool, always = obs[present], obs[~present]
-        k = max(1, int(round(len(pool) * job["feat_frac"])))
-        drawn = np.random.default_rng(job["bag_seed"] + 1).choice(
-            pool, size=k, replace=False)
-        print(f"[feat] {job['valid_unit']}: {len(pool)} taxa present in this "
-              f"member's training part -> kept {k} ({job['feat_frac']:.0%}); "
-              f"{len(always)} taxa absent from it kept whole")
-        keep = np.concatenate([drawn, always])
-        train_tbl = train_tbl.filter(keep, axis="observation", inplace=False)
-        # A sample whose every retained taxon is zero has nothing left: it
-        # encodes to all padding, is masked out end to end, and contributes a
-        # row of noise to the loss. Drop those samples rather than the member.
-        # Losing the member would shrink K on that fold alone and leave the
-        # ensemble uneven across folds, which is worse than losing a few rows
-        # -- and on a sparse table at a low --feat-frac it is near-certain.
-        kept_sids = np.asarray(train_tbl.ids(axis="sample"))
-        nz = np.asarray((train_tbl.matrix_data > 0).sum(axis=0)).ravel()
-        empty = int((nz == 0).sum())
-        if empty:
-            if empty > EMPTY_SAMPLE_LIMIT * len(nz):
-                raise ValueError(
-                    f"--feat-frac {job['feat_frac']} left {empty} of "
-                    f"{len(nz)} training samples with no taxa at all "
-                    f"({empty / len(nz):.0%} > "
-                    f"{EMPTY_SAMPLE_LIMIT:.0%}); raise --feat-frac")
-            survivors = kept_sids[nz > 0]
-            lab_kept = lab[~is_v][nz > 0]
-            if len(np.unique(lab_kept)) < 2:
-                raise ValueError(
-                    f"--feat-frac {job['feat_frac']} emptied every sample of "
-                    f"one class in {job['valid_unit']}; raise --feat-frac")
-            print(f"[feat] {job['valid_unit']}: --feat-frac "
-                  f"{job['feat_frac']} emptied {empty}/{len(nz)} training "
-                  f"samples; dropped them")
-            train_tbl = train_tbl.filter(survivors, axis="sample",
-                                         inplace=False)
-
     _write_table(train_tbl, train_part)
     _write_table(table.filter(sids[is_v], axis="sample", inplace=False),
                  valid_part)
     with open(info_path, "w") as f:
         json.dump(dict(strategy=strategy, n_train=int((~is_v).sum()),
-                       n_valid=int(is_v.sum()),
-                       dropped=list(job["drop_disease"])), f)
+                       n_valid=int(is_v.sum())), f)
     return train_part, valid_part, strategy
 
 # =====================================================================
@@ -710,13 +539,10 @@ def _build_kwargs(job, train_biom, valid_biom):
         glove_embedding=job["glove"],
         select_by=job["select_by"],
         abund_mode=job["abund_mode"],
-        train_sampler=job["train_sampler"],
         valid_auc=job["valid_auc"],
         min_group_n=job["min_group_n"],
         logit_adjust_tau=job["logit_adjust_tau"],
         disease_col=job["disease_col"],
-        max_ratio=job["max_ratio"],
-        sample_seed=job["sample_seed"],
         **CFG,
     )
     if job["head_hidden"] is not None:
@@ -775,7 +601,6 @@ def run_job(job):
                    valid_auc=float(rec["valid_auc"]),
                    n_valid=int(len(rec["valid_label"])),
                    test_auc=float(tm["auc"]),
-                   bag_frac=job["bag_frac"], feat_frac=job["feat_frac"],
                    abund_mode=job["abund_mode"],
                    out_dir=job["out_dir"], gpu=_GPU)
 
@@ -788,9 +613,10 @@ def run_job(job):
         if not job["keep_tables"] and job["split_dir"] == job["out_dir"]:
             # Only after result.json exists, so a crash before this point
             # leaves the split in place for the retry to reuse. A shared split
-            # -- 'joint', where every member reads the same pair -- is left
-            # alone here: the first member to finish would be deleting a table
-            # its siblings still need. The parent drops it after the pool.
+            # -- grouped 'loso', where a group's repeats read the same pair --
+            # is left alone here: the first member to finish would be deleting
+            # a table its siblings still need. The parent drops it after the
+            # pool.
             for ft in split_paths(job["out_dir"]):
                 if os.path.exists(ft):
                     os.remove(ft)
@@ -833,18 +659,6 @@ def build_jobs(task, args):
             f"one random study. Use --tasks lodo and/or loso_all, or pick "
             f"--inner-split loso for {task!r}")
     run = pd.read_csv(t["run_tsv"], sep="\t")
-    if args.drop_disease:
-        # Check the names against the real metadata once, here, rather than
-        # letting a typo quietly drop nothing across a whole run.
-        probe = t["meta"].format(**run.iloc[0].to_dict())
-        known = set(pd.read_csv(probe, sep="\t", low_memory=False)
-                    [args.disease_col].dropna().astype(str).unique())
-        bad = [d for d in args.drop_disease if str(d) not in known]
-        if bad:
-            raise SystemExit(
-                f"--drop-disease {bad} not found in column "
-                f"{args.disease_col!r} of {probe}; known values: "
-                f"{sorted(known)}")
     jobs, folds = [], []
 
     # min_delta 0 under 'auc': any strictly higher AUC counts as a new best, so
@@ -952,17 +766,13 @@ def build_jobs(task, args):
         folds.append(dict(task=task, fold=fold, artifact=t["artifact"],
                           n_members=len(units), inner_mode=args.inner_split))
 
-        # Under 'joint' every member reads the same split, so it is written
-        # once beside their job directories rather than copied into each.
-        # Under grouped 'loso' each group similarly shares one split across
-        # its --n-estimators repeats, which differ only in model_seed.
-        shared = os.path.join(t["artifact"], fold, "members", "_split")
-
+        # Under grouped 'loso' each group shares one split across its
+        # --n-estimators repeats, which differ only in model_seed, so it is
+        # written once beside their job directories rather than copied into
+        # each.
         for i, u in enumerate(units):
             out_dir = os.path.join(t["artifact"], fold, "members", str(u))
-            if args.inner_split == "joint":
-                split_dir = shared
-            elif u in group_split_dir:
+            if u in group_split_dir:
                 split_dir = group_split_dir[u]
             else:
                 split_dir = out_dir
@@ -974,23 +784,18 @@ def build_jobs(task, args):
                 cv_fold=cv_folds.get(u, (None, None))[0],
                 cv_k=cv_folds.get(u, (None, None))[1],
                 study_col=args.inner_group,
-                val_ratio=args.val_ratio, split_seed=args.split_seed,
+                split_seed=args.split_seed,
                 out_dir=out_dir, train=train, test=test, meta=meta,
                 head_hidden=args.head_hidden,
                 linear_branch=args.linear_branch,
                 lin_weight_decay=args.lin_weight_decay,
                 glove=args.glove_embedding, select_by=args.select_by,
                 abund_mode=args.abund_mode,
-                train_sampler=args.train_sampler,
                 valid_auc=args.valid_auc,
-                drop_disease=list(args.drop_disease),
                 min_group_n=args.min_group_n,
                 logit_adjust_tau=args.logit_adjust_tau,
                 disease_col=args.disease_col,
-                max_ratio=args.max_ratio,
-                sample_seed=args.sample_seed,
-                bag_frac=args.bag_frac, feat_frac=args.feat_frac,
-                bag_seed=args.bag_seed + i,
+                member_seed=args.member_seed + i,
                 keep_ckpt=args.keep_ckpt, keep_tables=args.keep_tables,
                 overwrite=args.overwrite,
                 override=dict(model_seed=args.ensemble_seed0 + i,
@@ -1000,7 +805,7 @@ def build_jobs(task, args):
 
 
 def cleanup_shared_splits(jobs):
-    """Delete the 'joint' shared tables once every member has had its turn.
+    """Delete the shared split tables once every member has had its turn.
 
     A per-member split is removed by the worker that owns it, but a shared one
     has no single owner: whichever member finished first would be deleting a
@@ -1066,8 +871,8 @@ def run_pool(jobs, gpus, workers_per_gpu, label):
 # =====================================================================
 #: Combiners scored side by side. AUC reads only the ordering of the scores, so
 #: what separates these is how each handles the members not being on a common
-#: scale: member i's probabilities come from a threshold fitted on member i's
-#: own out-of-bag set.
+#: scale: member i's probabilities come from a threshold fitted on the cohort
+#: member i held out.
 ENSEMBLE_COMBINERS = ("logit", "prob", "rank", "normal", "zlogit",
                       "trim", "median", "rankmed", "wauc")
 
@@ -1087,7 +892,9 @@ def ensemble_aucs(pred_paths, weights=None, eps=1e-6):
     weights : array-like, optional
         Per-member weight for ``'wauc'``, normally ``valid_auc - 0.5``.
         Negative entries are clipped to zero, so a member that did worse than
-        chance on its own out-of-bag set does not vote.
+        chance on the cohort it held out does not vote. `collect` passes None
+        under every remaining --inner-split, since the members are scored on
+        different cohorts and their AUCs are not comparable.
 
     Returns
     -------
@@ -1110,8 +917,8 @@ def ensemble_aucs(pred_paths, weights=None, eps=1e-6):
     separates the classes widely and one that barely does.
 
     ``'median'`` is the one that survives a degenerate member: a model that
-    early-stopped at epoch 1, or one whose bag was unlucky, still votes under a
-    mean and cannot move a median.
+    early-stopped at epoch 1, or one whose held-out cohort was unlucky, still
+    votes under a mean and cannot move a median.
 
     The middle four exist for the case this task actually has -- members whose
     probability distributions differ because they were calibrated on different
@@ -1203,14 +1010,13 @@ def collect(task, folds, results, args):
         keep = [i for i, p in enumerate(paths) if os.path.exists(p)]
         preds = [paths[i] for i in keep]
         # Weighting by valid_auc needs those numbers to mean the same thing
-        # across members. Under 'joint' they share one validation set and under
-        # 'bag' they draw it the same way, so they do; under 'loso' and
-        # 'disease_loso' each member was scored on a different set of cohorts
-        # and a higher valid_auc may only mean an easier one, so the weighting
-        # is withheld and ens_wauc stays NaN.
-        wts = ([recs[i]["valid_auc"] - 0.5 for i in keep]
-               if args.inner_split in ("bag", "joint") and keep else None)
-        combo = ensemble_aucs(preds, weights=wts)
+        # across members. Every remaining --inner-split scores each member on
+        # a different set of cohorts, so a higher valid_auc may only mean an
+        # easier one; the weighting is withheld and ens_wauc stays NaN. The
+        # modes it was defined for -- one shared validation set, or the same
+        # random draw for every member -- were both in-distribution and are
+        # gone.
+        combo = ensemble_aucs(preds, weights=None)
 
         aucs = [r["test_auc"] for r in recs]
         eps = sorted(r["epoch"] for r in recs)
@@ -1218,7 +1024,6 @@ def collect(task, folds, results, args):
         row = dict(fold=fold, abund_mode=args.abund_mode,
                    inner_mode=args.inner_split, strategy=",".join(strat),
                    K=len(recs), n_members=n_members.get(fold),
-                   bag_frac=args.bag_frac, feat_frac=args.feat_frac,
                    epoch_min=eps[0], epoch_med=int(np.median(eps)),
                    epoch_max=eps[-1],
                    inner_mean=float(np.mean(aucs)),
@@ -1287,18 +1092,13 @@ def main():
                     default=[0, 1, 2, 3, 4, 5, 6, 7])
     ap.add_argument("--workers-per-gpu", type=int, default=1)
 
-    ap.add_argument("--inner-split", default="bag",
-                    choices=["bag", "joint", "loso", "disease_loso",
-                             "same_disease"],
+    ap.add_argument("--inner-split", default="loso",
+                    choices=["loso", "disease_loso", "same_disease"],
                     help="how each member's training and validation parts are "
-                         "cut from the fold's training table. 'bag' (default) "
-                         "is the random-forest one: every member draws its own "
-                         "random --bag-frac and validates on the rest. 'joint' "
-                         "cuts one (study,label)-stratified split shared by "
-                         "every member, so they differ only in model_seed and "
-                         "the validation samples come from the training "
-                         "cohorts -- in-distribution, which is not what the "
-                         "test cohort measures. 'loso' gives one member per "
+                         "cut from the fold's training table. Every mode holds "
+                         "out whole cohorts, so the epoch is selected on the "
+                         "same cross-study step the test table asks for. "
+                         "'loso' (default) gives one member per "
                          "training cohort, each validating on the cohort it "
                          "held out, so it selects the epoch that transfers "
                          "across studies; --n-estimators is ignored there "
@@ -1326,13 +1126,12 @@ def main():
                          "in training and still validates on the same "
                          "disease. Capped by the smaller class, and a study "
                          "with fewer than two of either is held out whole")
-    ap.add_argument("--val-ratio", type=float, default=0.2,
-                    help="validation fraction for --inner-split joint")
     ap.add_argument("--split-seed", type=int, default=11,
-                    help="seed for the joint split, shared by all members")
+                    help="seed for the --cv-folds cut a single-study disease "
+                         "gets under --inner-split same_disease")
     ap.add_argument("--inner-group", default="study",
-                    help="metadata column naming the cohort, used by "
-                         "--inner-split loso and by the joint stratification")
+                    help="metadata column naming the cohort, used by every "
+                         "--inner-split to decide what is held out")
     ap.add_argument("--loso-k", type=int, default=None,
                     help="under --inner-split loso, hold out this many "
                          "cohorts together as each member's validation set "
@@ -1348,31 +1147,20 @@ def main():
                     help="seed for the one-time random partition of a "
                          "fold's cohorts into --loso-k-sized groups")
     ap.add_argument("--n-estimators", type=int, default=1,
-                    help="members per fold under --inner-split bag, joint or "
-                         "disease_loso. Each sees only --bag-frac of the "
-                         "samples and --feat-frac of the taxa, so it is weaker "
-                         "than a model trained on everything; this is what buys "
-                         "that back, and why a forest grows hundreds of trees. "
-                         "Under disease_loso each member instead redraws which "
-                         "study each disease holds out, and 8 is the count that "
-                         "mode is meant to be run at. It does not apply under "
-                         "'loso', where the member count is however many "
-                         "cohorts the fold's training table holds")
-    ap.add_argument("--bag-frac", type=float, default=BAG_FRAC_DEFAULT,
-                    help=f"fraction of the training table each member trains "
-                         f"on, the rest being its out-of-bag validation set. "
-                         f"Default {BAG_FRAC_DEFAULT:.4f} = 1 - 1/e, the "
-                         f"fraction of distinct samples a bootstrap of the "
-                         f"same size contains. Lower means weaker but more "
-                         f"diverse members")
-    ap.add_argument("--feat-frac", type=float, default=1.0,
-                    help="fraction of the taxa each member sees, counted over "
-                         "the taxa non-zero in its own training part; taxa "
-                         "zero throughout it are kept whole. 1.0 (default) is "
-                         "off and costs no disk; below that a filtered "
-                         "training table is written per member")
-    ap.add_argument("--bag-seed", type=int, default=101,
-                    help="member i draws its bag and its taxa with this plus i")
+                    help="members per fold under --inner-split disease_loso, "
+                         "where each member redraws which study every disease "
+                         "holds out; 8 is the count that mode is meant to be "
+                         "run at. A member gives a whole cohort up to "
+                         "validation, so it is weaker than a model trained on "
+                         "everything, and the ensemble is what buys that back. "
+                         "It does not "
+                         "apply under 'loso' (unless --loso-k is set) or "
+                         "'same_disease', where the member count is however "
+                         "many cohorts the fold's training table holds")
+    ap.add_argument("--member-seed", type=int, default=101,
+                    help="member i draws the cohorts it holds out with this "
+                         "plus i. Used by --inner-split disease_loso, the one "
+                         "mode whose split is drawn rather than enumerated")
     ap.add_argument("--ensemble-seed0", type=int, default=11,
                     help="member i initialises its weights with this plus i")
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
@@ -1384,7 +1172,6 @@ def main():
                          "is refused rather than silently ignored. Pair it "
                          "with --run-name: a sweep without one writes every "
                          "setting into the same directories")
-
     ap.add_argument("--abund-mode", default="multiply",
                     choices=["multiply", "none"],
                     help="how abundance is fused with the SNEs vectors. "
@@ -1424,21 +1211,8 @@ def main():
                          "where the test cohort's base rate is unknown. Note "
                          "it corrects base rates, not the fact that one "
                          "disease has far more samples than another: the "
-                         "disease size cancels out of the ratio, and that "
-                         "imbalance is what --train-sampler addresses. "
-                         "lodo and loso_all only")
-    ap.add_argument("--drop-disease", nargs="*", default=[], metavar="NAME",
-                    help="remove these diseases (--disease-col) from every "
-                         "fold's training AND validation pool, before the "
-                         "inner split. Their own test fold still runs and is "
-                         "still reported -- only their contribution to other "
-                         "folds' training is removed. Use it for a cohort "
-                         "whose case/control contrast is not comparable to "
-                         "the rest: one that scores well below 0.5 is being "
-                         "learnt backwards, and while it sits in the training "
-                         "pool it teaches every other fold the opposite "
-                         "relationship. Names are checked against the "
-                         "metadata at startup, so a typo is refused")
+                         "disease size cancels out of the ratio and is left "
+                         "untouched. lodo and loso_all only")
     ap.add_argument("--valid-auc", default="pooled",
                     choices=["pooled", "macro"],
                     help="how the validation AUC that selects the epoch is "
@@ -1465,35 +1239,13 @@ def main():
                          "epoch on its own. The disease is still trained on -- "
                          "this only removes it from the selection signal. Read "
                          "the '[macro] scored:' line of a run to pick a value")
-    ap.add_argument("--train-sampler", default="none",
-                    choices=["none", "disease_undersample"],
-                    help="how the training loader draws its batches. 'none' "
-                         "(default) shuffles the whole training part, which is "
-                         "what every result so far was produced with. "
-                         "'disease_undersample' caps each disease at "
-                         "--max-ratio times the smallest one's sample count "
-                         "and redraws the subset each epoch, preserving each "
-                         "disease's own case/control ratio. Only the training "
-                         "loader is affected; validation and test are always "
-                         "scored on their full cohorts. Consider raising "
-                         "--patience to 20-25 alongside it: the changing "
-                         "subset makes the validation curve noisier")
     ap.add_argument("--disease-col", default="disease_name_ab",
                     help="metadata column naming each sample's disease. Read "
-                         "under --train-sampler disease_undersample, which "
-                         "caps each disease's share of a training epoch, and "
-                         "under --inner-split disease_loso, which holds out "
-                         "one study per disease. On a single-disease task the "
-                         "undersampling is a no-op")
-    ap.add_argument("--max-ratio", type=float, default=10.0,
-                    help="largest allowed ratio between the biggest and the "
-                         "smallest disease after capping (default 10, one "
-                         "order of magnitude)")
-    ap.add_argument("--sample-seed", type=int, default=None,
-                    help="seed for the per-epoch undersampling draws. Default "
-                         "None uses each member's model_seed, so an ensemble "
-                         "gets diverse subsets as well as diverse weights. Pin "
-                         "it to hold every member's subsets identical")
+                         "under --valid-auc macro, which scores each disease "
+                         "separately, under --set loss=LogitAdjusted, which "
+                         "removes each disease's base rate, and under "
+                         "--inner-split disease_loso, which holds out one "
+                         "study per disease")
     ap.add_argument("--patience", type=int, default=15,
                     help="stop this many epochs after the best validation "
                          f"metric. Capped by num_epochs={CFG['num_epochs']}")
@@ -1520,8 +1272,8 @@ def main():
     ap.add_argument("--run-name", default="")
     ap.add_argument("--keep-ckpt", action="store_true")
     ap.add_argument("--keep-tables", action="store_true",
-                    help="keep each member's feature-subsampled training table "
-                         "instead of deleting it on success")
+                    help="keep each member's training and validation tables "
+                         "instead of deleting them on success")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -1532,14 +1284,6 @@ def main():
     if args.n_estimators < 1:
         raise SystemExit(f"--n-estimators must be at least 1, got "
                          f"{args.n_estimators}")
-    if args.inner_split != "bag" and args.bag_frac != BAG_FRAC_DEFAULT:
-        print(f"[warn] --bag-frac only applies to --inner-split bag; ignored "
-              f"under {args.inner_split!r}")
-    if args.train_sampler == "none" and args.max_ratio != 10.0:
-        print("[warn] --max-ratio only applies under --train-sampler "
-              "disease_undersample; ignored")
-    if args.train_sampler != "none" and args.max_ratio <= 0:
-        raise SystemExit(f"--max-ratio must be positive, got {args.max_ratio}")
     if args.loso_k is not None and args.loso_k < 1:
         raise SystemExit(f"--loso-k must be at least 1, got {args.loso_k}")
     if args.loso_k is not None and args.inner_split != "loso":
@@ -1570,12 +1314,6 @@ def main():
             print(f"[warn] --valid-auc macro on {single}: those tasks are "
                   f"single-disease, so the average is over one group and "
                   f"equals the pooled AUC")
-        if args.inner_split in ("bag", "joint"):
-            print(f"[warn] --valid-auc macro under --inner-split "
-                  f"{args.inner_split}: validation samples come from the same "
-                  f"cohorts as training, so a per-disease AUC there measures "
-                  f"within-cohort separation. --inner-split disease_loso is "
-                  f"the split this pairs with")
     _la = parse_set(args.set_cfg).get("loss", CFG["loss"]) == "LogitAdjusted"
     if _la:
         bad = [t for t in tasks if t not in ("lodo", "loso_all")]
@@ -1639,35 +1377,12 @@ def main():
               f"and cut into non-overlapping groups of {args.loso_k}, each "
               f"trained --n-estimators={args.n_estimators} times, differing "
               f"only in model_seed")
-    if not 0.05 <= args.bag_frac <= 0.95:
-        raise SystemExit(
-            f"--bag-frac {args.bag_frac} leaves too little on one side; the "
-            f"complement is the member's validation set, so keep it within "
-            f"[0.05, 0.95]")
-    if not 0 < args.feat_frac <= 1:
-        raise SystemExit(f"--feat-frac must be in (0, 1]; got {args.feat_frac}")
-    if args.n_estimators == 1 and args.inner_split == "bag":
-        print("[warn] --n-estimators 1 trains one model on a random part of "
-              "the data, which is strictly worse than training it on all of "
-              "it. The bagging only pays off across members")
     if args.run_name:
         for t in tasks:
             TASKS[t]["artifact"] = f"{TASKS[t]['artifact']}{args.run_name}"
 
     print(f"[cfg] tasks={tasks} gpus={args.gpus} x{args.workers_per_gpu}")
-    if args.inner_split == "bag":
-        print(f"[cfg] inner-split=bag: {args.n_estimators} members per fold, "
-              f"each trained on a plain random {args.bag_frac:.1%} of the "
-              f"training table and validated on the {1 - args.bag_frac:.1%} it "
-              f"did not draw. Seeds bag_seed={args.bag_seed}.."
-              f"{args.bag_seed + args.n_estimators - 1}")
-    elif args.inner_split == "joint":
-        print(f"[cfg] inner-split=joint: one (study,label)-stratified split at "
-              f"{args.val_ratio:.0%} validation, shared by "
-              f"{args.n_estimators} members that differ only in model_seed. "
-              f"The validation samples come from the training cohorts, so this "
-              f"selects for generalization within the training distribution")
-    elif args.inner_split == "same_disease":
+    if args.inner_split == "same_disease":
         print(f"[cfg] inner-split=same_disease: one member per study (column "
               f"{args.inner_group!r}) of the test study's disease (column "
               f"{args.disease_col!r}); each validates on that one study and "
@@ -1679,8 +1394,8 @@ def main():
         print(f"[cfg] inner-split=disease_loso: {args.n_estimators} members "
               f"per fold, each holding out one randomly drawn study (column "
               f"{args.inner_group!r}) per disease (column {args.disease_col!r}) "
-              f"as its validation set. Seeds bag_seed={args.bag_seed}.."
-              f"{args.bag_seed + args.n_estimators - 1}")
+              f"as its validation set. Seeds member_seed={args.member_seed}.."
+              f"{args.member_seed + args.n_estimators - 1}")
         print(f"[cfg] the unit held out is the (disease, study) cell, so a "
               f"study spanning several diseases keeps its other diseases in "
               f"training and does sit on both sides of that member's split")
@@ -1697,23 +1412,11 @@ def main():
     if args.inner_split != "loso":
         print(f"[cfg] model_seed={args.ensemble_seed0}.."
               f"{args.ensemble_seed0 + args.n_estimators - 1}")
-    if args.feat_frac < 1.0:
-        print(f"[cfg] feat_frac={args.feat_frac}: each member sees that "
-              f"fraction of the taxa non-zero in its own training part "
-              f"(taxa zero throughout it are kept whole, so the vocabulary "
-              f"still covers what only the test cohort carries), and writes "
-              f"its own training table")
     print(f"[cfg] abund_mode={args.abund_mode} "
           f"linear_branch={args.linear_branch} select_by={args.select_by} "
-          f"patience={args.patience} train_sampler={args.train_sampler} "
-          f"valid_auc={args.valid_auc}"
+          f"patience={args.patience} valid_auc={args.valid_auc}"
           + (f" min_group_n={args.min_group_n}"
              if args.valid_auc == "macro" else ""))
-    if args.train_sampler != "none":
-        seed_note = (args.sample_seed if args.sample_seed is not None
-                     else "model_seed")
-        print(f"[cfg] disease undersampling: column={args.disease_col!r} "
-              f"max_ratio={args.max_ratio} sample_seed={seed_note}")
     # Parsed here as well as in build_jobs so a typo costs a second, not a
     # GPU-hour, and so the deviation from CFG is on the record above the run.
     cfg_over = parse_set(args.set_cfg)
@@ -1723,10 +1426,6 @@ def main():
         if not args.run_name:
             print("[cfg] WARNING: --set without --run-name writes this "
                   "setting into the same directories as every other setting")
-    if args.drop_disease:
-        print(f"[cfg] dropping {', '.join(args.drop_disease)} from every "
-              f"fold's training and validation pool; their own test folds "
-              f"still run")
     print(f"[cfg] glove={args.glove_embedding or 'None (random codes)'}")
     if not args.run_name:
         print("[cfg] no --run-name: job directories and results are shared "
