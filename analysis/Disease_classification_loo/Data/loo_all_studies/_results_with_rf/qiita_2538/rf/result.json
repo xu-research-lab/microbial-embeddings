@@ -1,0 +1,1 @@
+{"task": "loso_all", "fold": "qiita_2538", "seed": 11, "top_k": 600, "n_features": 13191, "n_train": 9567, "n_test": 709, "test_auc": 0.6799745304043299}
