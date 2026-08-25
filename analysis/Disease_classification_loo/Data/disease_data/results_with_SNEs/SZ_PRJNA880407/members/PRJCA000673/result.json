@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "SZ_PRJNA880407", "member": 0, "valid_unit": "PRJCA000673", "inner_mode": "loso", "strategy": "loso", "epoch": 2, "valid_auc": 0.6412146226415095, "n_valid": 117, "test_auc": 0.6028, "bag_frac": 0.6321205588285577, "feat_frac": 1.0, "abund_mode": "multiply", "out_dir": "Data/disease_data/results_with_SNEs/SZ_PRJNA880407/members/PRJCA000673", "gpu": 4}

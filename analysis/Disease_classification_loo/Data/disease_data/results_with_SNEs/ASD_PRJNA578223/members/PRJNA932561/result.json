@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "ASD_PRJNA578223", "member": 1, "valid_unit": "PRJNA932561", "inner_mode": "loso", "strategy": "loso", "epoch": 7, "valid_auc": 0.811875, "n_valid": 80, "test_auc": 0.7890625, "bag_frac": 0.6321205588285577, "feat_frac": 1.0, "abund_mode": "multiply", "out_dir": "Data/disease_data/results_with_SNEs/ASD_PRJNA578223/members/PRJNA932561", "gpu": 5}
