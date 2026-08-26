@@ -1,1 +1,1 @@
-{"task": "disease", "fold": "MS_PRJEB22977", "seed": 11, "top_k": 600, "n_features": 2766, "n_train": 244, "n_test": 87, "test_auc": 0.6539772727272728}
+{"task": "disease", "fold": "MS_PRJEB22977", "seed": 11, "top_k": 600, "n_features": 2766, "n_train": 244, "n_test": 87, "test_auc": 0.625}

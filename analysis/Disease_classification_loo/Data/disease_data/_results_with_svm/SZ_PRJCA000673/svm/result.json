@@ -1,1 +1,1 @@
-{"task": "disease", "fold": "SZ_PRJCA000673", "seed": 11, "top_k": 600, "n_features": 3044, "n_train": 322, "n_test": 117, "test_auc": 0.7609080188679246}
+{"task": "disease", "fold": "SZ_PRJCA000673", "seed": 11, "top_k": 600, "n_features": 3044, "n_train": 322, "n_test": 117, "test_auc": 0.7529481132075471}

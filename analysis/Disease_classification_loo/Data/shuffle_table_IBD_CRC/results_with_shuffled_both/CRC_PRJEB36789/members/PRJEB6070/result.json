@@ -1,0 +1,1 @@
+{"task": "shuffled_table", "fold": "CRC_PRJEB36789", "member": 1, "valid_unit": "PRJEB6070", "inner_mode": "loso", "strategy": "loso", "epoch": 9, "valid_auc": 0.7907317073170732, "n_valid": 91, "test_auc": 0.8633217993079585, "abund_mode": "multiply", "out_dir": "Data/shuffle_table_IBD_CRC/results_with_shuffled_both/CRC_PRJEB36789/members/PRJEB6070", "gpu": 7}

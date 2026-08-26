@@ -1,1 +1,1 @@
-{"strategy": "loso", "n_train": 747, "n_valid": 228}
+{"strategy": "loso", "n_train": 747, "n_valid": 228, "dropped": []}
