@@ -105,3 +105,6 @@ ENV/
 .vscode/
 .idea/
 .Rproj.user
+
+# Local pretrained model weights
+/models/
