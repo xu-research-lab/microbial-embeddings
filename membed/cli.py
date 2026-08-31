@@ -255,6 +255,12 @@ def glove_train(**kwargs):
               type=click.STRING,
               required=True,
               help='Path to training dataset in BIOM format')
+@click.option('-val_otu',
+              '--valid-biom',
+              type=click.STRING,
+              required=True,
+              help='Path to the separate validation dataset used for model '
+              'selection and threshold fitting.')
 @click.option('-tes_otu',
               '--test-biom',
               type=click.STRING,
@@ -265,7 +271,7 @@ def glove_train(**kwargs):
               type=click.STRING,
               required=True,
               help='Path to a TAB-separated metadata file covering the samples of '
-              'both tables.')
+              'all three tables.')
 @click.option('--labels-col',
               '--labels_col',
               'labels_col',
@@ -297,12 +303,21 @@ def glove_train(**kwargs):
               help='Output path for the train/validation ROC-AUC curve plot')
 @click.option('--num-steps',
               type=click.INT,
-              default=400,
+              default=600,
               help='Number of OTU positions kept per sample (truncated or padded).')
 @click.option('--p-drop',
               type=click.FLOAT,
               default=0.0,
               help='Dropout probability')
+@click.option('--d-ff',
+              type=click.INT,
+              default=None,
+              help='Feed-forward width. Defaults to 4 * --d-model.')
+@click.option('--head-hidden',
+              type=click.INT,
+              default=None,
+              help='Output-head hidden width. Defaults to --d-model / 2; use 0 '
+              'for a single linear layer.')
 @click.option('--batch-size',
               type=click.INT, 
               default=64,
@@ -313,11 +328,11 @@ def glove_train(**kwargs):
               help='Model embedding dimension')
 @click.option('--n-layers', 
               type=click.INT, 
-              default=2,
+              default=1,
               help='Number of transformer layers')
 @click.option('--n-heads', 
               type=click.INT, 
-              default=2,
+              default=1,
               help='Number of attention heads')
 @click.option('--numb',
               type=click.INT,
@@ -325,7 +340,7 @@ def glove_train(**kwargs):
               help='Zero-based CUDA device index to train on.')
 @click.option('--lr', 
               type=click.FLOAT, 
-              default=0.0005,
+              default=0.001,
               help='Learning rate')
 @click.option('--weight-decay', 
               type=click.FLOAT, 
@@ -333,10 +348,12 @@ def glove_train(**kwargs):
               help='L2 regularization weight')
 @click.option('--num-epochs', 
               type=click.INT, 
-              default=1,
+              default=100,
               help='Number of training epochs')
 @click.option('--loss',
-              type=click.Choice(['BCE_loss', 'FocalLoss']),
+              type=click.Choice([
+                  'BCE_loss', 'BCEWithLogits', 'FocalLoss', 'LogitAdjusted'
+              ]),
               default='BCE_loss',
               help='Criterion to train with.')
 @click.option('--alpha',
@@ -351,38 +368,71 @@ def glove_train(**kwargs):
               '`membed glove-train` (e.g. result/embeddings_100.txt). Its vector '
               'width must equal --d-model. Omitted, the frozen embedding table is '
               'filled with fixed random codes instead.')
-@click.option('--valid-ratio',
-              type=click.FloatRange(0, 1, min_open=True, max_open=True),
-              default=0.2,
-              help='Fraction of the training table held out for validation. The '
-              'epoch and the decision threshold are picked on this part only.')
-@click.option('--split-seed',
-              type=click.INT,
-              default=11,
-              help='Seed for the train/validation split, independent of the model seed.')
-@click.option('--group-col',
-              type=click.STRING,
-              default=None,
-              help='Metadata column holding a grouping key, e.g. a subject ID. Given, '
-              'the split keeps every sample of a group on the same side.')
 @click.option('--pred-out',
               type=click.STRING,
               default=None,
               help='Prefix for the prediction files, written as <pred-out>_valid.csv '
               'and <pred-out>_test.csv. Defaults to --embedding-birnn without its '
               'extension.')
+@click.option('--abund-mode',
+              type=click.Choice(['multiply', 'none']),
+              default='multiply',
+              help='Multiply OTU embeddings by abundance, or ignore abundance.')
+@click.option('--model-seed',
+              type=click.INT,
+              default=11,
+              help='Seed for model initialization, dropout, and batch order.')
+@click.option('--patience',
+              type=click.INT,
+              default=10,
+              help='Stop after this many epochs without validation improvement.')
+@click.option('--min-delta',
+              type=click.FLOAT,
+              default=0.001,
+              help='Minimum validation improvement for checkpointing and early stopping.')
+@click.option('--pos-weight',
+              type=click.STRING,
+              default=None,
+              help="Positive-class weight for BCEWithLogits: a number or 'auto'.")
+@click.option('--select-by',
+              type=click.Choice(['loss', 'auc', 'last']),
+              default='loss',
+              help='Select the checkpoint by validation loss/AUC, or keep the last epoch.')
+@click.option('--linear-branch/--no-linear-branch',
+              default=True,
+              help='Enable or disable the per-OTU linear residual branch.')
+@click.option('--lin-weight-decay',
+              type=click.FLOAT,
+              default=1e-3,
+              help='Weight decay applied only to the linear residual branch.')
+@click.option('--disease-col',
+              type=click.STRING,
+              default='disease_name_ab',
+              help='Metadata disease column used by macro AUC and LogitAdjusted loss.')
+@click.option('--valid-auc',
+              type=click.Choice(['pooled', 'macro']),
+              default='pooled',
+              help='Pool validation samples or average AUC equally across diseases.')
+@click.option('--min-group-n',
+              type=click.INT,
+              default=0,
+              help='Minimum validation samples per disease under --valid-auc macro.')
+@click.option('--logit-adjust-tau',
+              type=click.FLOAT,
+              default=1.0,
+              help='Class-prior adjustment strength for LogitAdjusted loss.')
 @_common_parameters
 def class_attention(**kwargs):
-    """Run the attention classifier on a train/test pair of BIOM tables.
+    """Run the attention classifier on separate train/validation/test tables.
 
-    The training table is split into a training and a validation part; the epoch
-    to keep and the decision threshold are chosen on validation only. The test
-    table is scored once at the end with the frozen threshold, and per-sample
-    predictions are written next to the model.
+    The validation table selects the epoch and decision threshold. The test
+    table is scored once at the end with the frozen model and threshold, and
+    per-sample predictions are written next to the model.
 
     Example:
         membed class-attention \\
             --train-biom train.biom \\
+            --valid-biom valid.biom \\
             --test-biom test.biom \\
             --metadata metadata.tsv \\
             --labels-col group \\
@@ -396,12 +446,15 @@ def class_attention(**kwargs):
     params = {
         key: kwargs[key]
         for key in ('metadata', 'labels_col', 'sample_id_col', 'train_biom',
-                    'test_biom', 'embedding_birnn', 'plotfile_loss',
-                    'plotfile_auc', 'num_steps', 'p_drop', 'batch_size',
-                    'd_model', 'n_layers', 'n_heads', 'numb', 'lr',
-                    'weight_decay', 'num_epochs', 'loss', 'alpha',
-                    'glove_embedding', 'valid_ratio', 'split_seed', 'group_col',
-                    'pred_out')
+                    'valid_biom', 'test_biom', 'embedding_birnn',
+                    'plotfile_loss', 'plotfile_auc', 'num_steps', 'p_drop',
+                    'batch_size', 'd_model', 'n_layers', 'n_heads', 'numb',
+                    'lr', 'weight_decay', 'num_epochs', 'loss', 'alpha',
+                    'glove_embedding', 'pred_out', 'd_ff', 'head_hidden',
+                    'abund_mode', 'model_seed', 'patience', 'min_delta',
+                    'pos_weight', 'select_by', 'linear_branch',
+                    'lin_weight_decay', 'disease_col', 'valid_auc',
+                    'min_group_n', 'logit_adjust_tau')
     }
     Attention_biom(**params)
 
