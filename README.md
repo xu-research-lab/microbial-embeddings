@@ -117,49 +117,55 @@ The **membed class-attention** module is an attention-based classification model
 
 - **Prerequisites:**
 
-  - Training and testing data (`train.biom`, `test.biom`)
-  - A metadata file (`metadata.tsv`) mapping sample IDs to their corresponding class labels.
+  - Separate training, validation, and testing data (`train.biom`, `valid.biom`, `test.biom`)
+  - A metadata file (`metadata.tsv`) mapping sample IDs from all three tables to their corresponding numeric class labels.
   - Pre-trained SNEs: `embeddings_100.txt`
 
 - **Hardware Requirements:**
-  - This module is computationally intensive and benefits from GPU acceleration.
-  - **Recommended:** NVIDIA GPU with at least 8GB VRAM for optimal performance.
-  - **Minimum:** CPU with 8+ cores, but training will be significantly slower.
+  - This implementation currently requires an NVIDIA CUDA GPU.
+  - **Recommended:** At least 8GB VRAM for optimal performance.
+  - `--numb` selects one zero-based CUDA device index.
   - Memory: At least 32GB RAM for handling large datasets. 
 
 - **Basic Example: Training an Attention-based Classifier (as used in our paper)**
 
   ```bash
   membed class-attention \
-      -g embedding_100.txt \
-      -tra_otu train.biom \
-      -tes_otu test.biom \
-      -m metadata.tsv \
-      --labels_col group \
-      --sample_id_col sample_id \
-      -e attention_loo.pt \
-      -ploss attention_loss.png \
-      -pauc attention_auc.png \
+      --glove-embedding result/embeddings_100.txt \
+      --train-biom train.biom \
+      --valid-biom valid.biom \
+      --test-biom test.biom \
+      --metadata metadata.tsv \
+      --labels-col group \
+      --sample-id-col sample_id \
+      --embedding-birnn attention_loo.pt \
+      --plotfile-loss attention_loss.png \
+      --plotfile-auc attention_auc.png \
+      --pred-out predictions \
       --num-steps 600 \
       --num-epochs 100 \
-      --loss BCE_loss \
+      --loss BCEWithLogits \
       --p-drop 0.4 \
-      --d-ff 8 \
+      --d-ff 200 \
+      --head-hidden 64 \
       --d-model 100 \
       --n-layers 1 \
       --n-heads 1 \
       --weight-decay 0.0001 \
-      --lr 0.0001 \
-      --batch-size 512 \
-      --numb 8 \
+      --lr 0.001 \
+      --batch-size 64 \
+      --numb 0
   ```
 
+  The validation table is never used for gradient updates. It selects the checkpoint and decision threshold; the test table is scored once with both choices frozen.
+
 + **Argument Explanation**
-  + `-g`, `-tra_otu`, `-tes_otu`, `-m`: Specify paths to the four mandatory input files: SNEs, training biom table, testing biom table, and metadata, respectively.
-  + `-ploss`, `-pauc`, `-e`: Define the output paths for the loss curve plot, the AUC curve plot, and the model's attention weights.
-  + `--labels_col group`: Informs the program that the column named `group` in the metadata file contains the classification labels.
+  + `--glove-embedding`, `--train-biom`, `--valid-biom`, `--test-biom`, `--metadata`: Specify the SNEs, three BIOM tables, and shared metadata. The metadata labels must already be numeric 0/1.
+  + `--plotfile-loss`, `--plotfile-auc`, `--embedding-birnn`: Define the output paths for the training curves and selected model state. `--pred-out` writes `<prefix>_valid.csv` and `<prefix>_test.csv`.
+  + `--labels-col group`: Informs the program that the column named `group` in the metadata file contains the classification labels.
   + `--num-epochs`, `--lr`, `--batch-size`, etc.: Set the model's hyperparameters, such as epochs, learning rate, batch size, and model dimensions, mirroring the definitions in your script.
-  + `--numb`: Sets the number of visible CUDA devices (CUDA_VISIBLE_DEVICES) for GPU training. For example, `--numb 8` will use 8 GPU devices.
+  + `--select-by loss` (default) selects the checkpoint by validation loss and applies early stopping; use `membed class-attention --help` for the updated model options.
+  + `--numb 0`: Selects the single CUDA device `cuda:0`.
   + `--d-model 100`: Defines the model's internal dimensionality. **This value must exactly match the dimension of the input embeddings.**
 
 ## Running the tool on test data
