@@ -1,1 +1,0 @@
-{"task": "lodo", "fold": "T2DM", "member": 4, "valid_unit": "m4", "inner_mode": "disease_loso", "strategy": "disease_loso", "epoch": 6, "valid_auc": 0.6087471838468387, "n_valid": 2632, "test_auc": 0.6623789838487423, "bag_frac": 0.6321205588285577, "feat_frac": 1.0, "abund_mode": "multiply", "out_dir": "Data/loo_all_diseases/results_with_SNEs/T2DM/members/m4", "gpu": 5}

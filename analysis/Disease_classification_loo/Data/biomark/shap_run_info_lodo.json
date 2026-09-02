@@ -1,0 +1,353 @@
+[
+  {
+    "fold": "CAD",
+    "disease": "CAD",
+    "study": "",
+    "gpu": 3,
+    "n_members": 32,
+    "n_samples": 115,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 5.0407834351062775e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 125.0,
+    "attn_abundance_spearman": 0.7642850521523006,
+    "ig_samples": 115,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        4.784926912889911e-05
+      ]
+    ],
+    "ig_completeness_rel_err": 8.524743327659885e-05,
+    "ig_completeness_abs_err": 3.7112322796989394e-05,
+    "linear_branch": false,
+    "n_features_informative": 1114
+  },
+  {
+    "fold": "AS",
+    "disease": "AS",
+    "study": "",
+    "gpu": 0,
+    "n_members": 32,
+    "n_samples": 143,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 6.187474355101585e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 202.0,
+    "attn_abundance_spearman": 0.8305043853733032,
+    "ig_samples": 143,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        0.0003087608422297846
+      ]
+    ],
+    "ig_completeness_rel_err": 0.0003471607858209945,
+    "ig_completeness_abs_err": 0.00013465444857002629,
+    "linear_branch": false,
+    "n_features_informative": 1037
+  },
+  {
+    "fold": "GD",
+    "disease": "GD",
+    "study": "",
+    "gpu": 5,
+    "n_members": 32,
+    "n_samples": 201,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 6.55418261885643e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 130.0,
+    "attn_abundance_spearman": 0.82288790776449,
+    "ig_samples": 201,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        0.00011258800612837271
+      ]
+    ],
+    "ig_completeness_rel_err": 8.216245917070373e-05,
+    "ig_completeness_abs_err": 2.3980041791465956e-05,
+    "linear_branch": false,
+    "n_features_informative": 1094
+  },
+  {
+    "fold": "ASD",
+    "disease": "ASD",
+    "study": "",
+    "gpu": 1,
+    "n_members": 32,
+    "n_samples": 237,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 5.774199962615967e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 144.0,
+    "attn_abundance_spearman": 0.7887675216689716,
+    "ig_samples": 237,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        0.0003577943532385368
+      ]
+    ],
+    "ig_completeness_rel_err": 0.00011141245990792112,
+    "ig_completeness_abs_err": 3.968927304493636e-05,
+    "linear_branch": false,
+    "n_features_informative": 1641
+  },
+  {
+    "fold": "BD",
+    "disease": "BD",
+    "study": "",
+    "gpu": 2,
+    "n_members": 32,
+    "n_samples": 237,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 7.799826562404633e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 118.0,
+    "attn_abundance_spearman": 0.7213859259452776,
+    "ig_samples": 237,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        0.0001847021137724414
+      ]
+    ],
+    "ig_completeness_rel_err": 0.00025406126217709593,
+    "ig_completeness_abs_err": 0.00010712957825487202,
+    "linear_branch": false,
+    "n_features_informative": 1368
+  },
+  {
+    "fold": "IBS",
+    "disease": "IBS",
+    "study": "",
+    "gpu": 7,
+    "n_members": 32,
+    "n_samples": 1134,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 9.185168892145157e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 157.0,
+    "attn_abundance_spearman": 0.8209977131599022,
+    "ig_samples": 300,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        0.00022792889426560662
+      ]
+    ],
+    "ig_completeness_rel_err": 0.00019919603521860232,
+    "ig_completeness_abs_err": 9.791787405355468e-05,
+    "linear_branch": false,
+    "n_features_informative": 2481
+  },
+  {
+    "fold": "CRC",
+    "disease": "CRC",
+    "study": "",
+    "gpu": 4,
+    "n_members": 32,
+    "n_samples": 1034,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 7.502967491745949e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 156.0,
+    "attn_abundance_spearman": 0.8394143947697278,
+    "ig_samples": 300,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        0.00013135984478487858
+      ]
+    ],
+    "ig_completeness_rel_err": 0.0001801638594140029,
+    "ig_completeness_abs_err": 9.447484514168991e-05,
+    "linear_branch": false,
+    "n_features_informative": 4600
+  },
+  {
+    "fold": "IBD",
+    "disease": "IBD",
+    "study": "",
+    "gpu": 6,
+    "n_members": 32,
+    "n_samples": 2514,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 9.685754776000977e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 150.0,
+    "attn_abundance_spearman": 0.9010687179278601,
+    "ig_samples": 300,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        9.590695170233975e-05
+      ]
+    ],
+    "ig_completeness_rel_err": 9.575337471284177e-05,
+    "ig_completeness_abs_err": 5.290098379395758e-05,
+    "linear_branch": false,
+    "n_features_informative": 4766
+  },
+  {
+    "fold": "MS",
+    "disease": "MS",
+    "study": "",
+    "gpu": 3,
+    "n_members": 32,
+    "n_samples": 331,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 6.789923645555973e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 237.0,
+    "attn_abundance_spearman": 0.8218587196274821,
+    "ig_samples": 300,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        9.159867272321935e-05
+      ]
+    ],
+    "ig_completeness_rel_err": 0.00011965495357995357,
+    "ig_completeness_abs_err": 6.161077408453619e-05,
+    "linear_branch": false,
+    "n_features_informative": 3185
+  },
+  {
+    "fold": "OB",
+    "disease": "OB",
+    "study": "",
+    "gpu": 0,
+    "n_members": 32,
+    "n_samples": 1208,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 9.033828973770142e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 117.0,
+    "attn_abundance_spearman": 0.8238262047878728,
+    "ig_samples": 300,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        0.00042874140055275357
+      ]
+    ],
+    "ig_completeness_rel_err": 0.00023409049162986603,
+    "ig_completeness_abs_err": 0.00010682056793562267,
+    "linear_branch": false,
+    "n_features_informative": 2383
+  },
+  {
+    "fold": "SZ",
+    "disease": "SZ",
+    "study": "",
+    "gpu": 1,
+    "n_members": 32,
+    "n_samples": 438,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 6.658956408500671e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 144.0,
+    "attn_abundance_spearman": 0.8106429581416427,
+    "ig_samples": 300,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        4.565916281081602e-05
+      ]
+    ],
+    "ig_completeness_rel_err": 0.00014405143223305175,
+    "ig_completeness_abs_err": 6.371880276112574e-05,
+    "linear_branch": false,
+    "n_features_informative": 2322
+  },
+  {
+    "fold": "PD",
+    "disease": "PD",
+    "study": "",
+    "gpu": 5,
+    "n_members": 32,
+    "n_samples": 1495,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 1.7764978110790253e-07,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 150.0,
+    "attn_abundance_spearman": 0.9128178103852951,
+    "ig_samples": 300,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        5.631969920560471e-05
+      ]
+    ],
+    "ig_completeness_rel_err": 0.00012124564822424309,
+    "ig_completeness_abs_err": 5.167642403702821e-05,
+    "linear_branch": false,
+    "n_features_informative": 7908
+  },
+  {
+    "fold": "T2DM",
+    "disease": "T2DM",
+    "study": "",
+    "gpu": 2,
+    "n_members": 32,
+    "n_samples": 1189,
+    "n_features": 14019,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 32,
+    "attn_row_sum_err": 8.323695510625839e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 164.0,
+    "attn_abundance_spearman": 0.8586563283418222,
+    "ig_samples": 300,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        9.475508825538667e-05
+      ]
+    ],
+    "ig_completeness_rel_err": 0.00015346409687978682,
+    "ig_completeness_abs_err": 6.384072260019746e-05,
+    "linear_branch": false,
+    "n_features_informative": 4026
+  }
+]

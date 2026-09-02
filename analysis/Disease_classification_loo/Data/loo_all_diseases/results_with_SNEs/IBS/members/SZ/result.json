@@ -1,0 +1,1 @@
+{"task": "lodo", "fold": "IBS", "member": 10, "valid_unit": "SZ", "inner_mode": "per_disease", "strategy": "per_disease", "epoch": 6, "valid_auc": 0.8087636932707354, "n_valid": 161, "test_auc": 0.5611065248204856, "abund_mode": "multiply", "out_dir": "Data/loo_all_diseases/results_with_SNEs_test_remove_lowsample/IBS/members/SZ", "gpu": 3}
