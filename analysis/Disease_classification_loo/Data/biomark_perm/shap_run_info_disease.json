@@ -1,0 +1,36 @@
+[
+  {
+    "fold": "CRC_PRJDB11845",
+    "disease": "CRC",
+    "study": "PRJDB11845",
+    "gpu": 0,
+    "n_members": 6,
+    "n_samples": 102,
+    "n_features": 2142,
+    "max_abs_prob_diff": 1.1102230246251565e-16,
+    "members_checked": 6,
+    "attn_row_sum_err": 5.21540641784668e-08,
+    "attn_mask_leak": 0.0,
+    "attn_n_valid_med": 51.5,
+    "attn_abundance_spearman": 0.9253011183084122,
+    "ig_samples": 102,
+    "ig_steps": 64,
+    "ig_calibration": [
+      [
+        64,
+        0.0001057065275196494
+      ]
+    ],
+    "ig_completeness_rel_err": 0.00020130623743227222,
+    "ig_completeness_abs_err": 0.00015071858447401887,
+    "linear_branch": true,
+    "linear_branch_rel_err": 6.1026403211965994e-05,
+    "n_features_informative": 570,
+    "spearman_grad_vs_perm": 0.7109940607996429,
+    "top30_overlap": 16,
+    "pearson_signed": 0.8466044405148389,
+    "perm_samples": 102,
+    "perm_max_evals": 1141,
+    "perm_minutes": 1.3
+  }
+]

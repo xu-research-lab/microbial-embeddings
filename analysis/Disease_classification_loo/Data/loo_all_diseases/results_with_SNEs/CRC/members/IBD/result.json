@@ -1,0 +1,1 @@
+{"task": "lodo", "fold": "CRC", "member": 5, "valid_unit": "IBD", "inner_mode": "per_disease", "strategy": "per_disease", "epoch": 1, "valid_auc": 0.7966764418377321, "n_valid": 64, "test_auc": 0.5449627733829688, "abund_mode": "multiply", "out_dir": "Data/loo_all_diseases/results_with_SNEs_test_remove_lowsample/CRC/members/IBD", "gpu": 0}

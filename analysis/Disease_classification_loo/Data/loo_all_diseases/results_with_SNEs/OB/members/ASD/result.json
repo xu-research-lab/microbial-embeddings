@@ -1,0 +1,1 @@
+{"task": "lodo", "fold": "OB", "member": 1, "valid_unit": "ASD", "inner_mode": "per_disease", "strategy": "per_disease", "epoch": 10, "valid_auc": 0.5354838709677419, "n_valid": 61, "test_auc": 0.6583153606518092, "abund_mode": "multiply", "out_dir": "Data/loo_all_diseases/results_with_SNEs_test_remove_lowsample/OB/members/ASD", "gpu": 4}

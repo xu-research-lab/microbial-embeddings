@@ -1,0 +1,1 @@
+{"task": "lodo", "fold": "CAD", "member": 27, "valid_unit": "m27", "inner_mode": "disease_loso", "strategy": "disease_loso", "epoch": 7, "valid_auc": 0.6217742019906299, "n_valid": 3554, "test_auc": 0.6088929219600725, "abund_mode": "multiply", "out_dir": "Data/loo_all_diseases/results_with_SNEs_ckpt/CAD/members/m27", "gpu": 6}

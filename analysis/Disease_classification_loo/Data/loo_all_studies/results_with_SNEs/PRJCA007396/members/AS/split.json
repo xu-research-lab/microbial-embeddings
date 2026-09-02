@@ -1,0 +1,1 @@
+{"strategy": "per_disease_only_study", "n_train": 10133, "n_valid": 84, "dropped_studies": []}
