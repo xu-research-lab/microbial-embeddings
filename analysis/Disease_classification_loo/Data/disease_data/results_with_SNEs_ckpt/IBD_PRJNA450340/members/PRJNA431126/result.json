@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "IBD_PRJNA450340", "member": 3, "valid_unit": "PRJNA431126", "inner_mode": "loso", "strategy": "loso", "epoch": 25, "valid_auc": 0.768773466833542, "n_valid": 316, "test_auc": 0.8094471282877079, "abund_mode": "multiply", "out_dir": "Data/disease_data/results_with_SNEs_ckpt/IBD_PRJNA450340/members/PRJNA431126", "gpu": 5}
