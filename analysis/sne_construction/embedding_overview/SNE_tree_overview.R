@@ -1,105 +1,179 @@
 library(ape)
-library(aplot)
-library(dplyr)
-library(ggplot2)
 library(ggtree)
-library(RColorBrewer)
+library(ggplot2)
+library(ggtreeExtra)
+library(stringr)
+library(ggsci)
+library(dplyr)
 library(reshape2)
+library(tidyverse)
+library(ggnewscale)
+library(RColorBrewer)
+library(biomformat)
+library(aplot)
 
-script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
-script_dir <- if (length(script_arg)) {
-  dirname(normalizePath(sub("^--file=", "", script_arg[[1]])))
-} else {
-  getwd()
-}
-repo_root <- normalizePath(file.path(script_dir, "../../.."))
-overview_data <- file.path(repo_root, "analysis/sne_construction/data/embedding_overview")
-figure_dir <- file.path(script_dir, "results/figures")
-dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create("embedding_overview/results/figures", recursive = TRUE, showWarnings = FALSE)
 
-taxmap <- read.delim(
-  file.path(repo_root, "data/taxmap_slv_ssu_ref_nr_138.2.txt"),
+tax <- read.delim("../../data/taxmap_slv_ssu_ref_nr_138.2.txt",
   sep = "\t", stringsAsFactors = FALSE, check.names = FALSE
 )
-accession <- paste(taxmap[[1]], taxmap[[2]], taxmap[[3]], sep = ".")
-taxa <- strsplit(taxmap$path, ";")
-max_rank <- max(lengths(taxa))
-taxa <- lapply(taxa, function(x) `length<-`(x, max_rank))
-taxa <- as.data.frame(do.call(rbind, taxa))
-rownames(taxa) <- accession
-taxa <- taxa[, 1:7]
-colnames(taxa) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+acc <- paste(tax[[1]], tax[[2]], tax[[3]], sep = ".")
+tax_split <- strsplit(tax$path, ";")
+max_len <- max(sapply(tax_split, length))
+tax_split <- lapply(tax_split, function(x) {
+  length(x) <- max_len
+  return(x)
+})
 
-otu <- read.csv(file.path(overview_data, "OTU_prevalence_abundance.csv"))
-tree <- read.tree(file.path(repo_root, "data/SSURefNR99_1200_slv_138_2_subset.tre"))
-tip_data <- data.frame(OTU = tree$tip.label) %>%
-  left_join(data.frame(OTU = rownames(taxa), Phylum = taxa$Phylum), by = "OTU") %>%
+otu_annotation <- as.data.frame(do.call(rbind, tax_split))
+rownames(otu_annotation) <- acc
+otu_annotation <- otu_annotation[, 1:7]
+colnames(otu_annotation) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+otu_table <- read.csv("data/embedding_overview/OTU_prevalence_abundance.csv", stringsAsFactors = FALSE)
+otu_annotation <- otu_annotation[otu_table$OTU, ]
+tree <- read.tree("../../data/SSURefNR99_1200_slv_138_2_subset.tre")
+
+otu_annotation <- otu_annotation %>% rownames_to_column("OTU")
+tippoint <- data.frame(
+  OTU = tree$tip.label,
+  stringsAsFactors = FALSE
+) %>%
+  left_join(otu_annotation %>% select(OTU, Phylum), by = "OTU") %>%
   mutate(
-    OTU = factor(OTU, levels = tree$tip.label),
-    Taxon = if_else(
+    OTU_factor = factor(OTU, levels = tree$tip.label),
+    Taxa = factor(Phylum),
+    taxon = if_else(
       Phylum %in% names(sort(table(Phylum), decreasing = TRUE)[1:12]),
       Phylum,
       "Others"
     )
   )
 
-taxon_levels <- c(names(sort(table(tip_data$Phylum), decreasing = TRUE)[1:12]), "Others")
-taxon_colors <- c(brewer.pal(12, "Paired"), brewer.pal(4, "Pastel2"))
+taxon_levels <- c(
+  names(sort(table(tippoint$Phylum), decreasing = TRUE)[1:12]),
+  "Others"
+)
+col <- c(brewer.pal(12, "Paired"), brewer.pal(4, "Pastel2"))
 
-tree_plot <- ggtree(tree, layout = "rectangular", linewidth = 0.5, branch.length = "none") +
+p <- ggtree(tree, layout = "rectangular", size = 0.5, branch.length = "none") +
   layout_dendrogram() +
-  theme(axis.ticks.length = grid::unit(0, "mm"), plot.margin = margin())
+  theme(
+    axis.ticks.length = unit(0, "mm"),
+    plot.margin = margin()
+  )
+p
 
-phylum_plot <- ggplot(tip_data, aes(OTU, "Phylum", fill = factor(Taxon, levels = taxon_levels))) +
+Phylum_p <- ggplot(tippoint, aes(
+  x = OTU_factor,
+  y = "Phylum",
+  fill = factor(taxon, levels = taxon_levels)
+)) +
   geom_tile() +
-  scale_fill_manual(values = setNames(taxon_colors, taxon_levels)) +
-  labs(fill = "Phylum", x = NULL, y = NULL) +
+  scale_fill_manual(values = setNames(col, taxon_levels)) +
+  labs(
+    fill = "Phylum",
+    x = NULL,
+    y = NULL
+  ) +
   scale_y_discrete(position = "right") +
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), plot.margin = margin())
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_text(size = 14, face = "bold"),
+    axis.ticks.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.length = unit(0, "mm"),
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12, face = "italic"),
+    plot.margin = margin()
+  )
 
-tip_data$prevalence <- otu$prevalence[match(tip_data$OTU, otu$OTU)]
-prevalence_plot <- ggplot(tip_data, aes(OTU, "log10(prev)", fill = log10(prevalence))) +
+cor_colors <- colorRampPalette(c("white", "#FD763F"))(100)
+tippoint$prev <- otu_table$prev[match(tippoint$OTU, otu_table$OTU)]
+
+prev_p <- ggplot(tippoint, aes(x = OTU_factor, y = "log10(prev)", fill = log10(prev))) +
   geom_tile() +
-  scale_fill_gradientn(colors = colorRampPalette(c("white", "#FD763F"))(100)) +
-  labs(fill = "log10(prev)", x = NULL, y = NULL) +
+  scale_fill_gradientn(colors = cor_colors) +
+  labs(
+    fill = "log10(prev)",
+    x = NULL,
+    y = NULL
+  ) +
   scale_y_discrete(position = "right") +
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), plot.margin = margin())
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_text(size = 14, face = "bold"),
+    axis.ticks.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.length = unit(0, "mm"),
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    plot.margin = margin()
+  )
+prev_p
 
-tip_data$mean_abundance <- otu$mean_abc[match(tip_data$OTU, otu$OTU)]
-abundance_plot <- ggplot(tip_data, aes(OTU, "log10(mean Abund.)", fill = log10(mean_abundance))) +
+
+# mean_abc
+cor_colors <- colorRampPalette(c("white", "#23BAC5"))(100)
+tippoint$mean_abc <- otu_table$mean_abc[match(tippoint$OTU, otu_table$OTU)]
+mean_abc_p <- ggplot(tippoint, aes(x = OTU_factor, y = "log10(mean Abund.)", fill = log10(mean_abc))) +
   geom_tile() +
-  scale_fill_gradientn(colors = colorRampPalette(c("white", "#23BAC5"))(100)) +
-  labs(fill = "log10(mean Abund.)", x = NULL, y = NULL) +
+  scale_fill_gradientn(colors = cor_colors) +
+  labs(
+    fill = "log10(mean Abund.)",
+    x = NULL,
+    y = NULL
+  ) +
   scale_y_discrete(position = "right") +
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), plot.margin = margin())
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_text(size = 14, face = "bold"),
+    axis.ticks.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.length = unit(0, "mm"),
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    plot.margin = margin()
+  )
+mean_abc_p
 
-embedding <- read.table(
-  file.path(repo_root, "data/social_niche_embedding_100.txt"),
-  row.names = 1, quote = "\"", comment.char = ""
-)
-colnames(embedding) <- paste0("dim", seq_len(ncol(embedding)))
-embedding <- embedding[otu$OTU, , drop = FALSE]
-dimension_clustering <- hclust(dist(t(embedding)), method = "ward.D2")
-dimension_order <- dimension_clustering$labels[dimension_clustering$order]
-embedding$OTU <- rownames(embedding)
-embedding <- melt(embedding, id.vars = "OTU", variable.name = "Dimension")
-embedding$OTU <- factor(embedding$OTU, levels = tree$tip.label)
-embedding$Dimension <- factor(embedding$Dimension, levels = dimension_order)
+embedding_table <- read.table("../../data/social_niche_embedding_100.txt", row.names = 1, quote = "\"", comment.char = "")
+colnames(embedding_table) <- paste0("dim", 1:100)
+embedding_table <- embedding_table[otu_table$OTU, ]
+clust <- hclust(dist(t(embedding_table)), method = "ward.D2")
+order_dim <- clust$labels[clust$order]
+embedding_table <- embedding_table %>% rownames_to_column("fid")
+embedding_table <- embedding_table %>% melt(id.vars = c("fid"), variable.name = "dim")
+embedding_table$dim <- factor(embedding_table$dim, levels = order_dim)
+col_fun <- colorRampPalette(c("#2574AA", "white", "#ED7B79"))(100)
+embedding_table$fid <- factor(embedding_table$fid, levels = tree$tip.label)
 
-embedding_plot <- ggplot(embedding, aes(OTU, Dimension, fill = value)) +
+embedding_p <- ggplot(embedding_table, aes(y = dim, x = fid, fill = value)) +
   geom_tile() +
-  scale_fill_gradientn(colors = colorRampPalette(c("#2574AA", "white", "#ED7B79"))(100)) +
-  labs(fill = "SNE", x = "OTUs", y = NULL) +
+  scale_fill_gradientn(colors = col_fun) +
+  labs(
+    fill = "SNE",
+    x = "OTUs",
+    y = NULL
+  ) +
   scale_y_discrete(position = "right") +
-  theme(axis.text = element_blank(), axis.ticks = element_blank(), plot.margin = margin())
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.length = unit(0, "mm"),
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    plot.margin = margin()
+  )
+embedding_p
 
-combined <- embedding_plot %>%
-  insert_top(abundance_plot, height = 0.03) %>%
-  insert_top(prevalence_plot, height = 0.03) %>%
-  insert_top(phylum_plot, height = 0.03) %>%
-  insert_top(tree_plot, height = 0.5)
+# 6
+p_combined <- embedding_p %>%
+  aplot::insert_top(mean_abc_p, height = 0.03) %>%
+  aplot::insert_top(prev_p, height = 0.03) %>%
+  aplot::insert_top(Phylum_p, height = 0.03) %>%
+  aplot::insert_top(p, height = 0.5)
+p_combined
+ggsave("embedding_overview/results/figures/tree_otu_embedding_v2.png", p_combined, width = 15, height = 10, dpi = 300, units = "in", device = "png")
 
-ggsave(
-  file.path(figure_dir, "tree_otu_embedding.png"),
-  combined, width = 15, height = 10, dpi = 300, units = "in"
-)
