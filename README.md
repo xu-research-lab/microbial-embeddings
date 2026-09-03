@@ -157,6 +157,41 @@ The **membed class-attention** module is an attention-based classification model
       --numb 0
   ```
 
+  Alternatively, the same model can be called directly from Python (as done in `analysis/Disease_classification_loo/run_attention_biom_with_SNEs.py`):
+
+  ```python
+  from membed.otu_attention import Attention_biom
+
+  valid_record, test_metrics = Attention_biom(
+      metadata="metadata.tsv",
+      train_biom="train.biom",
+      valid_biom="valid.biom",
+      test_biom="test.biom",
+      embedding_birnn="attention_loo.pt",
+      plotfile_loss="attention_loss.png",
+      plotfile_auc="attention_auc.png",
+      pred_out="predictions",
+      glove_embedding="result/embeddings_100.txt",
+      labels_col="group",
+      sample_id_col="sample_id",
+      num_steps=600,
+      num_epochs=100,
+      loss="BCEWithLogits",
+      p_drop=0.4,
+      d_ff=200,
+      head_hidden=64,
+      d_model=100,
+      n_layers=1,
+      n_heads=1,
+      weight_decay=0.0001,
+      lr=0.001,
+      batch_size=64,
+      numb=0,
+  )
+  ```
+
+  It returns `(valid_record, test_metrics)`: `valid_record` holds the metrics of the selected epoch, and `test_metrics` holds `auc`, `aupr`, `f1`, `mcc`, `acc`, and the confusion matrix `cm` at the frozen threshold.
+
   The validation table is never used for gradient updates. It selects the checkpoint and decision threshold; the test table is scored once with both choices frozen.
 
 + **Argument Explanation**
@@ -191,7 +226,11 @@ cd tests
 **Expected output:** The script will generate embeddings in `tests/glove_output/` directory with detailed timing logs.
 
 **Test results (on a machine with 32GB RAM, 8 CPU cores):**
-- Total execution time: 00:01:28 (hh:mm:ss)
+- Total execution time: 00:04:24 (hh:mm:ss)
+  - Feature dictionary: 00:00:34
+  - Co-occurrence matrix: 00:01:09
+  - x_max file: 00:00:04
+  - GloVe training (100 iterations): 00:02:37
 - Each step timing is recorded in `glove_output/pipeline_timing.log`
 
 ### Running the classification test
@@ -206,7 +245,7 @@ cd tests
 **Expected output:** The script will train a classification model and save results in `tests/classification_output/` directory.
 
 **Test results (on a machine with GeForce RTX 2080Ti GPU):**
-- Total execution time: 00:01:16 (hh:mm:ss)
+- Total execution time: 00:00:45 (hh:mm:ss)
 - Timing logs are saved in `classification_output/classification_time.txt`
 
 ### Notes:
@@ -216,15 +255,12 @@ cd tests
 
 ## Code Structure & Analysis Reproducibility
 
-This repository is organized to reproduce every analysis presented in our paper. The `analysis/` directory contains subfolders, each corresponding to a specific figure or analytical theme.
+This repository is organized to reproduce every analysis presented in our paper. The `analysis/` directory contains subfolders, each corresponding to a specific figure or analytical theme. Each subfolder contains its own `README.md` with detailed descriptions and reproduction instructions.
 
-- **`Pretraining_data_profile/`**: Scripts for building and profiling the pre-training dataset
-- **`Co_occurence_method/`**: Scripts for the comparative analysis of co-occurrence metrics.
-  - Comparative_analysis.R: A standalone R script for sampling OTUs from a single sample and generating network visualizations for each of the eight co-occurrence metrics.
-- **`Simulation_experiments/`**: Scripts for validating the SNE framework using synthetic microbiome data.
-- **`SNE_overview/`**: Code for visualizing the pre-trained Social Niche Embeddings
-- **`Genome_collection_search/`**: Scripts for mapping OTUs to reference genomes
-- **`Traits/`**: Scripts for analyzing the association between SNEs and microbial traits.
-- **`Metabolic/`**: Scripts for metabolic interaction analysis using SMETANA.
-- **`HGT/`**: Scripts for analyzing SNEs in relation to phylogeny, function, and Horizontal Gene Transfer.
-- **`Disease_classification_loo/`**: Scripts for all disease and host phenotype classification experiments.
+- **`resources/`**: Shared resources: scripts for building the pretraining 16S dataset and for collecting and mapping reference genomes to OTUs.
+- **`sne_construction/`**: Co-occurrence metric comparison, SNE training, and embedding overview (t-SNE and tree visualizations). The reusable implementation lives in the `membed/` package; this folder retains the analysis wrappers and notebooks.
+- **`synthetic_validation/`**: Validation of the SNE framework on synthetic CRM (consumer-resource model) communities (Fig. 1B-C, Extended Data Fig. 3, Supplementary Fig. S3), including data-size and embedding-dimension ablations.
+- **`traits/`**: Trait analyses (Figure 2, Extended Data Fig. 5): trait annotation from BugBase, Traitar, and BacDive; PLS-DA against a phylogenetic null model; cross-database trait prediction; pretraining-size scaling.
+- **`metabolic_interaction/`**: Pairwise metabolic interaction analysis (Fig. 3A-B): predicts BiGG gene profiles per OTU, builds CarveMe metabolic models, and scores pairs with SMETANA (MIP/MRO).
+- **`function_phylogeny_hgt/`**: Ecological characterization of SNEs: agreement with phylogenetic distance and PICRUSt2-predicted function profiles, and prediction of horizontal gene transfer (HGT) between genome pairs.
+- **`Disease_classification_loo/`**: Disease classification benchmark with leave-one-study-out / leave-one-disease-out validation: the SNE attention model vs. RF/SVM baselines, shuffled controls, alternative embeddings (phylo-PCA, DNABERT2), and model interpretation.
