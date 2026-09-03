@@ -24,8 +24,7 @@ dependencies:
   - pyyaml
   - sphinx
   - pytest
-  - line_profiler
-  
+
   - seaborn
   - trimap
 

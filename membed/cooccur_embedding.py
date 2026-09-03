@@ -225,11 +225,13 @@ def _x_max_path(x_max_file):
     keeps the two in sync whatever the caller passes.
 
     Parameters:
-        x_max_file (str): Path as supplied by the caller, with or without suffix.
+        x_max_file (str or path-like): Path as supplied by the caller, with or
+            without suffix.
 
     Returns:
         str: The same path, guaranteed to end in '.npy'.
     """
+    x_max_file = os.fspath(x_max_file)
     return x_max_file if x_max_file.endswith('.npy') else f'{x_max_file}.npy'
 
 

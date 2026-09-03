@@ -334,7 +334,8 @@ def glove_train(**kwargs):
 @click.option('--numb',
               type=click.INT,
               default=1,
-              help='Zero-based CUDA device index to train on.')
+              help='Zero-based CUDA device index to train on; negative values '
+              'run on CPU.')
 @click.option('--lr', 
               type=click.FLOAT, 
               default=0.0005,

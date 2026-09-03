@@ -1,6 +1,7 @@
 # SNEs: Microbial Social Niches Learned from >210,000 Human Gut Microbiomes for Improve Deep Learning-based Disease Classification
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+[![Build Status](https://github.com/xu-research-lab/microbial-embeddings/actions/workflows/test.yml/badge.svg)](https://github.com/xu-research-lab/microbial-embeddings/actions/workflows/test.yml)
 
 `membed` package adapts Natural Language Processing techniques to create Social Niche Embeddings(SNEs) for microbes based on their co-occurrence patterns across samples. These embeddings provide ecological representations of microbial taxa based on their community context.
 
@@ -8,7 +9,7 @@
 
 ## Human gut microbiome resource
 
-* **Pre-training Microbiome Biom Table:** [pretraining_table_filter.biom](./data/pretraining_table_filter.biom)
+* **Pre-training Microbiome Biom Table:** [gut_pretraining.biom](./data/gut_pretraining.biom)
   * **Description:** This BIOM-format file contains **210,090 samples** and **14,093 microbial taxa** mapped to the SILVA SSU rRNA reference, representing one of the most comprehensive human gut microbiome datasets available.
 * **SNEs (100-dimensional):** [social_niche_embedding_100.txt](./data/social_niche_embedding_100.txt)
   * **Description:** This Social Niche Embedding file provides 100-dimensional vectors encoding "social niche" for all 14,093 SILVA sequences representing human gut microbes, pretrained from the BIOM table described above.
@@ -22,15 +23,21 @@
 
 We recommend using Conda to manage the environment and dependencies. Complete installation on a machine with 8 threads and 32GB of RAM usually takes around 45 minutes to download the repository (approx. 32GB total size) + 10 minutes for environment setup.
 
-1. **Clone the repository:**
+0. **Install Git LFS and clone the repository:**
+
+   The `data/` directory is stored via [Git LFS](https://git-lfs.com). If Git LFS is not installed, `git clone` checks out 134-byte text pointer files instead of the real data, and `biom.load_table()` will later fail with an uninformative parsing error. Run the following:
 
    ```bash
-   # Clone the repository (approx. 32GB download size)
+   # Install Git LFS first; otherwise data/ contains pointer files instead of real data
+   git lfs install
    git clone https://github.com/xu-research-lab/microbial-embeddings.git
    cd microbial-embeddings
+   git lfs pull
+   # Self-check: this should report approx. 171M; a 134-byte file means LFS did not take effect
+   ls -lh data/gut_pretraining.biom
    ```
 
-2. **Create or Update Conda Environment:** Use the provided file to create a new, clean environment:
+1. **Create or Update Conda Environment:** Use the provided file to create a new, clean environment:
 
    ```bash
    # Create a new environment named 'membed'
@@ -38,7 +45,7 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    conda activate membed
    ```
 
-3. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
+2. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
 
    ```bash
    pip install -e .
@@ -49,6 +56,15 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    ```bash
    pip install .
    ```
+
+3. **Pip-only installation (without Conda):** If you already have Python >= 3.9 and do not want a Conda environment:
+
+   ```bash
+   pip install -r requirements.txt
+   pip install .
+   ```
+
+   The `requirements.txt` file lists the runtime dependencies (with lower bounds matching `requirements_dev.yml`); the Conda file additionally pins dev/analysis tools.
 
 ### Part 1: Generating SNEs
 
@@ -65,17 +81,17 @@ We adapt the **GloVe** (Global Vectors for Word Representation) model, a techniq
 - **Step 2: Compute the Co-occurrence Matrix** A co-occurrence matrix is constructed by calculating the frequency or intensity of joint appearances for every pair of microbes across all samples.
 
   ```bash
-  # Use the percentiled_co_abundance metric
+  # Use the abundance_percentile metric
   membed cooccur -b table.biom -c table.co --metric abundance_percentile --cpus 28
   ```
 
-  Note: You can see all available metrics with `membed cooccur --help`. The `abundance_percentile`metric was selected as the primary method in this study. 
+  Note: You can see all available metrics with `membed cooccur --help`. The `abundance_percentile` metric was selected as the primary method in this study. 
 
   + **Parameters**:
   + `-b`: **[Required]** The input path for the BIOM-format file.
     
   + `-c`: **[Required]** The output path for the co-occurrence matrix file.
-    + `--metric`: Specifies the method used to quantify the association strength between microbes. Options include **binary** (presence/absence), **normalized abundance-based** (e.g., Bray-Curtis), and **percentile (rank)-based** metrics. The primary metric used in this study, `abundance_percentile`, is designed to overcome the limitations of other methods by assessing the **magnitude** of abundance for a more balanced evaluation, while also using a **percentile rank** transformation to ensure robustness against batch effects and extreme values.
+    + `--metric`: Specifies the method used to quantify the association strength between microbes. Options are presence/absence metrics (**russell_rao**, **jaccard**, **faith**), abundance-weighted metrics (**abundance_percentile**, **abundance_totalsum**), Bray-Curtis similarity (**braycurtis_percentile**, **braycurtis_totalsum**), and rank-weighted co-occurrence (**weighted_russell_rao**). The primary metric used in this study, `abundance_percentile`, is designed to overcome the limitations of other methods by assessing the **magnitude** of abundance for a more balanced evaluation, while also using a **percentile rank** transformation to ensure robustness against batch effects and extreme values.
 
 - **Step 3: Calculate the `x_max` Hyperparameter **The `x_max` value is used to down-weight high-frequency co-occurrences during GloVe training, preventing them from dominating the loss function. For this purpose, the 80th percentile of the co-occurrence distribution is adopted as the threshold.
 
@@ -122,9 +138,9 @@ The **membed class-attention** module is an attention-based classification model
   - Pre-trained SNEs: `embeddings_100.txt`
 
 - **Hardware Requirements:**
-  - This implementation currently requires an NVIDIA CUDA GPU.
+  - A CUDA GPU is recommended. The training loop falls back to CPU when `--numb` is negative (e.g. `--numb -1`) or when no CUDA device is available.
   - **Recommended:** At least 8GB VRAM for optimal performance.
-  - `--numb` selects one zero-based CUDA device index.
+  - `--numb` selects one zero-based CUDA device index; a negative value runs on CPU.
   - Memory: At least 32GB RAM for handling large datasets. 
 
 - **Basic Example: Training an Attention-based Classifier (as used in our paper)**
@@ -144,10 +160,9 @@ The **membed class-attention** module is an attention-based classification model
       --pred-out predictions \
       --num-steps 600 \
       --num-epochs 100 \
-      --loss BCEWithLogits \
+      --loss BCE_loss \
       --p-drop 0.4 \
       --d-ff 200 \
-      --head-hidden 64 \
       --d-model 100 \
       --n-layers 1 \
       --n-heads 1 \
@@ -199,8 +214,8 @@ The **membed class-attention** module is an attention-based classification model
   + `--plotfile-loss`, `--plotfile-auc`, `--embedding-birnn`: Define the output paths for the training curves and selected model state. `--pred-out` writes `<prefix>_valid.csv` and `<prefix>_test.csv`.
   + `--labels-col group`: Informs the program that the column named `group` in the metadata file contains the classification labels.
   + `--num-epochs`, `--lr`, `--batch-size`, etc.: Set the model's hyperparameters, such as epochs, learning rate, batch size, and model dimensions, mirroring the definitions in your script.
-  + `--select-by loss` (default) selects the checkpoint by validation loss and applies early stopping; use `membed class-attention --help` for the updated model options.
-  + `--numb 0`: Selects the single CUDA device `cuda:0`.
+  + The checkpoint is selected by validation loss with early stopping by default; other selection criteria (`select_by='auc'` or `select_by='last'`) are available through the Python API. Run `membed class-attention --help` for the full CLI option list.
+  + `--numb 0`: Selects the single CUDA device `cuda:0`. A negative value (e.g. `--numb -1`) runs on CPU.
   + `--d-model 100`: Defines the model's internal dimensionality. **This value must exactly match the dimension of the input embeddings.**
 
 ## Running the tool on test data
@@ -211,8 +226,20 @@ To test the main functionalities of the `membed` package, we provide test data a
 
 The test data includes:
 - `tests/data/test_Glove.biom`: A small BIOM table for testing the GloVe embedding pipeline
-- `tests/data/IBD_train.biom`, `tests/data/IBD_test.biom`: Training and testing data for classification
+- `tests/data/test_raw.biom`: A hand-made 5-feature by 3-sample table used by the pytest unit tests
+- `tests/data/IBD_train.biom`, `tests/data/IBD_valid.biom`, `tests/data/IBD_test.biom`: Training, validation and testing data for classification
 - `tests/data/metadata_IBD.txt`: Metadata file mapping sample IDs to labels
+
+### Running the pytest test suite
+
+The unit and smoke tests live in `tests/test_cooccur.py`, `tests/test_cli.py` and `tests/test_attention.py`:
+
+```bash
+conda activate membed
+make test          # or: pytest
+```
+
+This runs the co-occurrence metrics and workflow tests (all 8 supported metrics against `tests/data/test_raw.biom`), CLI entry-point tests, and a 2-epoch CPU smoke test of the attention classifier on the IBD cohort (`tests/test_attention.py`, marked `slow`).
 
 ### Running the GloVe pipeline test
 
