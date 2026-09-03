@@ -1,4 +1,4 @@
-.PHONY: clean clean-build clean-pyc clean-test coverage dist docs help install lint lint/flake8
+.PHONY: clean clean-build clean-pyc clean-test coverage coverage/xml dist docs help install lint lint/flake8
 .DEFAULT_GOAL := help
 
 define BROWSER_PYSCRIPT
@@ -63,6 +63,10 @@ coverage: ## check code coverage quickly with the default Python
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
+
+coverage/xml: ## generate xml coverage report for CI
+	coverage run --source membed -m pytest -m "not slow"
+	coverage xml
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/membed.rst

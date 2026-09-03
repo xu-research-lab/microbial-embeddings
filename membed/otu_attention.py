@@ -12,24 +12,27 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import Dataset, DataLoader
 from sklearn.metrics import confusion_matrix, f1_score, matthews_corrcoef, accuracy_score
-from sklearn.model_selection import StratifiedShuffleSplit, GroupShuffleSplit
 from sklearn import metrics
 
 
 def gpu(i=0):
-    """Select a CUDA device by index.
+    """Select a CUDA device by index, falling back to CPU.
 
     Parameters
     ----------
     i : int, optional
-        Zero-based CUDA device index. Default is 0.
+        Zero-based CUDA device index. Default is 0. A negative index, or a
+        machine without CUDA, falls back to CPU.
 
     Returns
     -------
     torch.device
-        Device handle referring to ``cuda:i``.
+        Device handle referring to ``cuda:i``, or ``cpu`` when CUDA is
+        unavailable or `i` is negative.
     """
-    return torch.device(f'cuda:{i}')
+    if i is not None and i >= 0 and torch.cuda.is_available():
+        return torch.device(f'cuda:{i}')
+    return torch.device('cpu')
 
 
 def num_gpus():
@@ -54,7 +57,7 @@ def try_all_gpus(numb):
     Parameters
     ----------
     numb : int
-        Zero-based CUDA device index.
+        Zero-based CUDA device index; a negative value selects CPU.
 
     Returns
     -------
@@ -2641,7 +2644,8 @@ def Attention_biom(
     n_heads : int, optional
         Number of attention heads per layer. Default is 2.
     numb : int, optional
-        Zero-based CUDA device index. Default is 1.
+        Zero-based CUDA device index; a negative value runs on CPU.
+        Default is 1.
     lr : float, optional
         Learning rate for the Adam optimizer. Default is 0.0005.
     weight_decay : float, optional

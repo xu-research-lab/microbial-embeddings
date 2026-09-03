@@ -8,10 +8,11 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 
-requirements = ['click>=8.0', 'tqdm', 'numba',
-                'numpy', 'scipy', 'matplotlib',
-                'biom-format', 'scikit-bio',
-                'scikit-learn', 'torch']
+requirements = ['click>=8.0', 'tqdm>=4.64.0', 'numba',
+                'numpy>=1.22.4', 'scipy>=1.8.1', 'matplotlib',
+                'biom-format>=2.1.10', 'scikit-bio>=0.5.6',
+                'scikit-learn>=0.24.1', 'pandas>=1.4', 'joblib>=1.2.0',
+                'torch>=1.10.0']
 
 extras_requirements = {'progress_bar': ['tqdm'],
                        'profiler': ['line-profiler'],
@@ -24,16 +25,16 @@ test_requirements = ['pytest>=3', ]
 setup(
     author="microbial language model team",
     author_email='zhuzhengnong@xbiome.com',
-    python_requires='>=3.6',
+    python_requires='>=3.9',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     description="microbial embedding model",
     entry_points={
@@ -42,7 +43,7 @@ setup(
         ],
     },
     install_requires=requirements,
-    extras_requires=extras_requirements,
+    extras_require=extras_requirements,
     license="MIT license",
     long_description=readme, # + '\n\n' + history,
     include_package_data=True,
@@ -52,6 +53,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='',
-    version='0.1.0',
+    version='1.0.0',
     zip_safe=False,
 )

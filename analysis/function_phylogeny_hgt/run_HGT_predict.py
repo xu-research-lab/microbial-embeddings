@@ -151,5 +151,32 @@ for fold, (train_index, val_index) in enumerate(kf.split(all_id)):
     proba = proba + list(y_pred_proba[:,1])
 
 
+    data_train = pd.DataFrame({"id_1": hgt_embed_train_keep.id_1.tolist() + hgt_embed_train_sample.id_1.tolist(),
+                     "id_2": hgt_embed_train_keep.id_2.tolist() + hgt_embed_train_sample.id_2.tolist(),
+                     "hgt": [1] * hgt_embed_train_keep.shape[0] + [0] * hgt_embed_train_sample.shape[0]})
+    train_emb_id1 = pd.concat([co_embedding.loc[data_train.id_1.values], phy_embedding.loc[data_train.id_1.values]], axis=1)
+    train_emb_id2 = pd.concat([co_embedding.loc[data_train.id_2.values], phy_embedding.loc[data_train.id_2.values]], axis=1)
+    X_train = np.hstack([train_emb_id1.values, train_emb_id2.values])
+    y_train = data_train.hgt.values
+
+    data_test = pd.DataFrame({"id_1": hgt_embed_test_keep.id_1.tolist() + hgt_embed_test_sample.id_1.tolist(),
+                     "id_2": hgt_embed_test_keep.id_2.tolist() + hgt_embed_test_sample.id_2.tolist(),
+                     "hgt": [1] * hgt_embed_test_keep.shape[0] + [0] * hgt_embed_test_sample.shape[0]})
+    test_emb_id1 = pd.concat([co_embedding.loc[data_test.id_1.values], phy_embedding.loc[data_test.id_1.values]], axis=1)
+    test_emb_id2 = pd.concat([co_embedding.loc[data_test.id_2.values], phy_embedding.loc[data_test.id_2.values]], axis=1)
+    x_test = np.hstack([test_emb_id1.values, test_emb_id2.values])
+    y_test = data_test.hgt.values
+
+    rf_classifier.fit(X_train, y_train)
+    y_pred_proba = rf_classifier.predict_proba(x_test)
+    auc_score = roc_auc_score(y_test, y_pred_proba[:,1])
+    print(f"SNE+PhyloE_{fold} AUC: {auc_score:.4f}")
+
+    test = test + [f"test_{fold}"] * len(y_test)
+    group = group + ["SNE+PhyloE"] * len(y_test)
+    labels = labels + list(y_test)
+    proba = proba + list(y_pred_proba[:,1])
+
+
 hgt_predict_res = pd.DataFrame({"test":test, "group":group, "labels":labels, "proba":proba})
 hgt_predict_res.to_csv("data/hgt_predict_res_all.csv", index=None)

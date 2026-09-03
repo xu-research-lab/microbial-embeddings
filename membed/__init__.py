@@ -2,4 +2,4 @@
 
 __author__ = """zhuzhengnong"""
 __email__ = 'zhuzhengnong@xbiome.com'
-__version__ = '0.1.0'
+__version__ = '1.0.0'

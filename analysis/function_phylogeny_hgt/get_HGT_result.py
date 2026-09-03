@@ -25,7 +25,7 @@ for i in range(vsearch_res.shape[0]):
     temp = vsearch_res.iloc[i].values
     genome_fid[temp[15]] = temp[0]
 
-genome_pairs = pd.read_csv("data/genome_pairs_vsearch_new.txt", header=None,  sep=" ")
+genome_pairs = pd.read_csv("data/genome_pairs_vsearch.txt", header=None,  sep=" ")
 
 path="data/blastn_results/filtered"
 hgt = []
@@ -55,7 +55,7 @@ fid_2 = [genome_fid[i] for i in genome_2]
 hgt_res = pd.DataFrame({"id_1":fid_1, "id_2":fid_2, "identity":identity, 
                         "cosine_co":cosine_co, "hgt":hgt, "phy_dis":phy_dis})
 
-hgt_res.to_csv("/home/dongbiao/word_embedding_microbiome/HGT/results/hgt.csv", index=None)
+hgt_res.to_csv("data/hgt.csv", index=None)
 
 def min_max_normalization(data): 
     data_min = np.min(data)
@@ -63,7 +63,7 @@ def min_max_normalization(data):
     normalized_data = (data - data_min) / (data_max - data_min)
     return normalized_data
 
-with open("/home/dongbiao/word_embedding_microbiome/HGT/results/genome_fid.json", "r") as f:
+with open("data/genome_fid.json", "r") as f:
     genome_fid = json.load(f) 
 phy_dis_vector = np.linspace(0.02, 1, 10)
 embed_dis_vector = np.linspace(0.1, 0.80, 10)
