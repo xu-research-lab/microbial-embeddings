@@ -284,7 +284,7 @@ cd tests
 
 This repository is organized to reproduce every analysis presented in our paper. The `analysis/` directory contains subfolders, each corresponding to a specific figure or analytical theme. Each subfolder contains its own `README.md` with detailed descriptions and reproduction instructions.
 
-- **`resources/`**: Shared resources: scripts for building the pretraining 16S dataset and for collecting and mapping reference genomes to OTUs.
+- **`resources/`**: Scripts for building the pretraining 16S dataset and for collecting and mapping reference genomes to OTUs.
 - **`sne_construction/`**: Co-occurrence metric comparison, SNE training, and embedding overview (t-SNE and tree visualizations). The reusable implementation lives in the `membed/` package; this folder retains the analysis wrappers and notebooks.
 - **`synthetic_validation/`**: Validation of the SNE framework on synthetic CRM (consumer-resource model) communities (Fig. 1B-C, Extended Data Fig. 3, Supplementary Fig. S3), including data-size and embedding-dimension ablations.
 - **`traits/`**: Trait analyses (Figure 2, Extended Data Fig. 5): trait annotation from BugBase, Traitar, and BacDive; PLS-DA against a phylogenetic null model; cross-database trait prediction; pretraining-size scaling.
