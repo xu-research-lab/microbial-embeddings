@@ -1,25 +1,24 @@
-# --- 0. 安装和加载必要的包 ---
-# (安装命令保持不变，确保已执行)
+# --- 0. Load packages ---
 
 library(miaSim)
-library(SummarizedExperiment) # assay() 函数在这里
+library(SummarizedExperiment) # Provides assay().
 library(gtools)
-library(parallel) # 用于并行计算
+library(parallel)
 
-cat("开始执行微生物组丰度数据生成脚本 (并行版本)...\n\n")
+cat("Starting microbial abundance simulations...\n\n")
 
-# --- 全局参数定义 ---
+# --- Global parameters ---
 n_global_species <- 1000
-n_global_resources <- 10 # 你在脚本中设置的是10
-n_simulations <- 1000000    # 你在脚本中设置的是1000
+n_global_resources <- 10
+n_simulations <- 1000000
 
 global_species_names <- paste0("GlobalSpecies", sprintf("%04d", 1:n_global_species))
 global_resource_names <- paste0("Resource", sprintf("%02d", 1:n_global_resources))
 
 set.seed(123)
 
-# --- 1. 定义全局物种资源交互矩阵 (E_global) ---
-cat("步骤 1: 使用 randomE 生成全局物种-资源交互矩阵 (E_global)...\n")
+# --- 1. Define the global species-resource interaction matrix ---
+cat("Step 1: Generating the global species-resource interaction matrix (E_global)...\n")
 E_global <- miaSim::randomE(
     n_species = n_global_species,
     n_resources = n_global_resources,
@@ -27,34 +26,32 @@ E_global <- miaSim::randomE(
     names_resources = global_resource_names,
     mean_production = 1
 )
-cat("E_global 维度:", dim(E_global), "\n")
-E_global_filename <- "data/E_global_v46.csv"
+cat("E_global dimensions:", dim(E_global), "\n")
+E_global_filename <- "data/E_global.csv"
 
-cat("步骤 1.5: 生成全局物种-资源 Monod 常数矩阵 (monod_constant_global)...\n")
-# 假设资源量的最大值为 100 来设定 shape 参数，这与函数默认行为一致
+cat("Step 1.5: Generating the global species-resource Monod constant matrix (monod_constant_global)...\n")
+# Match the function default by assuming a maximum resource amount of 100.
 max_resource_assumed <- 100 
 monod_constant_global <- matrix(rgamma(n = n_global_species * n_global_resources,
                                        shape = 50 * max_resource_assumed,
                                        rate = 1),
                                 nrow = n_global_species,
-                                # 确保矩阵有行列名称，便于后续按名称索引
+                                # Preserve names for later indexing.
                                 dimnames = list(global_species_names, global_resource_names))
-cat("monod_constant_global 维度:", dim(monod_constant_global), "\n\n")
+cat("monod_constant_global dimensions:", dim(monod_constant_global), "\n\n")
 
-# --- 2. 为每个微生物定义 prevalence ---
-# (这部分代码与你提供的脚本一致)
-cat("步骤 2: 为每个微生物定义 prevalence...\n")
+# --- 2. Define prevalence for each microbe ---
+cat("Step 2: Defining prevalence for each microbe...\n")
 prevalences <- rbeta(n_global_species, 1, 10) 
 names(prevalences) <- global_species_names
-cat("Prevalence 分布摘要:\n")
+cat("Prevalence summary:\n")
 print(summary(prevalences))
-cat("Prevalence 方差:", var(prevalences), "\n\n")
+cat("Prevalence variance:", var(prevalences), "\n\n")
 
 
-# --- 3. 执行迭代模拟并记录丰度数据 (并行版本) ---
-# [修改代码] 增加 monod_constant_global_matrix 参数
+# --- 3. Run simulations in parallel and record abundances ---
 run_single_simulation <- function(sim_idx, E_global_matrix, monod_constant_global_matrix, global_species_names_vec, prevalences_vec, n_global_resources_val, global_resource_names_vec, min_species_val, simulation_t_end_val) {
-    # 3.1 根据 prevalence 采样当前样本的物种组成
+    # Sample the species present in this community from their prevalences.
     present_species_logical <- runif(length(global_species_names_vec)) < prevalences_vec
     subset_species_names <- global_species_names_vec[present_species_logical]
     n_subset_species <- length(subset_species_names)
@@ -68,16 +65,14 @@ run_single_simulation <- function(sim_idx, E_global_matrix, monod_constant_globa
         return(list(abundances = current_simulation_abundances, status = simulation_status, sim_idx = sim_idx, n_subset = n_subset_species))
     }
 
-    # 从全局矩阵中提取当前样本的子集
+    # Subset the global interaction and Monod constant matrices.
     E_current_sample <- E_global_matrix[subset_species_names, , drop = FALSE]
-    # [新增代码] 从全局 Monod 矩阵中提取当前样本的子集
     monod_constant_current_sample <- monod_constant_global_matrix[subset_species_names, , drop = FALSE]
     
     current_x0 <- rep(10, n_subset_species)
     names(current_x0) <- subset_species_names
 
-    # 注意：这里的 resources 为 NULL，函数会默认生成随机资源。
-    # 如果希望所有样本的初始资源也相同，需要在这里手动设定一个固定的向量。
+    # NULL lets simulateConsumerResource generate random initial resources.
     current_resources <- NULL 
 
     tse_result <- NULL
@@ -93,7 +88,6 @@ run_single_simulation <- function(sim_idx, E_global_matrix, monod_constant_globa
             E = E_current_sample,
             x0 = current_x0,
             resources = current_resources,
-            # [修改代码] 传入固定的 Monod 常数子集
             monod_constant = monod_constant_current_sample,
             t_end = simulation_t_end_val,
             t_step = 1,
@@ -128,17 +122,17 @@ run_single_simulation <- function(sim_idx, E_global_matrix, monod_constant_globa
     return(list(abundances = current_simulation_abundances, status = simulation_status, sim_idx = sim_idx, n_subset = n_subset_species))
 }
 
-# 设置并行计算集群
-cat("步骤 3: 开始 ", n_simulations, " 次迭代模拟 (使用并行计算)...\n")
+# Set up the parallel cluster.
+cat("Step 3: Starting ", n_simulations, " simulations in parallel...\n")
 min_species_for_simulation <- 10
 
 num_cores <- detectCores() - 5
 if (num_cores < 1) num_cores <- 1 
-cat("检测到CPU核心数 (逻辑):", detectCores(), "将使用:", num_cores, "核心进行并行计算。\n")
+cat("Detected logical CPU cores:", detectCores(), "using:", num_cores, "cores for parallel processing.\n")
 
 cl <- makeCluster(num_cores)
 
-# [修改代码] 将新的全局 Monod 矩阵导出到工作进程
+# Export shared inputs to worker processes.
 clusterExport(cl, varlist = c("E_global", "monod_constant_global", "global_species_names", "prevalences", 
                                 "n_global_resources", "global_resource_names", 
                                 "min_species_for_simulation", "run_single_simulation",
@@ -153,15 +147,14 @@ original_rngkind <- RNGkind()
 RNGkind("L'Ecuyer-CMRG")
 clusterSetRNGStream(cl, iseed = 4567) 
 
-cat("开始并行执行模拟任务...\n")
+cat("Starting parallel simulations...\n")
 start_time <- Sys.time()
 
-# [修改代码] 在调用时传递新的全局 Monod 矩阵
 results_list <- parLapply(cl, 1:n_simulations, function(idx) {
     run_single_simulation(
         sim_idx = idx,
         E_global_matrix = E_global, 
-        monod_constant_global_matrix = monod_constant_global, # <-- 传递新矩阵
+        monod_constant_global_matrix = monod_constant_global,
         global_species_names_vec = global_species_names,
         prevalences_vec = prevalences,
         n_global_resources_val = n_global_resources,
@@ -172,14 +165,13 @@ results_list <- parLapply(cl, 1:n_simulations, function(idx) {
 })
 
 end_time <- Sys.time()
-cat("并行模拟任务完成。耗时:", format(end_time - start_time), "\n")
+cat("Parallel simulations completed. Elapsed time:", format(end_time - start_time), "\n")
 
 stopCluster(cl)
 RNGkind(original_rngkind[1], original_rngkind[2], original_rngkind[3]) 
 
-# --- 处理并行运算的结果 ---
-# (这部分代码与你脚本中一致，无需改动)
-cat("\n正在处理并行模拟结果...\n")
+# --- Process parallel results ---
+cat("\nProcessing parallel simulation results...\n")
 final_abundance_table <- matrix(NA, nrow = n_simulations, ncol = n_global_species,
                                   dimnames = list(paste0("Sample", 1:n_simulations), global_species_names))
 
@@ -206,25 +198,25 @@ for (i in 1:length(results_list)) {
         failed_sim_count <- failed_sim_count + 1
     }
     if (i %% (max(1, n_simulations/10)) == 0 || i == n_simulations || i == 1 ) { 
-        cat("已处理结果:", i, "/", n_simulations, 
-            " (成功:", successful_sim_count, 
-            "失败:", failed_sim_count, 
-            "跳过:", skipped_count, ")\n")
+        cat("Processed results:", i, "/", n_simulations,
+            " (successful:", successful_sim_count,
+            "failed:", failed_sim_count,
+            "skipped:", skipped_count, ")\n")
     }
 }
 
-cat("\n所有模拟数据处理完毕。\n")
-cat("最终成功模拟次数:", successful_sim_count, "\n")
-cat("最终失败模拟次数 (因错误或数据提取问题):", failed_sim_count, "\n")
-cat("最终跳过模拟次数 (因物种太少):", skipped_count, "\n")
+cat("\nAll simulation results have been processed.\n")
+cat("Successful simulations:", successful_sim_count, "\n")
+cat("Failed simulations (errors or data extraction issues):", failed_sim_count, "\n")
+cat("Skipped simulations (too few species):", skipped_count, "\n")
 
 if(!file.exists(E_global_filename)){
     write.csv(E_global, E_global_filename, row.names = TRUE)
-    cat("全局交互矩阵 E_global 已保存到", E_global_filename, "\n")
+    cat("Global interaction matrix E_global saved to", E_global_filename, "\n")
 }
 
-abundance_table_filename <- "data/final_abundance_table_v46.csv"
+abundance_table_filename <- "data/final_abundance_table.csv"
 write.csv(final_abundance_table, abundance_table_filename, row.names = TRUE, na = "NA")
-cat("最终丰度表已保存到", abundance_table_filename, "\n")
+cat("Final abundance table saved to", abundance_table_filename, "\n")
 
-cat("\n脚本执行完毕。\n")
+cat("\nScript completed.\n")
