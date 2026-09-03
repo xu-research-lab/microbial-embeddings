@@ -1,9 +1,8 @@
-# SNEs: Microbial Social Niches Learned from >210,000 Human Gut Microbiomes for Improve Deep Learning-based Disease Classification
+# SNEs: Microbial Social Niches Learned from >210,000 Human Gut Microbiomes to Improve Deep Learning-based Disease Classification
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
-[![Build Status](https://github.com/xu-research-lab/microbial-embeddings/actions/workflows/test.yml/badge.svg)](https://github.com/xu-research-lab/microbial-embeddings/actions/workflows/test.yml)
 
-`membed` package adapts Natural Language Processing techniques to create Social Niche Embeddings(SNEs) for microbes based on their co-occurrence patterns across samples. These embeddings provide ecological representations of microbial taxa based on their community context.
+`membed` package adapts Natural Language Processing techniques to create Social Niche Embeddings (SNEs) for microbes based on their co-occurrence patterns across samples. These embeddings provide ecological representations of microbial taxa based on their community context.
 
 ![SNE](img/img1.png)
 
@@ -22,6 +21,8 @@
 ### Installation
 
 We recommend using Conda to manage the environment and dependencies. Complete installation on a machine with 8 threads and 32GB of RAM usually takes around 45 minutes to download the repository (approx. 32GB total size) + 10 minutes for environment setup.
+
+**Platform requirement:** `membed glove-train` (Part 1, Step 4) shells out to the precompiled GloVe binaries bundled in `membed/glove_build/`, which are x86-64 Linux executables with no C source or build step provided. Generating SNEs therefore requires **Linux x86-64**; macOS and ARM machines cannot run the GloVe training step. Part 2 (classification with the provided pre-trained SNEs) is pure Python/PyTorch and runs on any platform.
 
 0. **Install Git LFS and clone the repository:**
 
@@ -43,6 +44,13 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    # Create a new environment named 'membed'
    conda env create --name membed --file requirements_dev.yml
    conda activate membed
+   ```
+
+   **GPU users:** the environment file pins only `pytorch=1.10.0`, so Conda installs the CPU build and classification silently falls back to CPU even when `--numb 0` is passed. To use a CUDA GPU, install the CUDA build into the same environment, picking the `cudatoolkit` version that matches your driver:
+
+   ```bash
+   conda install -n membed pytorch=1.10.0 cudatoolkit=11.3 -c pytorch -c conda-forge
+   python -c "import torch; print(torch.cuda.is_available())"   # should print True
    ```
 
 2. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
@@ -88,12 +96,12 @@ We adapt the **GloVe** (Global Vectors for Word Representation) model, a techniq
   Note: You can see all available metrics with `membed cooccur --help`. The `abundance_percentile` metric was selected as the primary method in this study. 
 
   + **Parameters**:
-  + `-b`: **[Required]** The input path for the BIOM-format file.
-    
-  + `-c`: **[Required]** The output path for the co-occurrence matrix file.
+    + `-b`: **[Required]** The input path for the BIOM-format file.
+    + `-c`: **[Required]** The output path for the co-occurrence matrix file.
     + `--metric`: Specifies the method used to quantify the association strength between microbes. Options are presence/absence metrics (**russell_rao**, **jaccard**, **faith**), abundance-weighted metrics (**abundance_percentile**, **abundance_totalsum**), Bray-Curtis similarity (**braycurtis_percentile**, **braycurtis_totalsum**), and rank-weighted co-occurrence (**weighted_russell_rao**). The primary metric used in this study, `abundance_percentile`, is designed to overcome the limitations of other methods by assessing the **magnitude** of abundance for a more balanced evaluation, while also using a **percentile rank** transformation to ensure robustness against batch effects and extreme values.
 
-- **Step 3: Calculate the `x_max` Hyperparameter **The `x_max` value is used to down-weight high-frequency co-occurrences during GloVe training, preventing them from dominating the loss function. For this purpose, the 80th percentile of the co-occurrence distribution is adopted as the threshold.
+- **Step 3: Calculate the `x_max` Hyperparameter**
+  The `x_max` value is used to down-weight high-frequency co-occurrences during GloVe training, preventing them from dominating the loss function. For this purpose, the 80th percentile of the co-occurrence distribution is adopted as the threshold.
 
   ```bash
   membed build-x-max-file -c table.co -x xmax_file.npy --percentile_num 80
@@ -160,9 +168,10 @@ The **membed class-attention** module is an attention-based classification model
       --pred-out predictions \
       --num-steps 600 \
       --num-epochs 100 \
-      --loss BCE_loss \
+      --loss BCEWithLogits \
       --p-drop 0.4 \
       --d-ff 200 \
+      --head-hidden 64 \
       --d-model 100 \
       --n-layers 1 \
       --n-heads 1 \
@@ -172,7 +181,7 @@ The **membed class-attention** module is an attention-based classification model
       --numb 0
   ```
 
-  Alternatively, the same model can be called directly from Python (as done in `analysis/Disease_classification_loo/run_attention_biom_with_SNEs.py`):
+  Alternatively, the same model configuration can be run directly from Python (as done in `analysis/Disease_classification_loo/run_attention_biom_with_SNEs.py`):
 
   ```python
   from membed.otu_attention import Attention_biom
@@ -228,7 +237,7 @@ The test data includes:
 - `tests/data/test_Glove.biom`: A small BIOM table for testing the GloVe embedding pipeline
 - `tests/data/test_raw.biom`: A hand-made 5-feature by 3-sample table used by the pytest unit tests
 - `tests/data/IBD_train.biom`, `tests/data/IBD_valid.biom`, `tests/data/IBD_test.biom`: Training, validation and testing data for classification
-- `tests/data/metadata_IBD.txt`: Metadata file mapping sample IDs to labels
+- `tests/data/metadata_IBD.txt`: Metadata file mapping sample IDs to labels. Note: the sample ID column in this file is named `sample` (not `sample_id`), so the classification commands above need `--sample-id-col sample` when run against this test data.
 
 ### Running the pytest test suite
 
@@ -268,6 +277,8 @@ To test the attention-based classification module:
 cd tests
 ./run_classification.sh
 ```
+
+**Device selection:** the script passes `--numb 0` (zero-based CUDA device index) by default and falls back to CPU automatically when no CUDA device is available. Override it via the `NUMB` environment variable, e.g. `NUMB=-1 ./run_classification.sh` to force CPU, or `NUMB=2 ./run_classification.sh` to use `cuda:2`.
 
 **Expected output:** The script will train a classification model and save results in `tests/classification_output/` directory.
 

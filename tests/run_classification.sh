@@ -27,7 +27,9 @@ N_HEADS=1
 WEIGHT_DECAY=0.0001
 LEARNING_RATE=0.001
 BATCH_SIZE=64
-CUDA_VISIBLE_DEVICES=4
+# Zero-based CUDA device index passed to --numb; falls back to CPU when no
+# CUDA device is available. Override with e.g. NUMB=-1 to force CPU.
+NUMB="${NUMB:-0}"
 
 echo "==============================================="
 echo "Running attention-based classification on IBD data"
@@ -74,7 +76,7 @@ HDF5_USE_FILE_LOCKING=FALSE membed class-attention \
     --weight-decay "${WEIGHT_DECAY}" \
     --lr "${LEARNING_RATE}" \
     --batch-size "${BATCH_SIZE}" \
-    --numb "${CUDA_VISIBLE_DEVICES}"
+    --numb "${NUMB}"
 
 # End timer
 end_time=$(date +%s)

@@ -171,15 +171,15 @@ def cooccur(**kwargs):
               '--percentile_num',
               'percentile_num',
               type=click.FloatRange(0, 100),
-              default=10,
+              default=80,
               help='Percentile (0-100) of the co-occurrence values to use as x_max. '
-              'Typical GloVe usage recommends 99.')
+              'This study adopts the 80th percentile.')
 @_common_parameters
 def build_x_max_file(**kwargs):
     """Pick the x_max weighting cutoff from the co-occurrence records.
 
     Example:
-    $ membed build-x-max-file -c table.co -x xmax_file.npy --percentile-num 99
+    $ membed build-x-max-file -c table.co -x xmax_file.npy --percentile-num 80
     """
     set_log_level(kwargs['log'])
 
@@ -323,6 +323,11 @@ def glove_train(**kwargs):
               default=None,
               help='Width of the feed-forward hidden layer in each encoder layer. '
               'Defaults to 4 * --d-model.')
+@click.option('--head-hidden',
+              type=click.INT,
+              default=None,
+              help='Width of the hidden layer in the output head. Defaults to '
+              'd_model // 2; pass 0 for the single-linear-layer head.')
 @click.option('--n-layers', 
               type=click.INT, 
               default=2,
@@ -349,7 +354,7 @@ def glove_train(**kwargs):
               default=1,
               help='Number of training epochs')
 @click.option('--loss',
-              type=click.Choice(['BCE_loss', 'FocalLoss']),
+              type=click.Choice(['BCE_loss', 'BCEWithLogits', 'FocalLoss']),
               default='BCE_loss',
               help='Criterion to train with.')
 @click.option('--alpha',
@@ -398,9 +403,9 @@ def class_attention(**kwargs):
         for key in ('metadata', 'labels_col', 'sample_id_col', 'train_biom',
                     'valid_biom', 'test_biom', 'embedding_birnn',
                     'plotfile_loss', 'plotfile_auc', 'num_steps', 'p_drop',
-                    'batch_size', 'd_model', 'd_ff', 'n_layers', 'n_heads',
-                    'numb', 'lr', 'weight_decay', 'num_epochs', 'loss', 'alpha',
-                    'glove_embedding', 'pred_out')
+                    'batch_size', 'd_model', 'd_ff', 'head_hidden', 'n_layers',
+                    'n_heads', 'numb', 'lr', 'weight_decay', 'num_epochs',
+                    'loss', 'alpha', 'glove_embedding', 'pred_out')
     }
     Attention_biom(**params)
 
