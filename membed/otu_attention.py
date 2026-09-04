@@ -12,24 +12,27 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import Dataset, DataLoader
 from sklearn.metrics import confusion_matrix, f1_score, matthews_corrcoef, accuracy_score
-from sklearn.model_selection import StratifiedShuffleSplit, GroupShuffleSplit
 from sklearn import metrics
 
 
 def gpu(i=0):
-    """Select a CUDA device by index.
+    """Select a CUDA device by index, falling back to CPU.
 
     Parameters
     ----------
     i : int, optional
-        Zero-based CUDA device index. Default is 0.
+        Zero-based CUDA device index. Default is 0. A negative index, or a
+        machine without CUDA, falls back to CPU.
 
     Returns
     -------
     torch.device
-        Device handle referring to ``cuda:i``.
+        Device handle referring to ``cuda:i``, or ``cpu`` when CUDA is
+        unavailable or `i` is negative.
     """
-    return torch.device(f'cuda:{i}')
+    if i is not None and i >= 0 and torch.cuda.is_available():
+        return torch.device(f'cuda:{i}')
+    return torch.device('cpu')
 
 
 def num_gpus():
@@ -54,7 +57,7 @@ def try_all_gpus(numb):
     Parameters
     ----------
     numb : int
-        Zero-based CUDA device index.
+        Zero-based CUDA device index; a negative value selects CPU.
 
     Returns
     -------
@@ -419,6 +422,12 @@ class load_data_imdb(Dataset):
         BIOM sample IDs, aligned with the rows of `features`.
     otu : numpy.ndarray
         Rank-normalized OTU matrix of shape ``(n_samples, n_features)``.
+    logit_offset : torch.Tensor
+        Per-sample additive offset on the logit, zero unless
+        :meth:`set_logit_offset` installs one.
+    sample_weight : torch.Tensor
+        Per-sample multiplier on the loss, one unless
+        :meth:`set_sample_weight` installs another.
     """
 
     def __init__(self, biom_table, metadata, labels_col, sample_id_col,
@@ -437,6 +446,9 @@ class load_data_imdb(Dataset):
         # than looked up in the training loop because the loader shuffles and
         # resamples, so the offset has to travel with its own sample.
         self.logit_offset = torch.zeros(len(labels), dtype=torch.float)
+        # The same argument, for the multiplicative half: a per-sample loss
+        # weight has to reach the criterion alongside the sample it belongs to.
+        self.sample_weight = torch.ones(len(labels), dtype=torch.float)
 
     def truncate_pad(self, otu, feature_ids, num_steps):
         """Truncate or pad each sample's OTUs to a fixed-length sequence.
@@ -525,6 +537,37 @@ class load_data_imdb(Dataset):
                 f"{len(self.labels)} samples")
         self.logit_offset = torch.tensor(offsets, dtype=torch.float)
 
+    def set_sample_weight(self, weights):
+        """Install a per-sample loss weight, aligned with the table's rows.
+
+        Parameters
+        ----------
+        weights : array_like
+            One non-negative float per sample, in the order :attr:`sample_ids`
+            holds. See :func:`group_balance_weights`.
+
+        Raises
+        ------
+        ValueError
+            If `weights` is not one value per sample, or holds a negative or
+            non-finite entry.
+        """
+        weights = np.asarray(weights, dtype=float).ravel()
+        if len(weights) != len(self.labels):
+            raise ValueError(
+                f"weights has {len(weights)} entries but the table holds "
+                f"{len(self.labels)} samples")
+        if not np.isfinite(weights).all():
+            raise ValueError("weights holds a non-finite entry")
+        if (weights < 0).any():
+            # A negative weight does not down-weight a sample, it optimises it
+            # backwards -- the model would be pushed to get it wrong.
+            raise ValueError(
+                f"weights holds {int((weights < 0).sum())} negative "
+                f"entr(ies); a negative weight ascends the loss for that "
+                f"sample rather than ignoring it")
+        self.sample_weight = torch.tensor(weights, dtype=torch.float)
+
     def __call__(self):
         """Return the vocabulary built from the table's feature IDs.
 
@@ -556,10 +599,13 @@ class load_data_imdb(Dataset):
         logit_offset : torch.Tensor
             Scalar logit offset for the sample, 0 unless
             :meth:`set_logit_offset` installed one.
+        sample_weight : torch.Tensor
+            Scalar loss weight for the sample, 1 unless
+            :meth:`set_sample_weight` installed another.
         """
         return (self.features[index, ], self.abundance[index, ],
                 self.labels[index], self.mask[index],
-                self.logit_offset[index])
+                self.logit_offset[index], self.sample_weight[index])
 
     def __len__(self):
         """Return the number of samples.
@@ -695,10 +741,178 @@ def logit_adjust_offsets(strata, labels, tau=1.0, verbose=True):
             print(f"[logitadj] * {', '.join(clamped)} hold one class only; "
                   f"their offset is clamped to +/-{tau * cap:.3f} rather than "
                   f"infinite, which would zero their gradients")
-        print(f"[logitadj] validation and test see raw logits -- the offset is "
-              f"a training-time device, so the scores it selects and reports "
-              f"on are already free of the base rate")
+        print("[logitadj] validation and test see raw logits -- the offset is "
+              "a training-time device, so the scores it selects and reports "
+              "on are already free of the base rate")
     return offsets, per_disease
+
+
+def group_balance_weights(strata, labels, beta=0.5, max_ratio=None,
+                          verbose=True):
+    """Per-sample loss weights that even out each disease's share of the loss.
+
+    Every criterion here reduces with ``'mean'``, an unweighted average over
+    samples, so a disease with twenty times the samples of another contributes
+    twenty times the gradient. On the pooled tasks that is the difference
+    between a model that learned twelve diseases and one that learned the three
+    biggest and carried the rest along, which a pooled AUC will not show.
+
+    The weight is ``n_d ** -beta`` for a sample of disease *d*, rescaled so the
+    weights average to one::
+
+        w_i = n_{d(i)} ** -beta  *  N / sum_j n_{d(j)} ** -beta
+
+    That last rescaling is what keeps `lr`, `patience` and `min_delta` meaning
+    what they meant before, and what makes the loss comparable across members
+    whose training parts hold different numbers of diseases -- under
+    ``inner_split='per_disease'`` a member can be missing a disease entirely.
+
+    This corrects the disease's **size**. It is orthogonal to
+    :func:`logit_adjust_offsets`, which corrects the case/control base rate
+    *within* a disease and out of whose ratio the size cancels: one is a
+    multiplicative weight on the loss, the other an additive offset on the
+    logit, and ``loss='GroupBalanced+LogitAdjusted'`` applies both without
+    either double-counting the other.
+
+    Parameters
+    ----------
+    strata : array_like
+        Disease of each training sample. See :func:`read_strata`.
+    labels : array_like
+        0/1 class label of each training sample, same order. Read only for the
+        per-disease table `verbose` prints; the weights depend on the disease's
+        size alone.
+    beta : float, optional
+        Strength, in ``[0, 1]``. Default is 0.5. ``0`` weights every sample
+        alike and is exactly the unweighted loss; ``1`` gives every disease the
+        same total, whatever its size. Unlike the `tau` of
+        :func:`logit_adjust_offsets`, whose default is the full 1.0, this
+        defaults to half strength: an offset costs no gradient magnitude, while
+        a weight multiplies it, and at ``beta=1`` a twentyfold size gap becomes
+        a twentyfold gap in how hard one sample pulls.
+    max_ratio : float, optional
+        Cap on the weight ratio between the smallest disease and the largest,
+        applied before the rescaling. Default is None, which leaves the ratio
+        at its natural ``(n_max / n_min) ** beta``. The analogue of
+        `min_group_n` in :func:`macro_auc`: a disease down to a handful of
+        samples is the one case where the weight grows large enough to make the
+        gradient mostly noise, and this bounds it without dropping the disease.
+    verbose : bool, optional
+        Print the per-disease table. Default is True.
+
+    Returns
+    -------
+    weights : numpy.ndarray
+        Float weight per sample, aligned with `strata`, multiplied into the
+        per-sample loss during training only.
+    per_disease : dict
+        ``{disease: weight}``, for the record.
+
+    Raises
+    ------
+    ValueError
+        If `strata` and `labels` differ in length, if `beta` is not finite or
+        falls outside ``[0, 1]``, or if `max_ratio` is below one.
+
+    Notes
+    -----
+    Held-out data is never weighted. The weights come from the *training*
+    counts, and the validation part has a different mix of diseases -- under
+    ``inner_split='per_disease'`` it holds exactly one -- so there is no
+    meaningful weight to give it. The consequence is that with
+    ``select_by='loss'`` the epoch would be chosen on a quantity training is
+    not optimising; pair this with ``select_by='auc'``.
+
+    Reweighting trades bias for variance, and the printed effective sample
+    size, ``(sum w)^2 / sum w^2``, is how much of the training set is left in
+    that trade: at ``beta=1`` on a pool whose diseases run 40 to 820 samples it
+    falls to about a third, and the gradient's sampling noise rises by half
+    again. Lower `beta` before reaching for `max_ratio`.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> s = np.array(['A'] * 2 + ['B'] * 6)
+    >>> y = np.array([1, 0, 1, 1, 1, 0, 0, 0])
+    >>> w, per = group_balance_weights(s, y, beta=1.0, verbose=False)
+    >>> round(per['A'], 4), round(per['B'], 4)
+    (2.0, 0.6667)
+    >>> float(w.mean())
+    1.0
+    """
+    strata = np.asarray([str(s) for s in strata])
+    labels = np.asarray(labels).astype(int).ravel()
+    if len(strata) != len(labels):
+        raise ValueError(
+            f"strata has {len(strata)} entries but labels has {len(labels)}; "
+            f"they must be aligned with the same dataset")
+    if not np.isfinite(beta):
+        raise ValueError(f"beta must be finite, got {beta!r}")
+    if beta < 0 or beta > 1:
+        raise ValueError(
+            f"beta must lie in [0, 1], got {beta!r}; below zero it would "
+            f"amplify the size imbalance instead of evening it out, and above "
+            f"one a rare disease would carry more of the loss in total than a "
+            f"common one, which is past the point of equal footing")
+    if max_ratio is not None:
+        if not np.isfinite(max_ratio):
+            raise ValueError(f"max_ratio must be finite, got {max_ratio!r}")
+        if max_ratio < 1:
+            raise ValueError(
+                f"max_ratio must be >= 1, got {max_ratio!r}; below one it "
+                f"would invert the cap and hold the rarest disease *under* the "
+                f"most common one")
+
+    # sorted() so the table and the arithmetic depend on the data alone, not on
+    # the order the diseases happen to appear in.
+    groups = sorted(set(strata))
+    counts = {d: int((strata == d).sum()) for d in groups}
+    n_pos = {d: int((labels[strata == d] == 1).sum()) for d in groups}
+
+    raw = {d: float(counts[d] ** -float(beta)) for d in groups}
+    clamped = []
+    if max_ratio is not None:
+        cap = max_ratio * min(raw.values())
+        for d in groups:
+            if raw[d] > cap:
+                raw[d] = cap
+                clamped.append(d)
+
+    # Rescale to mean one. sum_d raw_d * n_d is the unnormalised total, so
+    # dividing N by it puts the average weight at exactly 1.0 -- and at beta=0,
+    # where every raw_d is 1, that total is N and every weight is exactly 1.0.
+    n_total = len(strata)
+    scale = n_total / sum(raw[d] * counts[d] for d in groups)
+    per_disease = {d: raw[d] * scale for d in groups}
+    weights = np.array([per_disease[d] for d in strata], dtype=float)
+
+    if verbose:
+        n_eff = weights.sum() ** 2 / (weights ** 2).sum()
+        print(f"[gbal] beta {beta:g} -- each disease's share of the training "
+              f"loss rescaled by n^-{beta:g} ({len(groups)} diseases, "
+              f"{n_total} samples)")
+        order = sorted(groups, key=lambda d: -per_disease[d])
+        width = max(len(str(d)) for d in order)
+        for d in order[:12]:
+            star = " *" if d in clamped else ""
+            print(f"[gbal] {str(d):<{width}} n {counts[d]:5d}  case "
+                  f"{n_pos[d]:5d} / ctrl {counts[d] - n_pos[d]:5d} -> weight "
+                  f"{per_disease[d]:6.3f}, "
+                  f"{per_disease[d] * counts[d] / n_total:5.1%} of the loss "
+                  f"(was {counts[d] / n_total:5.1%}){star}")
+        if len(order) > 12:
+            print(f"[gbal] ... and {len(order) - 12} more")
+        if clamped:
+            print(f"[gbal] * {', '.join(clamped)} hit the max_ratio "
+                  f"{max_ratio:g} cap, so they carry less than beta {beta:g} "
+                  f"alone would give them")
+        spread = max(per_disease.values()) / min(per_disease.values())
+        print(f"[gbal] weight ratio {spread:.1f}x rarest/commonest; effective "
+              f"sample size {n_eff:.0f}/{n_total}, so the gradient's sampling "
+              f"noise rises about {np.sqrt(n_total / n_eff) - 1:.0%}")
+        print("[gbal] validation loss is not weighted -- these weights come "
+              "from the training counts, so pair this with select_by='auc'")
+    return weights, per_disease
 
 
 class LogitAdjustedLoss(nn.Module):
@@ -732,6 +946,58 @@ class LogitAdjustedLoss(nn.Module):
         return nn.functional.binary_cross_entropy_with_logits(
             logits.float(), targets.float(), pos_weight=self.pos_weight,
             reduction=self.reduction)
+
+
+class GroupBalancedLoss(nn.Module):
+    """Binary cross-entropy with a per-sample weight, and optionally an offset.
+
+    The weight evens out how much each disease contributes to the gradient,
+    which an unweighted mean leaves proportional to the disease's sample count.
+    See :func:`group_balance_weights` for where the numbers come from.
+
+    It also accepts the additive `offset` of :class:`LogitAdjustedLoss`, so the
+    two corrections compose: the weight is multiplicative on the loss and the
+    offset additive on the logit, they address the disease's size and its
+    case/control base rate respectively, and neither double-counts the other.
+    ``loss='GroupBalanced+LogitAdjusted'`` is that combination. Left at None,
+    each half simply does nothing.
+
+    Parameters
+    ----------
+    pos_weight : torch.Tensor, optional
+        Passed through to the underlying criterion. Default is None, and it is
+        not wanted here -- a global class prior on top of a per-disease
+        reweighting corrects the same imbalance twice, from two directions.
+    reduction : {'mean', 'sum'}, optional
+        How the per-sample losses are aggregated. Default is ``'mean'``.
+
+    Notes
+    -----
+    Under ``'mean'`` the sum of the weighted losses is divided by the **batch
+    size**, not by the batch's weight sum. That is deliberate. Renormalising
+    per batch would leave only the weights' relative order inside each batch
+    and throw away the part that matters: a rare disease earns its extra
+    influence by making the step *larger* on the batches it lands in, and
+    dividing that back out would leave the knob doing almost nothing. Since
+    :func:`group_balance_weights` scales the weights to average one, the loss
+    stays on the same scale as the unweighted criterion either way.
+    """
+
+    def __init__(self, pos_weight=None, reduction='mean'):
+        """Store the criterion configuration."""
+        super().__init__()
+        self.pos_weight = pos_weight
+        self.reduction = reduction
+
+    def forward(self, logits, targets, offset=None, weight=None):
+        """Weighted loss on ``logits + offset``; None for either skips it."""
+        if offset is not None:
+            logits = logits + offset.to(logits.device, dtype=logits.dtype)
+        return nn.functional.binary_cross_entropy_with_logits(
+            logits.float(), targets.float(),
+            weight=(None if weight is None
+                    else weight.to(logits.device, dtype=torch.float)),
+            pos_weight=self.pos_weight, reduction=self.reduction)
 
 
 class otuEmbedding:
@@ -1564,7 +1830,7 @@ class Timer:
         return np.array(self.times).cumsum().tolist()
 
 
-def criterion_value(loss, logits, targets, offset=None):
+def criterion_value(loss, logits, targets, offset=None, weight=None):
     """Evaluate a criterion on whichever of logits or probabilities it expects.
 
     :class:`torch.nn.BCEWithLogitsLoss` folds the sigmoid into the loss and
@@ -1582,7 +1848,11 @@ def criterion_value(loss, logits, targets, offset=None):
         Binary targets of shape ``(batch,)``, as floats.
     offset : torch.Tensor, optional
         Per-sample logit offset of shape ``(batch,)``, used only by
-        :class:`LogitAdjustedLoss` and ignored by every other criterion.
+        :class:`LogitAdjustedLoss` and :class:`GroupBalancedLoss`, and ignored
+        by every other criterion. Default is None.
+    weight : torch.Tensor, optional
+        Per-sample loss weight of shape ``(batch,)``, used only by
+        :class:`GroupBalancedLoss` and ignored by every other criterion.
         Default is None.
 
     Returns
@@ -1599,6 +1869,11 @@ def criterion_value(loss, logits, targets, offset=None):
     ``BCELoss`` to clamp its logarithm at -100 -- a clamp that returns a
     gradient of zero for the samples the model is most wrong about.
     """
+    # GroupBalancedLoss first, and deliberately not a subclass of
+    # LogitAdjustedLoss: it takes one more argument than the branch below, so
+    # subclassing to share an isinstance check would silently drop the weight.
+    if isinstance(loss, GroupBalancedLoss):
+        return loss(logits, targets, offset, weight)
     if isinstance(loss, LogitAdjustedLoss):
         return loss(logits, targets, offset)
     if isinstance(loss, nn.BCEWithLogitsLoss):
@@ -1607,7 +1882,7 @@ def criterion_value(loss, logits, targets, offset=None):
 
 
 def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices,
-                     offset=None):
+                     offset=None, weight=None):
     """Run one training step on a minibatch.
 
     The model output is squeezed to shape ``(batch,)``. Whether the criterion
@@ -1634,6 +1909,13 @@ def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices,
         Optimizer used to apply the gradient step.
     devices : list of torch.device
         Devices to use; only ``devices[0]`` is used.
+    offset : torch.Tensor, optional
+        Per-sample logit offset of shape ``(batch,)``, moved to the device and
+        handed to :func:`criterion_value`. Default is None.
+    weight : torch.Tensor, optional
+        Per-sample loss weight of shape ``(batch,)``, likewise. Default is
+        None. Both ride on the batch rather than being looked up here, since
+        the loader shuffles and only the dataset knows which sample is which.
 
     Returns
     -------
@@ -1655,7 +1937,9 @@ def train_batch_ch13(net, X, y, abundance, loss, mask, trainer, devices,
     logits = torch.squeeze(logits, dim=1)
     l = criterion_value(loss, logits, y.float(),
                         offset=None if offset is None
-                        else offset.to(devices[0]))
+                        else offset.to(devices[0]),
+                        weight=None if weight is None
+                        else weight.to(devices[0]))
     l.backward()
     trainer.step()
     train_loss_sum = l.sum().detach()
@@ -1810,7 +2094,7 @@ def predict_iter(net, data_iter, devices, loss=None):
     n_batches = 0
     probs, labels_all = [], []
     with torch.no_grad():
-        for features, abundance, labels, mask, offset in data_iter:
+        for features, abundance, labels, mask, offset, weight in data_iter:
             X = features.to(devices[0])
             abundance = abundance.to(devices[0])
             mask = mask.to(devices[0])
@@ -1819,9 +2103,13 @@ def predict_iter(net, data_iter, devices, loss=None):
             prob = torch.sigmoid(logits)
             if loss is not None:
                 y = labels.to(devices[0], dtype=torch.int64)
-                # No offset here on purpose: the held-out cohorts are scored
-                # on the prior-free logits, which is the whole point of
-                # adjusting during training only.
+                # Neither the offset nor the weight here, on purpose. The
+                # held-out cohorts are scored on the prior-free logits, which
+                # is the whole point of adjusting during training only; and the
+                # weights are computed from the *training* disease counts, so
+                # on a validation part with a different mix of diseases -- one
+                # single disease, under inner_split='per_disease' -- there is
+                # no meaningful weight to apply.
                 total_loss += float(criterion_value(loss, logits, y.float()))
             probs.append(to_numpy(prob))
             labels_all.append(to_numpy(labels))
@@ -1885,16 +2173,27 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, num_epochs,
     `ckpt_path` and the optimal threshold **of that same epoch** is recorded,
     so the returned threshold always matches the returned weights.
 
+    Under :class:`GroupBalancedLoss` the training loss is a weighted mean while
+    the validation loss stays a plain one, so the two curves on `plotfile_loss`
+    share a scale -- the weights average to one -- without being the same
+    quantity. With ``select_by='auc'`` that costs nothing, since the validation
+    loss then decides nothing; with ``select_by='loss'`` the epoch is chosen on
+    a quantity training is not optimising.
+
     Parameters
     ----------
     net : torch.nn.Module
         Model to train.
     train_iter : torch.utils.data.DataLoader
-        Loader yielding ``(features, abundance, labels, mask)`` batches, with
-        `features`, `abundance`, and `mask` of shape ``(batch, seq_len)`` and
-        `labels` of shape ``(batch,)`` holding 0/1 class labels.
+        Loader yielding ``(features, abundance, labels, mask, logit_offset,
+        sample_weight)`` batches, with `features`, `abundance`, and `mask` of
+        shape ``(batch, seq_len)`` and the other three of shape ``(batch,)``.
+        The last two are the per-sample channels of
+        :func:`logit_adjust_offsets` and :func:`group_balance_weights`; they
+        are inert defaults unless the caller installed them on the dataset.
     valid_iter : torch.utils.data.DataLoader
-        Validation loader with the same structure as `train_iter`.
+        Validation loader with the same structure as `train_iter`. Its last two
+        channels are never read -- see :func:`predict_iter`.
     loss : torch.nn.Module
         Loss criterion, on either logits or probabilities; see
         :func:`criterion_value`.
@@ -1977,10 +2276,10 @@ def train_cls(net, train_iter, valid_iter, loss, trainer, num_epochs,
         train_loss = 0.0
         n_batches = 0
         train_probs, train_labels = [], []
-        for features, abundance, labels, mask, offset in train_iter:
+        for features, abundance, labels, mask, offset, weight in train_iter:
             l, pred = train_batch_ch13(
                 net, features, labels, abundance, loss, mask, trainer, devices,
-                offset=offset)
+                offset=offset, weight=weight)
             train_loss += float(l)
             train_probs.append(to_numpy(pred))
             train_labels.append(to_numpy(labels))
@@ -2293,7 +2592,9 @@ def Attention_biom(
         disease_col='disease_name_ab',
         valid_auc='pooled',
         min_group_n=0,
-        logit_adjust_tau=1.0):
+        logit_adjust_tau=1.0,
+        group_balance_beta=0.5,
+        group_balance_max_ratio=None):
     """Run the end-to-end training pipeline for OTU-based microbiome analysis.
 
     The training table is split into a training and a validation part. Training
@@ -2343,17 +2644,27 @@ def Attention_biom(
     n_heads : int, optional
         Number of attention heads per layer. Default is 2.
     numb : int, optional
-        Zero-based CUDA device index. Default is 1.
+        Zero-based CUDA device index; a negative value runs on CPU.
+        Default is 1.
     lr : float, optional
         Learning rate for the Adam optimizer. Default is 0.0005.
     weight_decay : float, optional
         L2 regularization strength. Default is 0.
     num_epochs : int, optional
         Number of training epochs. Default is 100.
-    loss : {'BCE_loss', 'BCEWithLogits', 'FocalLoss'}, optional
-        Which criterion to build. Default is ``'BCE_loss'``.
+    loss : str, optional
+        Which criterion to build, one of ``'BCE_loss'``, ``'BCEWithLogits'``,
+        ``'FocalLoss'``, ``'LogitAdjusted'``, ``'GroupBalanced'`` or
+        ``'GroupBalanced+LogitAdjusted'``. Default is ``'BCE_loss'``.
         ``'BCEWithLogits'`` is the same objective computed in its numerically
-        stable fused form, and is the only one that accepts `pos_weight`.
+        stable fused form, and is the only one that accepts `pos_weight`. The
+        last three need `disease_col` and a training table spanning several
+        diseases: ``'LogitAdjusted'`` removes each disease's case/control base
+        rate from the training logits (`logit_adjust_tau`),
+        ``'GroupBalanced'`` evens out how much each disease contributes to the
+        loss (`group_balance_beta`), and the combined name applies both --
+        they correct a disease's base rate and its size respectively, which are
+        different quantities reached by different means.
     alpha : float, optional
         Positive-class weight, used only by ``'FocalLoss'``. Default is 0.6.
     glove_embedding : str, optional
@@ -2398,9 +2709,10 @@ def Attention_biom(
         than how the samples are ordered, so it moves the thresholded metrics
         far more than it moves the AUC.
     disease_col : str, optional
-        Metadata column naming each sample's disease, read only under
-        ``valid_auc='macro'`` and ``loss='LogitAdjusted'``. Default is
-        ``'disease_name_ab'``.
+        Metadata column naming each sample's disease, read under
+        ``valid_auc='macro'`` and under the ``'LogitAdjusted'``,
+        ``'GroupBalanced'`` and ``'GroupBalanced+LogitAdjusted'`` losses.
+        Default is ``'disease_name_ab'``.
     valid_auc : {'pooled', 'macro'}, optional
         How the validation AUC that selects the epoch is formed. ``'pooled'``
         (default) is one AUC over every validation sample at once -- unchanged
@@ -2424,11 +2736,31 @@ def Attention_biom(
         from the *selection* even though the model is still trained on them.
         Read the ``[macro] scored:`` line of a run to pick a value.
     logit_adjust_tau : float, optional
-        Strength of the logit adjustment applied when ``loss='LogitAdjusted'``,
-        ignored otherwise. Default is 1.0, which removes each disease's
-        case/control base rate exactly (Menon et al., ICLR 2021); 0 leaves the
-        logits alone and reduces the loss to plain ``BCEWithLogits``. Requires
-        `disease_col`. See :func:`logit_adjust_offsets`.
+        Strength of the logit adjustment applied when ``loss='LogitAdjusted'``
+        or ``'GroupBalanced+LogitAdjusted'``, ignored otherwise. Default is
+        1.0, which removes each disease's case/control base rate exactly
+        (Menon et al., ICLR 2021); 0 leaves the logits alone and reduces that
+        half to plain ``BCEWithLogits``. Requires `disease_col`. See
+        :func:`logit_adjust_offsets`.
+    group_balance_beta : float, optional
+        Strength of the per-disease loss reweighting applied when
+        ``loss='GroupBalanced'`` or ``'GroupBalanced+LogitAdjusted'``, ignored
+        otherwise. In ``[0, 1]``; default is 0.5. ``0`` weights every sample
+        alike and is exactly the unweighted loss, ``1`` gives every disease the
+        same total whatever its size. It defaults to half strength rather than
+        to the full 1.0 of `logit_adjust_tau` because the two cost different
+        things: an offset does not change how hard a sample pulls, a weight
+        multiplies it, and this is the only mechanism in the model that can
+        make one sample's gradient twenty times another's. Requires
+        `disease_col`. See :func:`group_balance_weights`.
+    group_balance_max_ratio : float, optional
+        Cap on the weight ratio between the smallest disease and the largest,
+        under the same losses. Default is None, which leaves the ratio at its
+        natural ``(n_max / n_min) ** group_balance_beta``. The counterpart of
+        `min_group_n`, for the one case where reweighting bites: a disease down
+        to a handful of training samples earns a weight large enough that its
+        contribution is mostly noise. Read the ``[gbal]`` lines of a run to
+        pick a value. See :func:`group_balance_weights`.
 
     Returns
     -------
@@ -2556,12 +2888,18 @@ def Attention_biom(
         trainer = torch.optim.Adam(
             net.parameters(), lr=lr, weight_decay=weight_decay)
     if pos_weight is not None and loss != "BCEWithLogits":
+        hint = ""
+        if loss in ("LogitAdjusted", "GroupBalanced+LogitAdjusted"):
+            hint = (" -- LogitAdjusted already corrects a class prior, per "
+                    "disease, so stacking pos_weight on top would correct it "
+                    "twice")
+        elif loss == "GroupBalanced":
+            hint = (" -- GroupBalanced already installs a per-sample weight, "
+                    "and pos_weight would multiply a second one over the top "
+                    "of it, balancing the classes globally while the diseases "
+                    "are being balanced individually")
         raise ValueError(f"pos_weight applies only to loss='BCEWithLogits', "
-                         f"not {loss!r}"
-                         + (" -- LogitAdjusted already corrects a class prior, "
-                            "per disease, so stacking pos_weight on top would "
-                            "correct it twice"
-                            if loss == "LogitAdjusted" else ""))
+                         f"not {loss!r}" + hint)
     if loss == "FocalLoss":
         loss = FocalLoss(alpha=alpha, devices=devices)
     elif loss == "BCEWithLogits":
@@ -2590,11 +2928,31 @@ def Attention_biom(
                                           tau=logit_adjust_tau)
         full_train.set_logit_offset(offsets)
         loss = LogitAdjustedLoss(pos_weight=None, reduction='mean')
+    elif loss in ("GroupBalanced", "GroupBalanced+LogitAdjusted"):
+        # Both channels ride on the training dataset for the same reason the
+        # offsets alone do: the loader shuffles, so each per-sample quantity
+        # has to travel with its own sample. read_strata is called once and
+        # serves both.
+        gb_strata = read_strata(metadata, sample_id_col, disease_col,
+                                full_train.sample_ids)
+        weights, _ = group_balance_weights(
+            gb_strata, train_labels, beta=group_balance_beta,
+            max_ratio=group_balance_max_ratio)
+        full_train.set_sample_weight(weights)
+        if loss == "GroupBalanced+LogitAdjusted":
+            # Orthogonal to the weights: a multiplicative term on the loss and
+            # an additive one on the logit, correcting the disease's size and
+            # its base rate respectively. Neither undoes the other.
+            offsets, _ = logit_adjust_offsets(gb_strata, train_labels,
+                                              tau=logit_adjust_tau)
+            full_train.set_logit_offset(offsets)
+        loss = GroupBalancedLoss(pos_weight=None, reduction='mean')
     elif loss == "BCE_loss" or loss is None:
         loss = nn.BCELoss(weight=None, reduction='mean')
     else:
         raise ValueError(f"unsupported loss {loss!r}; expected 'BCE_loss', "
-                         f"'BCEWithLogits', 'FocalLoss', or 'LogitAdjusted'")
+                         f"'BCEWithLogits', 'FocalLoss', 'LogitAdjusted', "
+                         f"'GroupBalanced', or 'GroupBalanced+LogitAdjusted'")
 
     print(f"[train] lr {lr}, epochs {num_epochs}, patience {patience}, "
           f"min_delta {min_delta}, select_by {select_by}")

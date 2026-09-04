@@ -1,0 +1,1 @@
+{"task": "lodo", "fold": "PD", "member": 1, "valid_unit": "m1", "inner_mode": "disease_loso", "strategy": "disease_loso", "epoch": 5, "valid_auc": 0.6382436125471722, "n_valid": 2441, "test_auc": 0.5824984409191382, "abund_mode": "multiply", "out_dir": "Data/loo_all_diseases/results_with_SNEs_ckpt/PD/members/m1", "gpu": 5}

@@ -7,6 +7,7 @@ set -e  # Exit on error
 # Configuration
 EMBEDDING_FILE="../data/social_niche_embedding_100.txt"
 TRAIN_BIOM="data/IBD_train.biom"
+VALID_BIOM="data/IBD_valid.biom"
 TEST_BIOM="data/IBD_test.biom"
 METADATA_FILE="data/metadata_IBD.txt"
 OUTPUT_DIR="classification_output"
@@ -26,7 +27,9 @@ N_HEADS=1
 WEIGHT_DECAY=0.0001
 LEARNING_RATE=0.001
 BATCH_SIZE=64
-CUDA_VISIBLE_DEVICES=4
+# Zero-based CUDA device index passed to --numb; falls back to CPU when no
+# CUDA device is available. Override with e.g. NUMB=-1 to force CPU.
+NUMB="${NUMB:-0}"
 
 echo "==============================================="
 echo "Running attention-based classification on IBD data"
@@ -36,7 +39,7 @@ echo "==============================================="
 mkdir -p "${OUTPUT_DIR}"
 
 # Check if required files exist
-for file in "${EMBEDDING_FILE}" "${TRAIN_BIOM}" "${TEST_BIOM}" "${METADATA_FILE}"; do
+for file in "${EMBEDDING_FILE}" "${TRAIN_BIOM}" "${VALID_BIOM}" "${TEST_BIOM}" "${METADATA_FILE}"; do
     if [[ ! -f "${file}" ]]; then
         echo "Error: Required file not found: ${file}"
         exit 1
@@ -54,6 +57,7 @@ start_time=$(date +%s)
 HDF5_USE_FILE_LOCKING=FALSE membed class-attention \
     -g "${EMBEDDING_FILE}" \
     -tra_otu "${TRAIN_BIOM}" \
+    -val_otu "${VALID_BIOM}" \
     -tes_otu "${TEST_BIOM}" \
     -m "${METADATA_FILE}" \
     --labels_col "${LABELS_COL}" \
@@ -72,7 +76,7 @@ HDF5_USE_FILE_LOCKING=FALSE membed class-attention \
     --weight-decay "${WEIGHT_DECAY}" \
     --lr "${LEARNING_RATE}" \
     --batch-size "${BATCH_SIZE}" \
-    --numb "${CUDA_VISIBLE_DEVICES}"
+    --numb "${NUMB}"
 
 # End timer
 end_time=$(date +%s)

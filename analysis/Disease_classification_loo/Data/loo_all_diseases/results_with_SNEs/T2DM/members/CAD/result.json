@@ -1,0 +1,1 @@
+{"task": "lodo", "fold": "T2DM", "member": 3, "valid_unit": "CAD", "inner_mode": "per_disease", "strategy": "per_disease", "epoch": 19, "valid_auc": 0.7373737373737375, "n_valid": 63, "test_auc": 0.6512517076805706, "abund_mode": "multiply", "out_dir": "Data/loo_all_diseases/results_with_SNEs_test_remove_lowsample/T2DM/members/CAD", "gpu": 5}

@@ -1,0 +1,3 @@
+task,source,disease,emb_type,silhouette,p_shuffle,mds_stress,n_markers
+lodo,attn,pooled,Phylo,0.025049629777019553,0.001,740.7787978250487,100
+lodo,attn,pooled,SNE,0.11855428662704942,0.001,365.191743557431,100

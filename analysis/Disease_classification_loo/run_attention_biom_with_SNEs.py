@@ -72,6 +72,11 @@ Usage
       --gpus 0 1 2 3 4 5 6 7 --run-name rf_loso
   python run_attention_biom_with_SNEs.py --tasks lodo \
       --inner-split disease_loso --n-estimators 8 --run-name rf_dloso
+  python run_attention_biom_with_SNEs.py --tasks lodo loso_all \
+      --inner-split per_disease --run-name rf_pdis
+  python run_attention_biom_with_SNEs.py --tasks lodo loso_all \
+      --set loss=GroupBalanced --group-balance-beta 0.5 \
+      --valid-auc macro --run-name rf_gb05
 """
 from __future__ import annotations
 
@@ -79,6 +84,7 @@ import argparse
 import json
 import multiprocessing as mp
 import os
+import re
 import shutil
 import time
 import traceback
@@ -99,7 +105,7 @@ from biom.util import biom_open
 # =====================================================================
 TASKS = {
     "disease": dict(
-        run_tsv="run_test.tsv",
+        run_tsv="run_leave_one_study_out_each_diease_list.tsv",
         train="Data/disease_data/{disease}/{study}/train_loo.biom",
         test="Data/disease_data/{disease}/{study}/test_loo.biom",
         meta="Data/disease_data/{disease}/metadata.tsv",
@@ -134,6 +140,14 @@ TASKS = {
         artifact="Data/loo_all_studies/",
         results="loso_all.csv",
     ),
+    "shuffled_table": dict(
+        run_tsv="run_shuffled_table.tsv",
+        train="Data/shuffle_table_IBD_CRC/{disease}/{study}/train_loo.biom",
+        test="Data/shuffle_table_IBD_CRC/{disease}/{study}/test_loo.biom",
+        meta="Data/shuffle_table_IBD_CRC/{disease}/metadata.tsv",
+        fold="{disease}_{study}",
+        artifact="Data/shuffle_table_IBD_CRC/",
+        results="disease.csv")
 }
 
 SAMPLE_ID_COL = "sample"
@@ -215,11 +229,32 @@ def _write_table(tbl, path):
     os.replace(tmp, path)
 
 
-def survey_training_table(train_biom, meta_path, study_col):
+def drop_study_mask(sids, md, study_col, drop_studies):
+    """Boolean over `sids`; True keeps the sample, False drops its cohort.
+
+    ``--drop-studies`` exists for a cohort whose labels cannot be trusted --
+    self-reported diagnoses, say. Such a cohort has to leave every table at
+    once: keeping it in training teaches the model those labels, and keeping it
+    in test scores the model against them. Filtering in one place, applied at
+    each of the three, is what keeps the two halves from drifting apart.
+
+    Blanks are kept rather than refused, unlike :func:`_column`: a sample whose
+    study is unrecorded is not a member of a named dropped cohort, and this is
+    not the function that should be deciding the metadata is malformed.
+    """
+    if not drop_studies:
+        return np.ones(len(sids), dtype=bool)
+    g = md.loc[sids, study_col].astype(str).to_numpy()
+    return ~np.isin(g, [str(s) for s in drop_studies])
+
+
+def survey_training_table(train_biom, meta_path, study_col, drop_studies=()):
     """The cohorts present in a fold's training table."""
     sids = biom.load_table(train_biom).ids(axis="sample")
     md = pd.read_csv(meta_path, sep="\t", index_col=SAMPLE_ID_COL,
                      dtype={SAMPLE_ID_COL: str}, low_memory=False)
+    sids = np.asarray(sids)[drop_study_mask(np.asarray(sids), md, study_col,
+                                            drop_studies)]
     return md.loc[sids, study_col].unique()
 
 
@@ -229,6 +264,14 @@ def _valid_mask(job, sids, lab, md):
 
     if mode == "same_disease":
         return _same_disease_mask(job, sids, lab, md)
+
+    if mode == "per_disease":
+        # One member per disease, validating on one drawn study of that disease
+        # alone. Where 'disease_loso' gives one member a validation set spanning
+        # every disease, this spreads the same draw across members: the fold
+        # ends up covering every disease too, but through the ensemble rather
+        # than inside any one member's split.
+        return _per_disease_mask(job, sids, md)
 
     if mode == "disease_loso":
         # One study held out per disease, redrawn per member. Plain 'loso'
@@ -415,12 +458,149 @@ def _disease_loso_mask(job, sids, md):
     return mask, "disease_loso"
 
 
-def survey_same_disease_studies(train_biom, meta_path, study_col, disease_col,
-                                test_study):
-    """Training-table studies carrying the disease(s) of the held-out study."""
-    sids = biom.load_table(train_biom).ids(axis="sample")
+def _per_disease_mask(job, sids, md):
+    """Hold out one study of *this member's* disease, and nothing else.
+
+    The member is the disease: a fold whose training table spans twelve
+    diseases trains twelve members, member *d* validating on the single study
+    drawn for *d* in :func:`survey_per_disease_units`. Every other disease, and
+    every other study of *d*, stays in training.
+
+    Compared with ``disease_loso``, which hands one member a validation set
+    holding one cohort of every disease at once, this cuts the same draw up
+    across members. Each member therefore gives up far less of its fold -- one
+    cohort of one disease rather than one cohort of each -- and the epoch it
+    selects is the one that transfers across studies *for its own disease*.
+    What makes the fold's answer speak for every disease is the ensemble over
+    members, not any single split.
+
+    As in ``disease_loso`` the unit held out is the ``(disease, study)`` cell,
+    not the whole study, so a study spanning several diseases -- PRJEB11419
+    carries OB, IBS, BD and T2DM -- contributes only its samples of this
+    member's disease and keeps the rest in training. That leaves one study on
+    both sides of the split, so this member's valid_auc is not a clean
+    cross-study estimate for a disease that shares its cohort.
+
+    The draw itself happened in the parent process, so this only applies it:
+    ``job['valid_disease']`` names the disease and ``job['valid_studies']``
+    holds the one study drawn for it.
+    """
+    dis = _column(md, sids, job["disease_col"], "disease")
+    stu = _column(md, sids, job["study_col"], "study")
+    d = str(job["valid_disease"])
+    chosen = str(job["valid_studies"][0])
+
+    in_d = dis == d
+    mask = in_d & (stu == chosen)
+    tag = f"{job['fold']}/{job['valid_unit']}"
+    if not mask.any():
+        raise ValueError(
+            f"{tag}: no training sample has {job['disease_col']}=={d!r} and "
+            f"{job['study_col']}=={chosen!r}, so validation would be empty")
+
+    left = int((in_d & ~mask).sum())
+    print(f"[pdis] {tag}: validating on {d}/{chosen}, {int(mask.sum())}/"
+          f"{len(sids)} samples ({mask.sum() / len(sids):.1%}); {d} keeps "
+          f"{left} training sample(s), the other "
+          f"{len(set(dis)) - 1} disease(s) all of theirs")
+    if left == 0:
+        print(f"[pdis] {tag}: {d} had this one study, so it is absent from "
+              f"this member's training part")
+        return mask, "per_disease_only_study"
+    return mask, "per_disease"
+
+
+def survey_per_disease_units(train_biom, meta_path, study_col, disease_col,
+                             seed, min_class_n=1, drop_studies=()):
+    """Draw one study per disease from a fold's training table.
+
+    Done in the parent process rather than in the worker, because the member
+    list *is* the disease list: `build_jobs` has to know which diseases survive
+    the draw before it can queue anything. Doing it here also puts the whole
+    plan on the record above the run.
+
+    A disease's candidates are the studies whose ``(disease, study)`` cell holds
+    at least `min_class_n` cases **and** at least `min_class_n` controls. A cell
+    short on either cannot carry the epoch decision: with none of a class the
+    AUC is undefined outright, and with a handful the AUC is mostly sampling
+    noise, so the member would early-stop on a coin flip. Candidates are
+    filtered before the draw rather than after, which is the difference between
+    never picking such a cell and failing the member that picked it. A disease
+    left with no candidate at all gets no member, and says so.
+
+    The threshold applies to each class separately on purpose. A cohort of 200
+    controls and 4 cases has plenty of samples and still cannot say whether an
+    epoch separates the classes, so a rule on the cell's total would let it
+    through.
+
+    Each disease is drawn for independently, in sorted order so the sequence
+    depends on `seed` alone and not on the order the diseases happen to appear
+    in the table.
+
+    Returns
+    -------
+    picks : dict
+        ``{disease: {'study', 'n_eligible', 'n_studies', 'n_valid'}}``, in
+        sorted disease order. One entry per member the fold will run.
+    skipped : dict
+        ``{disease: reason}`` for the diseases that had no two-class study.
+    """
+    sids = np.asarray(biom.load_table(train_biom).ids(axis="sample"))
     md = pd.read_csv(meta_path, sep="\t", index_col=SAMPLE_ID_COL,
                      dtype={SAMPLE_ID_COL: str}, low_memory=False)
+    # Before anything is counted: a dropped cohort must not be a candidate, and
+    # must not count towards a disease's cohort tally either.
+    keep = drop_study_mask(sids, md, study_col, drop_studies)
+    # A disease living only in a dropped cohort leaves the table altogether, so
+    # the loop below never reaches it and it would vanish without a word. Note
+    # it here, while both sides of the filter are still in hand.
+    vanished = (set(md.loc[sids, disease_col].astype(str))
+                - set(md.loc[sids[keep], disease_col].astype(str)))
+    sids = sids[keep]
+    dis = _column(md, sids, disease_col, "disease")
+    stu = _column(md, sids, study_col, "study")
+    lab = pd.to_numeric(md.loc[sids, LABELS_COL], errors="coerce").to_numpy()
+
+    rng = np.random.default_rng(seed)
+    picks, skipped = {}, {}
+    for d in sorted(vanished):
+        skipped[d] = ("--drop-studies removed every cohort it had, so the "
+                      "disease is no longer in this fold's training table at "
+                      "all")
+    for d in sorted(set(dis)):
+        in_d = dis == d
+        studies = sorted(set(stu[in_d]))
+        eligible, sizes = [], []
+        for s in studies:
+            cell = in_d & (stu == s)
+            n_pos = int((lab[cell] == 1).sum())
+            n_neg = int((lab[cell] == 0).sum())
+            sizes.append(f"{s} {n_pos}/{n_neg}")
+            if n_pos >= min_class_n and n_neg >= min_class_n:
+                eligible.append(s)
+        if not eligible:
+            skipped[d] = (
+                f"none of its {len(studies)} study/studies reaches "
+                f"{min_class_n} case(s) and {min_class_n} control(s) "
+                f"(case/control by study: {', '.join(sizes)})")
+            continue
+        chosen = eligible[int(rng.integers(len(eligible)))]
+        cell = in_d & (stu == chosen)
+        picks[d] = dict(study=chosen, n_eligible=len(eligible),
+                        n_studies=len(studies),
+                        n_valid=int(cell.sum()),
+                        n_case=int((lab[cell] == 1).sum()),
+                        n_ctrl=int((lab[cell] == 0).sum()))
+    return picks, skipped
+
+
+def survey_same_disease_studies(train_biom, meta_path, study_col, disease_col,
+                                test_study, drop_studies=()):
+    """Training-table studies carrying the disease(s) of the held-out study."""
+    sids = np.asarray(biom.load_table(train_biom).ids(axis="sample"))
+    md = pd.read_csv(meta_path, sep="\t", index_col=SAMPLE_ID_COL,
+                     dtype={SAMPLE_ID_COL: str}, low_memory=False)
+    sids = sids[drop_study_mask(sids, md, study_col, drop_studies)]
     test_mask = md[study_col].astype(str) == str(test_study)
     if not test_mask.any():
         raise SystemExit(
@@ -444,6 +624,36 @@ def split_paths(out_dir):
             os.path.join(out_dir, "valid_part.biom"))
 
 
+def test_path(out_dir):
+    return os.path.join(out_dir, "test_part.biom")
+
+
+def _filtered_test_table(job, md):
+    """The fold's test table with `--drop-studies` removed, as a path.
+
+    Returns ``job['test']`` untouched when nothing is dropped, so a run without
+    the flag reads the original file and writes nothing extra. Otherwise a
+    filtered copy is written beside the member's split; `build_jobs` has
+    already refused any fold this would empty.
+    """
+    if not job.get("drop_studies"):
+        return job["test"]
+    out = test_path(job["split_dir"])
+    if os.path.exists(out):
+        return out
+    table = biom.load_table(job["test"])
+    sids = np.asarray(table.ids(axis="sample"))
+    keep = drop_study_mask(sids, md, job["study_col"], job["drop_studies"])
+    if not keep.any():
+        raise ValueError(
+            f"{job['fold']}: every test sample belongs to --drop-studies "
+            f"{list(job['drop_studies'])}, so there is nothing to score")
+    _write_table(table.filter(sids[keep], axis="sample", inplace=False), out)
+    print(f"[drop ] {job['fold']}/{job['valid_unit']}: test table "
+          f"{len(sids)} -> {int(keep.sum())} samples")
+    return out
+
+
 def member_split(job):
     """Materialise this member's training and validation parts as BIOM tables.
 
@@ -451,26 +661,46 @@ def member_split(job):
     made here and handed over as files. Which partition depends on
     --inner-split; see `_valid_mask`.
 
-    Returns ``(train_path, valid_path, strategy)``. Existing files are reused,
-    so a retried job -- or, under grouped 'loso', every repeat of a group after
-    the first -- does not pay for the filtering again.
+    ``--drop-studies`` is applied first, to all three tables. It has to reach
+    the test table as well as the training one: a cohort excluded because its
+    labels are doubtful would otherwise still be scored against.
+
+    Returns ``(train_path, valid_path, test_path, strategy)``. Existing files
+    are reused, so a retried job -- or, under grouped 'loso', every repeat of a
+    group after the first -- does not pay for the filtering again.
     """
     split_dir = job["split_dir"]
     train_part, valid_part = split_paths(split_dir)
     info_path = os.path.join(split_dir, "split.json")
+    md = pd.read_csv(job["meta"], sep="\t", index_col=SAMPLE_ID_COL,
+                     dtype={SAMPLE_ID_COL: str}, low_memory=False)
     if all(os.path.exists(x) for x in (train_part, valid_part, info_path)):
         with open(info_path) as f:
-            return train_part, valid_part, json.load(f)["strategy"]
+            return (train_part, valid_part, _filtered_test_table(job, md),
+                    json.load(f)["strategy"])
     os.makedirs(split_dir, exist_ok=True)
 
     table = biom.load_table(job["train"])
     sids = np.asarray(table.ids(axis="sample"))
-    md = pd.read_csv(job["meta"], sep="\t", index_col=SAMPLE_ID_COL,
-                     dtype={SAMPLE_ID_COL: str}, low_memory=False)
     missing = [x for x in sids if x not in md.index]
     if missing:
         raise KeyError(f"{len(missing)} training samples have no metadata row; "
                        f"first offenders: {missing[:5]}")
+
+    # Before the split, so a dropped cohort can reach neither part. The surveys
+    # in build_jobs filtered the same way, so the member plan already assumed
+    # this table.
+    keep = drop_study_mask(sids, md, job["study_col"], job.get("drop_studies"))
+    if not keep.all():
+        n_before = len(sids)
+        sids = sids[keep]
+        table = table.filter(sids, axis="sample", inplace=False)
+        if len(sids) == 0:
+            raise ValueError(
+                f"{job['fold']}/{job['valid_unit']}: every training sample "
+                f"belongs to --drop-studies {list(job['drop_studies'])}")
+        print(f"[drop ] {job['fold']}/{job['valid_unit']}: training table "
+              f"{n_before} -> {len(sids)} samples")
 
     lab = pd.to_numeric(md.loc[sids, LABELS_COL], errors="coerce")
     if lab.isna().any():
@@ -505,8 +735,9 @@ def member_split(job):
                  valid_part)
     with open(info_path, "w") as f:
         json.dump(dict(strategy=strategy, n_train=int((~is_v).sum()),
-                       n_valid=int(is_v.sum())), f)
-    return train_part, valid_part, strategy
+                       n_valid=int(is_v.sum()),
+                       dropped_studies=list(job.get("drop_studies") or [])), f)
+    return train_part, valid_part, _filtered_test_table(job, md), strategy
 
 # =====================================================================
 # 2. Worker: bind a GPU, run one job
@@ -524,10 +755,10 @@ def _init_worker(gpu_queue):
     os.environ.setdefault("OMP_NUM_THREADS", "4")
 
 
-def _build_kwargs(job, train_biom, valid_biom):
+def _build_kwargs(job, train_biom, valid_biom, test_biom=None):
     kw = dict(
         metadata=job["meta"], train_biom=train_biom, valid_biom=valid_biom,
-        test_biom=job["test"],
+        test_biom=job["test"] if test_biom is None else test_biom,
         embedding_birnn=os.path.join(job["out_dir"], "model.pth"),
         plotfile_loss=os.path.join(job["out_dir"], "loss.png"),
         plotfile_auc=os.path.join(job["out_dir"], "auc.png"),
@@ -542,6 +773,8 @@ def _build_kwargs(job, train_biom, valid_biom):
         valid_auc=job["valid_auc"],
         min_group_n=job["min_group_n"],
         logit_adjust_tau=job["logit_adjust_tau"],
+        group_balance_beta=job["group_balance_beta"],
+        group_balance_max_ratio=job["group_balance_max_ratio"],
         disease_col=job["disease_col"],
         **CFG,
     )
@@ -589,8 +822,9 @@ def run_job(job):
             with open(res_path) as f:
                 return job["id"], json.load(f), None
 
-        train_part, valid_part, strategy = member_split(job)
-        rec, tm = Attention_biom(**_build_kwargs(job, train_part, valid_part))
+        train_part, valid_part, test_part, strategy = member_split(job)
+        rec, tm = Attention_biom(
+            **_build_kwargs(job, train_part, valid_part, test_part))
         ep = rec["epoch"]
         if not isinstance(ep, int):
             raise RuntimeError(f"unexpected epoch value {ep!r}")
@@ -599,6 +833,14 @@ def run_job(job):
                    inner_mode=job["inner_mode"], strategy=strategy,
                    epoch=int(ep),
                    valid_auc=float(rec["valid_auc"]),
+                   # The train/valid pair at the selected epoch. train_auc is
+                   # the one quantity that separates a member which fit its
+                   # training part too well from one that never fit it at all,
+                   # and until now it reached stdout and nowhere else -- which
+                   # is unusable, since eight workers interleave their output.
+                   train_auc=float(rec["train_auc"]),
+                   train_loss=float(rec["train_loss"]),
+                   valid_loss=float(rec["valid_loss"]),
                    n_valid=int(len(rec["valid_label"])),
                    test_auc=float(tm["auc"]),
                    abund_mode=job["abund_mode"],
@@ -648,18 +890,55 @@ def run_job(job):
 # =====================================================================
 # 3. Job construction (parent process, never touches CUDA)
 # =====================================================================
+def _test_survives_drop(test_biom, meta_path, study_col, drop, task, fold):
+    """Whether a fold still has a test table once --drop-studies is applied.
+
+    Under loso_all the fold *is* a study, so dropping that study empties its
+    test table outright: there is no cohort left to score and the fold cannot
+    mean anything. Caught here, in the parent, so the fold never reaches a GPU
+    -- and reported, since a silently shorter results table is worse than a
+    slightly noisier log.
+    """
+    sids = np.asarray(biom.load_table(test_biom).ids(axis="sample"))
+    md = pd.read_csv(meta_path, sep="\t", index_col=SAMPLE_ID_COL,
+                     dtype={SAMPLE_ID_COL: str}, low_memory=False)
+    keep = drop_study_mask(sids, md, study_col, drop)
+    if keep.all():
+        return True
+    if not keep.any():
+        print(f"[warn] {task}/{fold}: the test table is empty after "
+              f"--drop-studies {' '.join(drop)}, so this fold is skipped "
+              f"entirely -- it will not appear in the results")
+        return False
+    print(f"[drop ] {task}/{fold}: test table {len(sids)} -> "
+          f"{int(keep.sum())} samples")
+    return True
+
+
+def _unit_name(disease):
+    """A disease name made safe to use as a job directory name.
+
+    Under per_disease the member *is* a disease, so the disease is what names
+    its directory. Disease labels come from the metadata and are free text, and
+    a '/' in one would silently write the member a directory deeper.
+    """
+    return re.sub(r"[^0-9A-Za-z._-]+", "_", str(disease)).strip("_") or "unnamed"
+
+
 def build_jobs(task, args):
     """One job per (fold, member)."""
     t = TASKS[task]
-    if args.inner_split == "disease_loso" and task not in ("lodo", "loso_all"):
+    if (args.inner_split in ("disease_loso", "per_disease")
+            and task not in ("lodo", "loso_all")):
         raise SystemExit(
-            f"--inner-split disease_loso needs a training table spanning "
+            f"--inner-split {args.inner_split} needs a training table spanning "
             f"several diseases, and {task!r} is single-disease (its metadata is "
             f"one file per disease), where the mode would degrade to drawing "
             f"one random study. Use --tasks lodo and/or loso_all, or pick "
             f"--inner-split loso for {task!r}")
     run = pd.read_csv(t["run_tsv"], sep="\t")
     jobs, folds = [], []
+    drop = [str(x) for x in (args.drop_studies or [])]
 
     # min_delta 0 under 'auc': any strictly higher AUC counts as a new best, so
     # the checkpoint lands on the true peak and the patience countdown starts
@@ -675,13 +954,20 @@ def build_jobs(task, args):
         test = t["test"].format(**row)
         meta = t["meta"].format(**row)
 
+        if drop and not _test_survives_drop(test, meta, args.inner_group,
+                                            drop, task, fold):
+            continue
+
         # loso only: unit -> studies it holds out, and unit -> a shared split
         # directory when --loso-k groups several repeats onto the same split.
         group_studies, group_split_dir, cv_folds = {}, {}, {}
+        # per_disease only: unit -> the disease that unit is the member for.
+        unit_disease = {}
 
         if args.inner_split == "loso":
             cohorts = sorted(str(x) for x in
-                             survey_training_table(train, meta, args.inner_group))
+                             survey_training_table(train, meta, args.inner_group,
+                                                   drop_studies=drop))
             if args.loso_k is None:
                 # One member per training cohort. The member count is the
                 # fold's -- a fold whose training table spans eight cohorts
@@ -719,9 +1005,61 @@ def build_jobs(task, args):
                 print(f"[info] {task}/{fold}: {len(cohorts)} cohort(s) -> "
                       f"{len(chunks)} group(s) of up to {args.loso_k}, "
                       f"x{args.n_estimators} repeat(s) = {len(units)} members")
+        elif args.inner_split == "per_disease":
+            picks, skipped = survey_per_disease_units(
+                train, meta, args.inner_group, args.disease_col,
+                args.member_seed, args.per_disease_min_class,
+                drop_studies=drop)
+            for d, why in sorted(skipped.items()):
+                print(f"[warn] {task}/{fold}: no member for {d}: {why}, so "
+                      f"there is nothing to select an epoch on")
+            if not picks:
+                raise SystemExit(
+                    f"{task}/{fold}: no disease in the training table has a "
+                    f"study with {args.per_disease_min_class} of each class, "
+                    f"so --inner-split per_disease can build no member at all. "
+                    f"Lower --per-disease-min-class (currently "
+                    f"{args.per_disease_min_class}) or use --inner-split loso")
+            units = []
+            for d, info in picks.items():
+                u = _unit_name(d)
+                units.append(u)
+                group_studies[u] = [info["study"]]
+                unit_disease[u] = d
+            if len(set(units)) != len(units):
+                raise SystemExit(
+                    f"{task}/{fold}: two diseases in {args.disease_col!r} "
+                    f"reduce to the same job-directory name; rename them or "
+                    f"they would share one directory. Diseases: "
+                    f"{', '.join(sorted(picks))}")
+            # * marks a disease with one study full stop, whose member therefore
+            # trains without it. A disease with one *eligible* study out of
+            # several is not stranded -- its single-class cohorts stay in
+            # training, they just cannot be validated on.
+            drawn = " ".join(
+                f"{d}/{i['study']}" + ("*" if i["n_studies"] == 1 else "")
+                for d, i in picks.items())
+            lonely = [d for d, i in picks.items() if i["n_studies"] == 1]
+            print(f"[info] {task}/{fold}: {len(units)} disease(s) -> "
+                  f"{len(units)} member(s), one study drawn for each: {drawn}"
+                  + (f"  (* = {', '.join(lonely)} had one study only, so that "
+                     f"member trains without the disease)" if lonely else ""))
+            print(f"[info] {task}/{fold}: validation sizes (case/control): "
+                  + "  ".join(f"{d} {i['n_case']}/{i['n_ctrl']}"
+                              for d, i in picks.items()))
+            if len(units) < 2:
+                # ensemble_aucs returns NaN below two members, so the fold's
+                # ens_* columns would be empty and its answer would rest on
+                # the single surviving disease's model.
+                print(f"[warn] {task}/{fold}: only {len(units)} member "
+                      f"survived --per-disease-min-class "
+                      f"{args.per_disease_min_class}, so this fold cannot be "
+                      f"ensembled and its ens_* columns will be NaN. Lower the "
+                      f"threshold if that is not what you want")
         elif args.inner_split == "same_disease":
             cohorts, test_dis, ccount = survey_same_disease_studies(
-                train, meta, args.inner_group, args.disease_col, fold)
+                train, meta, args.inner_group, args.disease_col, fold,
+                drop_studies=drop)
             if not cohorts:
                 raise SystemExit(
                     f"{task}/{fold}: the held-out study's disease(s) "
@@ -781,10 +1119,12 @@ def build_jobs(task, args):
                 inner_mode=args.inner_split, valid_unit=u,
                 split_dir=split_dir,
                 valid_studies=group_studies.get(u),
+                valid_disease=unit_disease.get(u),
                 cv_fold=cv_folds.get(u, (None, None))[0],
                 cv_k=cv_folds.get(u, (None, None))[1],
                 study_col=args.inner_group,
                 split_seed=args.split_seed,
+                drop_studies=drop,
                 out_dir=out_dir, train=train, test=test, meta=meta,
                 head_hidden=args.head_hidden,
                 linear_branch=args.linear_branch,
@@ -794,6 +1134,8 @@ def build_jobs(task, args):
                 valid_auc=args.valid_auc,
                 min_group_n=args.min_group_n,
                 logit_adjust_tau=args.logit_adjust_tau,
+                group_balance_beta=args.group_balance_beta,
+                group_balance_max_ratio=args.group_balance_max_ratio,
                 disease_col=args.disease_col,
                 member_seed=args.member_seed + i,
                 keep_ckpt=args.keep_ckpt, keep_tables=args.keep_tables,
@@ -1093,7 +1435,8 @@ def main():
     ap.add_argument("--workers-per-gpu", type=int, default=1)
 
     ap.add_argument("--inner-split", default="loso",
-                    choices=["loso", "disease_loso", "same_disease"],
+                    choices=["loso", "disease_loso", "per_disease",
+                             "same_disease"],
                     help="how each member's training and validation parts are "
                          "cut from the fold's training table. Every mode holds "
                          "out whole cohorts, so the epoch is selected on the "
@@ -1109,6 +1452,16 @@ def main():
                          "on whichever single disease 'loso' happened to hold "
                          "out; each member redraws, so run --n-estimators 8 "
                          "and ensemble. lodo and loso_all only. "
+                         "'per_disease' cuts that same draw across members "
+                         "instead of putting it all in one: one member per "
+                         "disease in the fold's training table, each "
+                         "validating on a single study drawn for its own "
+                         "disease and training on everything else. A member "
+                         "therefore gives up one cohort of one disease rather "
+                         "than one of each, and it is the ensemble over "
+                         "members -- as many as the fold has diseases -- that "
+                         "covers every disease. --n-estimators does not apply; "
+                         "lodo and loso_all only. "
                          "'same_disease' is leave-one-study-out confined to "
                          "the disease under test: one member per study of that "
                          "disease, each validating on it and training on the "
@@ -1154,13 +1507,50 @@ def main():
                          "validation, so it is weaker than a model trained on "
                          "everything, and the ensemble is what buys that back. "
                          "It does not "
-                         "apply under 'loso' (unless --loso-k is set) or "
+                         "apply under 'loso' (unless --loso-k is set), "
+                         "'per_disease' or "
                          "'same_disease', where the member count is however "
-                         "many cohorts the fold's training table holds")
+                         "many cohorts or diseases the fold's training table "
+                         "holds")
+    ap.add_argument("--drop-studies", nargs="+", default=[], metavar="STUDY",
+                    help="remove these cohorts (column --inner-group) from "
+                         "every table before anything else happens: the "
+                         "training part, the validation part drawn from it, "
+                         "and the test table. For a cohort whose labels cannot "
+                         "be trusted -- self-reported diagnoses, say -- "
+                         "dropping it from training alone is not enough, since "
+                         "the fold would still be scored against those labels. "
+                         "Applies to every task and every --inner-split, and "
+                         "the member plan is drawn up from the filtered table, "
+                         "so a disease left with no usable cohort simply gets "
+                         "no member. A fold whose test table this empties -- "
+                         "under loso_all the fold is a study, so dropping that "
+                         "study empties it -- is skipped and reported. Off by "
+                         "default; pair it with --run-name, since the results "
+                         "are not comparable with a run that kept the cohort")
+    ap.add_argument("--per-disease-min-class", type=int, default=20,
+                    help="under --inner-split per_disease, a study is only a "
+                         "candidate for a disease if its (disease, study) cell "
+                         "holds at least this many cases AND at least this "
+                         "many controls (default 20; the test is >=, so pass "
+                         "21 for a strict 'more than 20'). The epoch is "
+                         "selected on that one cell's AUC, and an AUC over a "
+                         "handful of either class is mostly sampling noise, so "
+                         "the member would early-stop on a coin flip. The "
+                         "threshold is per class, not on the cell's total: a "
+                         "cohort of 200 controls and 4 cases is large and "
+                         "still cannot say whether an epoch separates them. A "
+                         "disease with no cohort reaching it gets no member "
+                         "and is left out of the fold's ensemble, which is "
+                         "reported on a [warn] line. Set 1 for the old "
+                         "behaviour of accepting any cell holding both classes")
     ap.add_argument("--member-seed", type=int, default=101,
-                    help="member i draws the cohorts it holds out with this "
-                         "plus i. Used by --inner-split disease_loso, the one "
-                         "mode whose split is drawn rather than enumerated")
+                    help="seed for the draws the split is made of. Under "
+                         "--inner-split disease_loso, member i draws the "
+                         "cohorts it holds out with this plus i, so the "
+                         "members differ. Under per_disease the draw is one "
+                         "per disease and made once per fold, so this seed "
+                         "alone decides which study each disease validates on")
     ap.add_argument("--ensemble-seed0", type=int, default=11,
                     help="member i initialises its weights with this plus i")
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
@@ -1212,7 +1602,40 @@ def main():
                          "it corrects base rates, not the fact that one "
                          "disease has far more samples than another: the "
                          "disease size cancels out of the ratio and is left "
-                         "untouched. lodo and loso_all only")
+                         "untouched -- that is what --group-balance-beta is "
+                         "for. lodo and loso_all only")
+    ap.add_argument("--group-balance-beta", type=float, default=0.5,
+                    help="how far each disease's contribution to the training "
+                         "loss is evened out, used only with --set "
+                         "loss=GroupBalanced or loss=GroupBalanced+"
+                         "LogitAdjusted. A sample of a disease holding n "
+                         "training samples is weighted n**-beta, rescaled so "
+                         "the weights average 1 and the loss keeps the scale "
+                         "--patience and --min-delta were tuned on. 0 weights "
+                         "every sample alike and is exactly BCEWithLogits; 1 "
+                         "gives every disease the same total whatever its "
+                         "size. Default 0.5, deliberately not the 1.0 that "
+                         "--logit-adjust-tau defaults to: an offset does not "
+                         "change how hard a sample pulls, a weight multiplies "
+                         "it, and this is the only thing in the model that can "
+                         "make one sample's gradient twenty times another's. "
+                         "On a pool running 40 to 820 samples per disease, "
+                         "beta 0.5 lifts the smallest disease from 1.3%% to "
+                         "3.7%% of the loss at a 12%% rise in gradient noise, "
+                         "where beta 1 reaches 8.3%% but costs 62%%. Read the "
+                         "[gbal] lines of a run. lodo and loso_all only")
+    ap.add_argument("--group-balance-max-ratio", type=float, default=None,
+                    help="cap the per-sample weight ratio between the rarest "
+                         "disease and the most common one, under the same two "
+                         "losses. Default None keeps the natural "
+                         "(n_max/n_min)**beta. The counterpart of "
+                         "--min-group-n, for the one case where reweighting "
+                         "bites: a disease down to a handful of training "
+                         "samples earns a weight big enough that its "
+                         "contribution is mostly noise. 20 is a reasonable "
+                         "safety net. The disease is still trained on -- this "
+                         "only bounds how loud it gets. Prefer lowering "
+                         "--group-balance-beta first")
     ap.add_argument("--valid-auc", default="pooled",
                     choices=["pooled", "macro"],
                     help="how the validation AUC that selects the epoch is "
@@ -1269,6 +1692,18 @@ def main():
                          "headline number and nothing else. 'zlogit' or "
                          "'normal' are the ones to reach for when the members "
                          "were calibrated on different cohorts")
+    ap.add_argument("--run-tsv", default=None,
+                    help="read the fold list from this TSV instead of the "
+                         "task's own. The columns are the task's, so this is "
+                         "for running a subset of the folds -- a cut-down copy "
+                         "of the task's TSV -- not a different task. Safe to "
+                         "cut: a job's model_seed is --ensemble-seed0 plus its "
+                         "index among its own fold's members, and every member "
+                         "of every fold is enumerated from that fold's own "
+                         "training table, so dropping rows leaves the "
+                         "surviving jobs bit-for-bit the ones the full run "
+                         "would have produced. One --tasks only, since which "
+                         "task the file belongs to would otherwise be a guess")
     ap.add_argument("--run-name", default="")
     ap.add_argument("--keep-ckpt", action="store_true")
     ap.add_argument("--keep-tables", action="store_true",
@@ -1306,6 +1741,17 @@ def main():
             "and then ignored -- and the pooled loss weights each disease by "
             "its sample count, which is what macro is for. Use --select-by "
             "auc (the default) alongside --valid-auc macro, or drop the macro")
+    if args.valid_auc == "macro" and args.inner_split == "per_disease":
+        # Same reason as the single-disease tasks below, reached from the other
+        # end: the task's table spans many diseases but this member's
+        # validation part holds exactly one, so the average is over one group.
+        print("[warn] --valid-auc macro under --inner-split per_disease: a "
+              "member validates on one disease and one study of it, so the "
+              "macro average is over that one group and equals the pooled "
+              "AUC. per_disease already stops one disease deciding the epoch "
+              "-- it gives each its own member and ensembles them -- so the "
+              "flag adds nothing here. It is what --inner-split disease_loso "
+              "needs, whose validation set spans every disease at once")
     if args.valid_auc == "macro":
         single = [t for t in tasks if t not in ("lodo", "loso_all")]
         if single:
@@ -1314,25 +1760,91 @@ def main():
             print(f"[warn] --valid-auc macro on {single}: those tasks are "
                   f"single-disease, so the average is over one group and "
                   f"equals the pooled AUC")
-    _la = parse_set(args.set_cfg).get("loss", CFG["loss"]) == "LogitAdjusted"
+    # Membership rather than equality: the combined name carries both halves,
+    # so an exact == would let it slip past both guards below and then print a
+    # warning saying tau was ignored when it was not.
+    _loss_name = parse_set(args.set_cfg).get("loss", CFG["loss"])
+    _la = _loss_name in ("LogitAdjusted", "GroupBalanced+LogitAdjusted")
+    _gb = _loss_name in ("GroupBalanced", "GroupBalanced+LogitAdjusted")
     if _la:
         bad = [t for t in tasks if t not in ("lodo", "loso_all")]
         if bad:
             raise SystemExit(
-                f"loss=LogitAdjusted needs a training table spanning several "
+                f"loss={_loss_name} needs a training table spanning several "
                 f"diseases, and {bad} is single-disease (its metadata is one "
                 f"file per disease), where the per-disease base rate collapses "
                 f"to one global number. Use --tasks lodo and/or loso_all")
         if args.logit_adjust_tau < 0:
             raise SystemExit(f"--logit-adjust-tau must be >= 0, got "
                              f"{args.logit_adjust_tau}")
-        print(f"[cfg] loss=LogitAdjusted tau={args.logit_adjust_tau:g}: each "
+        print(f"[cfg] loss={_loss_name} tau={args.logit_adjust_tau:g}: each "
               f"disease's case/control base rate is removed from the training "
               f"logits (column {args.disease_col!r}); validation and test see "
               f"raw logits")
     elif args.logit_adjust_tau != 1.0:
         print("[warn] --logit-adjust-tau only applies with "
-              "--set loss=LogitAdjusted; ignored")
+              "--set loss=LogitAdjusted or "
+              "--set loss=GroupBalanced+LogitAdjusted; ignored")
+    if _gb:
+        bad = [t for t in tasks if t not in ("lodo", "loso_all")]
+        if bad:
+            # One disease means one group, so every sample's weight is the
+            # same number and the reweighting is an expensive no-op.
+            raise SystemExit(
+                f"loss={_loss_name} evens out how much each disease "
+                f"contributes to the loss, and {bad} is single-disease (its "
+                f"metadata is one file per disease), where every sample falls "
+                f"in one group and every weight comes out 1. Use --tasks lodo "
+                f"and/or loso_all")
+        if not 0 <= args.group_balance_beta <= 1:
+            raise SystemExit(
+                f"--group-balance-beta must lie in [0, 1], got "
+                f"{args.group_balance_beta}; below zero it would amplify the "
+                f"size imbalance instead of evening it out, and above one a "
+                f"rare disease would carry more of the loss in total than a "
+                f"common one, which is past the point of equal footing")
+        if (args.group_balance_max_ratio is not None
+                and args.group_balance_max_ratio < 1):
+            raise SystemExit(
+                f"--group-balance-max-ratio must be >= 1, got "
+                f"{args.group_balance_max_ratio}; below one it would invert "
+                f"the cap and hold the rarest disease under the most common")
+        if args.select_by == "loss":
+            # Not an error: unlike --valid-auc macro with --select-by loss,
+            # where the macro number is computed and then ignored, here the
+            # training objective genuinely changes and only the selection
+            # disagrees with it.
+            print("[warn] --select-by loss with a group-balanced training "
+                  "loss: the validation loss is pooled and unweighted, since "
+                  "the weights come from the training disease counts, so the "
+                  "epoch would be chosen on a quantity training is not "
+                  "optimising. Prefer --select-by auc (the default)")
+        print(f"[cfg] loss={_loss_name} beta={args.group_balance_beta:g}: each "
+              f"disease's share of the training loss is rescaled by n^-beta "
+              f"(column {args.disease_col!r}), normalised to mean 1"
+              + (f", capped at {args.group_balance_max_ratio:g}x"
+                 if args.group_balance_max_ratio is not None else ""))
+        # Only worth suggesting where validation actually spans several
+        # diseases. Under per_disease a member validates on one disease, so a
+        # macro average would be over a single group and equal the pooled AUC.
+        if args.inner_split == "per_disease":
+            print("[cfg] validation loss stays pooled and unweighted, but "
+                  "--inner-split per_disease already keeps one disease from "
+                  "deciding the epoch: each member is selected on its own "
+                  "disease and the fold is their ensemble. --valid-auc macro "
+                  "would do nothing on top of that")
+        else:
+            print("[cfg] validation loss stays pooled and unweighted; pair "
+                  "this with --valid-auc macro so the epoch is chosen per "
+                  "disease too")
+    elif args.group_balance_beta != 0.5:
+        print("[warn] --group-balance-beta only applies with "
+              "--set loss=GroupBalanced or "
+              "--set loss=GroupBalanced+LogitAdjusted; ignored")
+    elif args.group_balance_max_ratio is not None:
+        print("[warn] --group-balance-max-ratio only applies with "
+              "--set loss=GroupBalanced or "
+              "--set loss=GroupBalanced+LogitAdjusted; ignored")
     if args.inner_split == "same_disease":
         bad = [t for t in tasks if t != "loso_all"]
         if bad:
@@ -1349,6 +1861,42 @@ def main():
               "same_disease: a fold runs one member per study of the disease "
               "under test, so folds whose disease has more cohorts get more "
               "members, and their predictions are averaged")
+    if args.inner_split == "per_disease":
+        bad = [t for t in tasks if t not in ("lodo", "loso_all")]
+        if bad:
+            raise SystemExit(
+                f"--inner-split per_disease runs one member per disease in the "
+                f"training table, and {bad} is single-disease (its metadata is "
+                f"one file per disease), so every fold would come down to one "
+                f"member holding out one random study. Use --tasks lodo and/or "
+                f"loso_all, or --inner-split loso for {bad}")
+        if args.inner_group == args.disease_col:
+            # Every disease would then be its own only cohort, so the drawn
+            # "study" is the whole disease and the member validates on a
+            # disease it never trains on -- leave-one-disease-out nested inside
+            # the fold, not the cross-study step this mode is for.
+            raise SystemExit(
+                f"--inner-group and --disease-col are both "
+                f"{args.inner_group!r}. Under --inner-split per_disease they "
+                f"name different things: --inner-group is the cohort/study "
+                f"column (default 'study') and --disease-col is the disease "
+                f"column (default 'disease_name_ab'). Pointing both at one "
+                f"column makes each disease its own only cohort, so the "
+                f"member holds its whole disease out instead of one of its "
+                f"studies. Drop --inner-group to take the default")
+        if args.per_disease_min_class < 1:
+            raise SystemExit(
+                f"--per-disease-min-class must be at least 1, got "
+                f"{args.per_disease_min_class}; a cell needs one of each class "
+                f"before an AUC exists at all")
+        if args.n_estimators != 1:
+            print(f"[info] --n-estimators {args.n_estimators} does not apply "
+                  f"under --inner-split per_disease: a fold runs one member "
+                  f"per disease its training table holds, so the member count "
+                  f"is the fold's and not a flag's")
+    elif args.per_disease_min_class != 20:
+        print("[warn] --per-disease-min-class only applies under "
+              "--inner-split per_disease; ignored")
     if args.inner_split == "disease_loso" and args.inner_group == args.disease_col:
         # Both columns pointing at the same thing makes every disease look like
         # it has exactly one cohort -- itself -- so the draw holds out the whole
@@ -1377,11 +1925,37 @@ def main():
               f"and cut into non-overlapping groups of {args.loso_k}, each "
               f"trained --n-estimators={args.n_estimators} times, differing "
               f"only in model_seed")
+    if args.drop_studies:
+        print(f"[cfg] --drop-studies {' '.join(args.drop_studies)}: removed "
+              f"from the training, validation and test tables alike (column "
+              f"{args.inner_group!r}). Member plans are drawn from the "
+              f"filtered table, and a fold whose test table this empties is "
+              f"skipped")
+        if not args.run_name:
+            print("[cfg] WARNING: --drop-studies without --run-name writes "
+                  "into the same directories as a run that kept those "
+                  "cohorts, and the two are not comparable")
+    if args.run_tsv is not None:
+        if len(tasks) != 1:
+            raise SystemExit(
+                f"--run-tsv replaces one task's fold list, and --tasks names "
+                f"{len(tasks)} ({', '.join(tasks)}), so which one it belongs "
+                f"to would be a guess. Run the tasks one at a time")
+        if not os.path.exists(args.run_tsv):
+            raise SystemExit(f"--run-tsv {args.run_tsv!r} does not exist")
+        TASKS[tasks[0]]["run_tsv"] = args.run_tsv
+
     if args.run_name:
         for t in tasks:
             TASKS[t]["artifact"] = f"{TASKS[t]['artifact']}{args.run_name}"
 
     print(f"[cfg] tasks={tasks} gpus={args.gpus} x{args.workers_per_gpu}")
+    for t in tasks:
+        # On the record above every run, so a set of results carries the fold
+        # list it was made from -- a cut-down TSV is otherwise invisible
+        # afterwards, and the folds it dropped look like folds that failed.
+        print(f"[cfg] {t}: folds from {TASKS[t]['run_tsv']}"
+              + ("  <- --run-tsv" if args.run_tsv is not None else ""))
     if args.inner_split == "same_disease":
         print(f"[cfg] inner-split=same_disease: one member per study (column "
               f"{args.inner_group!r}) of the test study's disease (column "
@@ -1390,15 +1964,31 @@ def main():
               f"disease. The member count is the fold's, not a flag's")
         print(f"[cfg] a disease down to one study is cut --cv-folds="
               f"{args.cv_folds} ways instead, so it stays in training")
+    elif args.inner_split == "per_disease":
+        print(f"[cfg] inner-split=per_disease: one member per disease (column "
+              f"{args.disease_col!r}) in the fold's training table; member d "
+              f"validates on one study (column {args.inner_group!r}) drawn for "
+              f"d alone and trains on everything else. The member count is the "
+              f"fold's, not a flag's, and the fold's answer is the ensemble "
+              f"over them")
+        print(f"[cfg] the draw uses --member-seed {args.member_seed} and is "
+              f"made once per fold; a study is a candidate only if its "
+              f"(disease, study) cell holds >= {args.per_disease_min_class} "
+              f"case(s) and >= {args.per_disease_min_class} control(s) "
+              f"(--per-disease-min-class), and a disease with no such study "
+              f"gets no member and drops out of that fold's ensemble")
+        print("[cfg] the unit held out is the (disease, study) cell, so a "
+              "study spanning several diseases keeps its other diseases in "
+              "training and does sit on both sides of that member's split")
     elif args.inner_split == "disease_loso":
         print(f"[cfg] inner-split=disease_loso: {args.n_estimators} members "
               f"per fold, each holding out one randomly drawn study (column "
               f"{args.inner_group!r}) per disease (column {args.disease_col!r}) "
               f"as its validation set. Seeds member_seed={args.member_seed}.."
               f"{args.member_seed + args.n_estimators - 1}")
-        print(f"[cfg] the unit held out is the (disease, study) cell, so a "
-              f"study spanning several diseases keeps its other diseases in "
-              f"training and does sit on both sides of that member's split")
+        print("[cfg] the unit held out is the (disease, study) cell, so a "
+              "study spanning several diseases keeps its other diseases in "
+              "training and does sit on both sides of that member's split")
     elif args.loso_k is None:
         print(f"[cfg] inner-split=loso: one member per training cohort "
               f"(column {args.inner_group!r}), each validating on the cohort "
@@ -1409,14 +1999,21 @@ def main():
               f"{args.loso_k_seed}), each group trained "
               f"--n-estimators={args.n_estimators} times differing only in "
               f"model_seed")
-    if args.inner_split != "loso":
+    if args.inner_split not in ("loso", "per_disease"):
+        # Both of those size their member count from the fold rather than from
+        # --n-estimators, so the seed range is only known once the folds are
+        # surveyed; it is printed below instead.
         print(f"[cfg] model_seed={args.ensemble_seed0}.."
               f"{args.ensemble_seed0 + args.n_estimators - 1}")
     print(f"[cfg] abund_mode={args.abund_mode} "
           f"linear_branch={args.linear_branch} select_by={args.select_by} "
           f"patience={args.patience} valid_auc={args.valid_auc}"
           + (f" min_group_n={args.min_group_n}"
-             if args.valid_auc == "macro" else ""))
+             if args.valid_auc == "macro" else "")
+          + (f" group_balance_beta={args.group_balance_beta:g}"
+             + (f" max_ratio={args.group_balance_max_ratio:g}"
+                if args.group_balance_max_ratio is not None else "")
+             if _gb else ""))
     # Parsed here as well as in build_jobs so a typo costs a second, not a
     # GPU-hour, and so the deviation from CFG is on the record above the run.
     cfg_over = parse_set(args.set_cfg)
@@ -1448,7 +2045,7 @@ def main():
         shape = (f"{len(all_folds)} folds, {min(per_fold)}..{max(per_fold)} "
                  f"members each")
     print(f"\n{len(all_jobs)} jobs ({shape}), {len(todo)} to run")
-    if args.inner_split == "loso" and per_fold:
+    if args.inner_split in ("loso", "per_disease") and per_fold:
         print(f"[cfg] model_seed={args.ensemble_seed0}.."
               f"{args.ensemble_seed0 + max(per_fold) - 1}, member i of every "
               f"fold using the same one")

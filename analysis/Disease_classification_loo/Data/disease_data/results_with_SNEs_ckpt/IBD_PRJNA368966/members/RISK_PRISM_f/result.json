@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "IBD_PRJNA368966", "member": 4, "valid_unit": "RISK_PRISM_f", "inner_mode": "loso", "strategy": "loso", "epoch": 3, "valid_auc": 0.6182724252491695, "n_valid": 551, "test_auc": 0.8455522971652004, "abund_mode": "multiply", "out_dir": "Data/disease_data/results_with_SNEs_ckpt/IBD_PRJNA368966/members/RISK_PRISM_f", "gpu": 0}

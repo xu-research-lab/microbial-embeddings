@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "IBD_PRJNA368966", "member": 5, "valid_unit": "qiita_1629", "inner_mode": "loso", "strategy": "loso", "epoch": 8, "valid_auc": 0.8854216206328883, "n_valid": 552, "test_auc": 0.83088954056696, "abund_mode": "multiply", "out_dir": "Data/disease_data/results_with_SNEs_ckpt/IBD_PRJNA368966/members/qiita_1629", "gpu": 7}

@@ -1,0 +1,1 @@
+{"task": "lodo", "fold": "OB", "member": 11, "valid_unit": "T2DM", "inner_mode": "per_disease", "strategy": "per_disease", "epoch": 8, "valid_auc": 0.7552083333333334, "n_valid": 48, "test_auc": 0.6617870836328781, "abund_mode": "multiply", "out_dir": "Data/loo_all_diseases/results_with_SNEs_test_remove_lowsample/OB/members/T2DM", "gpu": 2}

@@ -1,0 +1,1 @@
+{"task": "disease", "fold": "CRC_PRJNA824020", "member": 5, "valid_unit": "PRJNA430990", "inner_mode": "loso", "strategy": "loso", "epoch": 6, "valid_auc": 0.783068783068783, "n_valid": 146, "test_auc": 0.7587412587412586, "abund_mode": "multiply", "out_dir": "Data/disease_data/results_with_SNEs_ckpt/CRC_PRJNA824020/members/PRJNA430990", "gpu": 1}

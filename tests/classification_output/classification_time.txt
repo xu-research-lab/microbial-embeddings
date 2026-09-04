@@ -1,0 +1,11 @@
+Start time: 2026-09-03 14:10:17
+Command: membed class-attention ...
+
+
+End time: 2026-09-03 14:11:02
+----------------------------------------
+Total execution time: 00:00:45 (hh:mm:ss)
+Total seconds: 45 seconds
+----------------------------------------
+Output saved to: classification_output
+Time log saved to: classification_output/classification_time.txt
