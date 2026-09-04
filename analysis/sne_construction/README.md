@@ -14,16 +14,18 @@ The analysis asks how co-occurrence choices affect the learned microbial represe
 The scripts use the `membed` package for co-occurrence calculation and GloVe
 training.
 
+Run scripts and notebooks from the repository root.
+
 ## 2. Data
 
 | Resource | Path | Used by |
 |---|---|---|
-| Full-cohort BIOM table | `../../data/gut_pretraining.biom` | `sne_training/` |
-| Shared SNE embedding | `../../data/social_niche_embedding_100.txt` | `embedding_overview/` |
-| Phylogenetic embedding | `../../data/phylo_embed_PCA_100.txt` | `SNE_t_SNE.ipynb` |
-| Taxonomy and tree | `../../data/taxmap_slv_ssu_ref_nr_138.2.txt`, `../../data/SSURefNR99_1200_slv_138_2_subset.tre` | overview scripts |
-| Study embeddings | `data/cooccurrence_metric_comparison/difference_study_training/embeding_list/` | metric comparison |
-| Prevalence table | `data/embedding_overview/OTU_prevalence_abundance.csv` | overview scripts |
+| Full-cohort BIOM table | `data/gut_pretraining.biom` | `sne_training/` |
+| Shared SNE embedding | `data/social_niche_embedding_100.txt` | `embedding_overview/` |
+| Phylogenetic embedding | `data/phylo_embed_PCA_100.txt` | `SNE_t_SNE.ipynb` |
+| Taxonomy and tree | `data/taxmap_slv_ssu_ref_nr_138.2.txt`, `data/SSURefNR99_1200_slv_138_2_subset.tre` | overview scripts |
+| Study embeddings | `analysis/sne_construction/data/cooccurrence_metric_comparison/difference_study_training/embeding_list/` | metric comparison |
+| Prevalence table | `analysis/sne_construction/data/embedding_overview/OTU_prevalence_abundance.csv` | overview scripts |
 
 The checked-in full-cohort BIOM file is a Git LFS pointer. A real BIOM file is
 needed to run the training scripts.

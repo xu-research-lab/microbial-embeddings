@@ -7,12 +7,20 @@ from matplotlib.colors import LogNorm
 import seaborn as sns
 from collections import Counter
 
-# Resolve shared inputs from the repository root and keep figures with this analysis.
-SCRIPT_DIR = Path(__file__).resolve().parent
-REPO_ROOT = SCRIPT_DIR.parents[2]
-EMBEDDING_FILE = REPO_ROOT / "data/social_niche_embedding_100.txt"
-PREVALENCE_FILE = SCRIPT_DIR.parent / "data/embedding_overview/OTU_prevalence_abundance.csv"
-OUTPUT_FILE = SCRIPT_DIR / "results/figures/tsne_prevalence.png"
+# Run this script from the repository root.
+REPO_ROOT = Path.cwd().resolve()
+if not (REPO_ROOT / "analysis/sne_construction").is_dir():
+    raise RuntimeError("Run this script from the repository root.")
+
+DATA_DIR = REPO_ROOT / "data"
+ANALYSIS_DIR = REPO_ROOT / "analysis/sne_construction"
+OVERVIEW_DIR = ANALYSIS_DIR / "embedding_overview"
+OVERVIEW_DATA_DIR = ANALYSIS_DIR / "data/embedding_overview"
+FIGURES_DIR = OVERVIEW_DIR / "results/figures"
+
+EMBEDDING_FILE = DATA_DIR / "social_niche_embedding_100.txt"
+PREVALENCE_FILE = OVERVIEW_DATA_DIR / "OTU_prevalence_abundance.csv"
+OUTPUT_FILE = FIGURES_DIR / "tsne_prevalence.png"
 
 
 def load_pretrained_embeddings(vectors_file):

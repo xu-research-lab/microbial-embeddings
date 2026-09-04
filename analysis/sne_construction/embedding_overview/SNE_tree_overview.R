@@ -12,22 +12,16 @@ library(RColorBrewer)
 library(biomformat)
 library(aplot)
 
-# Resolve paths from either the script directory or the repository root.
-script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
-script_dir <- if (length(script_arg)) {
-  dirname(normalizePath(sub("^--file=", "", script_arg[1])))
-} else {
-  getwd()
+# Run this script from the repository root.
+repo_root <- normalizePath(getwd())
+if (!dir.exists(file.path(repo_root, "analysis", "sne_construction"))) {
+  stop("Run this script from the repository root.")
 }
-module_dir <- if (basename(script_dir) == "embedding_overview") dirname(script_dir) else script_dir
-if (basename(module_dir) != "sne_construction" &&
-    dir.exists(file.path(module_dir, "analysis", "sne_construction"))) {
-  module_dir <- file.path(module_dir, "analysis", "sne_construction")
-}
-repo_root <- normalizePath(file.path(module_dir, "../.."), mustWork = FALSE)
 shared_data_dir <- file.path(repo_root, "data")
-overview_data_dir <- file.path(module_dir, "data", "embedding_overview")
-figures_dir <- file.path(module_dir, "embedding_overview", "results", "figures")
+analysis_dir <- file.path(repo_root, "analysis", "sne_construction")
+overview_dir <- file.path(analysis_dir, "embedding_overview")
+overview_data_dir <- file.path(analysis_dir, "data", "embedding_overview")
+figures_dir <- file.path(overview_dir, "results", "figures")
 
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 
