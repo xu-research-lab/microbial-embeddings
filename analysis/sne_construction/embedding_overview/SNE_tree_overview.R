@@ -12,7 +12,21 @@ library(RColorBrewer)
 library(biomformat)
 library(aplot)
 
-tax <- read.delim("../pretraining_resources/data/profile/taxmap_slv_ssu_ref_nr_138.2.txt",
+# Run this script from the repository root.
+repo_root <- normalizePath(getwd())
+if (!dir.exists(file.path(repo_root, "analysis", "sne_construction"))) {
+  stop("Run this script from the repository root.")
+}
+shared_data_dir <- file.path(repo_root, "data")
+analysis_dir <- file.path(repo_root, "analysis", "sne_construction")
+overview_dir <- file.path(analysis_dir, "embedding_overview")
+overview_data_dir <- file.path(analysis_dir, "data", "embedding_overview")
+figures_dir <- file.path(overview_dir, "results", "figures")
+
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+
+# Match taxonomy and prevalence metadata to the retained OTUs.
+tax <- read.delim(file.path(shared_data_dir, "taxmap_slv_ssu_ref_nr_138.2.txt"),
   sep = "\t", stringsAsFactors = FALSE, check.names = FALSE
 )
 acc <- paste(tax[[1]], tax[[2]], tax[[3]], sep = ".")
@@ -27,9 +41,9 @@ otu_annotation <- as.data.frame(do.call(rbind, tax_split))
 rownames(otu_annotation) <- acc
 otu_annotation <- otu_annotation[, 1:7]
 colnames(otu_annotation) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-otu_table <- read.csv("data/embedding_overview/OTU_prevalence_abundance.csv", stringsAsFactors = FALSE)
+otu_table <- read.csv(file.path(overview_data_dir, "OTU_prevalence_abundance.csv"), stringsAsFactors = FALSE)
 otu_annotation <- otu_annotation[otu_table$OTU, ]
-tree <- read.tree("data/embedding_overview/tree.tre")
+tree <- read.tree(file.path(shared_data_dir, "SSURefNR99_1200_slv_138_2_subset.tre"))
 
 otu_annotation <- otu_annotation %>% rownames_to_column("OTU")
 tippoint <- data.frame(
@@ -53,6 +67,7 @@ taxon_levels <- c(
 )
 col <- c(brewer.pal(12, "Paired"), brewer.pal(4, "Pastel2"))
 
+# Build the tree and its annotation tracks separately before alignment.
 p <- ggtree(tree, layout = "rectangular", size = 0.5, branch.length = "none") +
   layout_dendrogram() +
   theme(
@@ -110,7 +125,7 @@ prev_p <- ggplot(tippoint, aes(x = OTU_factor, y = "log10(prev)", fill = log10(p
 prev_p
 
 
-# mean_abc
+# Mean-abundance track
 cor_colors <- colorRampPalette(c("white", "#23BAC5"))(100)
 tippoint$mean_abc <- otu_table$mean_abc[match(tippoint$OTU, otu_table$OTU)]
 mean_abc_p <- ggplot(tippoint, aes(x = OTU_factor, y = "log10(mean Abund.)", fill = log10(mean_abc))) +
@@ -134,7 +149,8 @@ mean_abc_p <- ggplot(tippoint, aes(x = OTU_factor, y = "log10(mean Abund.)", fil
   )
 mean_abc_p
 
-embedding_table <- read.table("data/social_niche_embedding_100.txt", row.names = 1, quote = "\"", comment.char = "")
+# Cluster embedding dimensions before drawing the heatmap.
+embedding_table <- read.table(file.path(shared_data_dir, "social_niche_embedding_100.txt"), row.names = 1, quote = "\"", comment.char = "")
 colnames(embedding_table) <- paste0("dim", 1:100)
 embedding_table <- embedding_table[otu_table$OTU, ]
 clust <- hclust(dist(t(embedding_table)), method = "ward.D2")
@@ -166,12 +182,12 @@ embedding_p <- ggplot(embedding_table, aes(y = dim, x = fid, fill = value)) +
   )
 embedding_p
 
-# 6
+# Stack the aligned tree and annotation tracks.
 p_combined <- embedding_p %>%
   aplot::insert_top(mean_abc_p, height = 0.03) %>%
   aplot::insert_top(prev_p, height = 0.03) %>%
   aplot::insert_top(Phylum_p, height = 0.03) %>%
   aplot::insert_top(p, height = 0.5)
 p_combined
-ggsave("results/figures/embedding_overview/tree_otu_embedding_v2.png", p_combined, width = 15, height = 10, dpi = 300, units = "in", device = "png")
+ggsave(file.path(figures_dir, "tree_otu_embedding_v2.png"), p_combined, width = 15, height = 10, dpi = 300, units = "in", device = "png")
 
