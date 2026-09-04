@@ -4,9 +4,28 @@ library(ggplot2)
 library(RColorBrewer)
 library(reshape2)
 
-dir.create("embedding_overview/results/figures", recursive = TRUE, showWarnings = FALSE)
+# Resolve paths from either the script directory or the repository root.
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+script_dir <- if (length(script_arg)) {
+    dirname(normalizePath(sub("^--file=", "", script_arg[1])))
+} else {
+    getwd()
+}
+module_dir <- if (basename(script_dir) == "embedding_overview") dirname(script_dir) else script_dir
+if (basename(module_dir) != "sne_construction" &&
+    dir.exists(file.path(module_dir, "analysis", "sne_construction"))) {
+    module_dir <- file.path(module_dir, "analysis", "sne_construction")
+}
+repo_root <- normalizePath(file.path(module_dir, "../.."), mustWork = FALSE)
+shared_data_dir <- file.path(repo_root, "data")
+traits_data_dir <- file.path(module_dir, "..", "traits", "data")
+overview_dir <- file.path(module_dir, "embedding_overview")
+figures_dir <- file.path(overview_dir, "results", "figures")
+tables_dir <- file.path(overview_dir, "results", "tables")
 
-tax <- read.delim("../../data/taxmap_slv_ssu_ref_nr_138.2.txt",
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+
+tax <- read.delim(file.path(shared_data_dir, "taxmap_slv_ssu_ref_nr_138.2.txt"),
                   sep = "\t", stringsAsFactors = FALSE, check.names = FALSE)
 acc <- paste(tax[[1]], tax[[2]], tax[[3]], sep = ".")
 tax_split <- strsplit(tax$path, ";")
@@ -22,9 +41,10 @@ rownames(tax) <- acc
 tax <- tax[, 1:7]
 colnames(tax) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 
-t_sne_1 <- read.csv("embedding_overview/results/tables/t_sne_co.csv", check.names = FALSE)
+# Compare SNE and phylogenetic embeddings across taxonomic ranks.
+t_sne_1 <- read.csv(file.path(tables_dir, "t_sne_co.csv"), check.names = FALSE)
 t_sne_1$group <- rep("SNE", nrow(t_sne_1))
-t_sne_2 <- read.csv("embedding_overview/results/tables/t_sne_phylo.csv", check.names = FALSE)
+t_sne_2 <- read.csv(file.path(tables_dir, "t_sne_phylo.csv"), check.names = FALSE)
 t_sne_2$group <- rep("PhyloE", nrow(t_sne_2))
 t_sne <- rbind(t_sne_1, t_sne_2)
 
@@ -56,21 +76,21 @@ for (level in taxa_levels){
              plot.title = element_text(hjust = 0.5)) +
         guides(color = guide_legend(override.aes = list(size = 3, alpha = 1)))
     
-    ggsave(paste0("embedding_overview/results/figures/", level, ".png"), p1,
+    ggsave(file.path(figures_dir, paste0(level, ".png")), p1,
            width = 25, height = 10, units = "cm")
 }
 
-### Bugbase
-df <- read.table("../traits/data/traits_precalculated.txt", 
+# Plot selected BugBase traits on both embeddings.
+df <- read.table(file.path(traits_data_dir, "traits_precalculated.txt"),
                  header = TRUE, sep = "\t", stringsAsFactors = FALSE, row.names = 1)
-t_sne_1 <- read.csv("embedding_overview/results/tables/t_sne_co_bugbase.csv")
-t_sne_2 <- read.csv("embedding_overview/results/tables/t_sne_phy_bugbase.csv")
+t_sne_1 <- read.csv(file.path(tables_dir, "t_sne_co_bugbase.csv"))
+t_sne_2 <- read.csv(file.path(tables_dir, "t_sne_phy_bugbase.csv"))
 t_sne_1$group <- rep("SNE", nrow(t_sne_1))
 t_sne_2$group <- rep("PhyloE", nrow(t_sne_2))
 t_sne <- rbind(t_sne_1, t_sne_2)
 id <- t_sne_1[, 1]
 
-#Aerobic_Anaerobic_Facultatively
+# Aerobic, anaerobic, and facultatively anaerobic traits
 plot <- t_sne
 plot$Aerobic <- rep(df[id, ]$Aerobic, 2)
 plot$Anaerobic <- rep(df[id, ]$Anaerobic, 2)
@@ -92,7 +112,7 @@ p <- ggplot(plot, aes(x = t.SNE1, y = t.SNE2, color = variable)) +
     ) +
     guides(color = guide_legend(override.aes = list(size = 3, alpha = 1)))
 
-ggsave("embedding_overview/results/figures/Aerobic_Anaerobic_Facultatively.png",
+ggsave(file.path(figures_dir, "Aerobic_Anaerobic_Facultatively.png"),
        width = 25, height = 10, units = "cm")
 
 # Gram negative and Gram positive
@@ -115,5 +135,5 @@ p <- ggplot(plot, aes(x = t.SNE1, y = t.SNE2, color = variable)) +
     ) + 
     guides(color = guide_legend(override.aes = list(size = 3, alpha = 1)))
 
-ggsave("embedding_overview/results/figures/Gram.png", width = 25, height = 10, units = "cm")
+ggsave(file.path(figures_dir, "Gram.png"), width = 25, height = 10, units = "cm")
 

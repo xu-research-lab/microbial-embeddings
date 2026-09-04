@@ -5,30 +5,22 @@ from sklearn.metrics.pairwise import cosine_similarity
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 
-# --- Configuration ---
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+ANALYSIS_DIR = os.path.dirname(SCRIPT_DIR)
+INPUT_FOLDER = os.path.join(
+    ANALYSIS_DIR,
+    "data/cooccurrence_metric_comparison/difference_study_training/embeding_list",
+)
+OUTPUT_FOLDER = os.path.join(SCRIPT_DIR, "results/similarity_matrix")
 
-# 1. Input directory
-INPUT_FOLDER = 'data/cooccurrence_metric_comparison/difference_study_training/embeding_list'
-
-# 2. Output directory
-OUTPUT_FOLDER = os.path.join('./', 'cooccurrence_metric_comparison/results/similarity_matrix')
-
-# 3. Number of CPU cores
-#    - Set a specific value such as 4 or 8
-#    - Use None to use all available CPU cores
-#    - Use os.cpu_count() - 1 to leave one core free
+# Number of worker processes.
 NUM_CORES_TO_USE = 24
 
 
 def calculate_and_save_similarity(filepath, output_dir):
-    """
-    Compute and save a cosine-similarity matrix for one embedding file.
-
-    """
+    """Compute and save a cosine-similarity matrix for one embedding file."""
     try:
         basename = os.path.basename(filepath)
-        # if basename !='russell_rao_1_100.txt':
-        #     return f"Skipped: {basename}"
         
         output_filename = f"similarity_{os.path.splitext(basename)[0]}.csv"
         output_path = os.path.join(output_dir, output_filename)
@@ -55,24 +47,21 @@ def calculate_and_save_similarity(filepath, output_dir):
 
 
 def main():
-    """
-    Scan input files and dispatch tasks.
-    """
+    """Scan input files and dispatch tasks."""
     print(f"Input directory: {INPUT_FOLDER}")
     
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     print(f"Results will be saved to: {OUTPUT_FOLDER}")
     
-    embedding_files = glob.glob(os.path.join(INPUT_FOLDER, '*.txt'))
+    embedding_files = sorted(glob.glob(os.path.join(INPUT_FOLDER, '*.txt')))
     
     if not embedding_files:
         print("\nError: No .txt files were found in the input directory. Check the path.")
         return
         
     print(f"\nFound {len(embedding_files)} embedding files.")
-    # Report the number of CPU cores
     if NUM_CORES_TO_USE is None:
-        print(f"Using all available CPU cores...")
+        print("Using all available CPU cores...")
     else:
         print(f"Using {NUM_CORES_TO_USE} CPU cores...")
     

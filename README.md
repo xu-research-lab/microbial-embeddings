@@ -219,8 +219,8 @@ cd tests
 This repository is organized to reproduce every analysis presented in our paper. The `analysis/` directory contains subfolders, each corresponding to a specific figure or analytical theme.
 
 - **`Pretraining_data_profile/`**: Scripts for building and profiling the pre-training dataset
-- **`Co_occurence_method/`**: Scripts for the comparative analysis of co-occurrence metrics.
-  - Comparative_analysis.R: A standalone R script for sampling OTUs from a single sample and generating network visualizations for each of the eight co-occurrence metrics.
+- **`sne_construction/cooccurrence_metric_comparison/`**: Scripts for comparing co-occurrence metrics.
+  - `plot_metric_networks.R`: Samples OTUs from one sample and visualizes all eight metrics as circular networks.
 - **`Simulation_experiments/`**: Scripts for validating the SNE framework using synthetic microbiome data.
 - **`SNE_overview/`**: Code for visualizing the pre-trained Social Niche Embeddings
 - **`Genome_collection_search/`**: Scripts for mapping OTUs to reference genomes

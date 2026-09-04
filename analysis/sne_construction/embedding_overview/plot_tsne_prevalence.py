@@ -1,10 +1,19 @@
-import json
+from pathlib import Path
+
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 from matplotlib.colors import LogNorm
 import seaborn as sns
 from collections import Counter
+
+# Resolve shared inputs from the repository root and keep figures with this analysis.
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parents[2]
+EMBEDDING_FILE = REPO_ROOT / "data/social_niche_embedding_100.txt"
+PREVALENCE_FILE = SCRIPT_DIR.parent / "data/embedding_overview/OTU_prevalence_abundance.csv"
+OUTPUT_FILE = SCRIPT_DIR / "results/figures/tsne_prevalence.png"
+
 
 def load_pretrained_embeddings(vectors_file):
     with open(vectors_file, 'r') as f:
@@ -14,17 +23,18 @@ def load_pretrained_embeddings(vectors_file):
             if vals[0] != '<unk>':
                 vectors[vals[0]] = [float(x) for x in vals[1:]]
     return vectors
-embedding_dict = load_pretrained_embeddings('../../data/social_niche_embedding_100.txt')
 
-def load_prevalence_dict(json_file):
-    with open(json_file, 'r') as file:
-        prevalence_dict = json.load(file)
-    return prevalence_dict
 
-prevalence_dict = load_prevalence_dict('prevalence_dict.json')
+embedding_dict = load_pretrained_embeddings(EMBEDDING_FILE)
+prevalence_table = np.genfromtxt(
+    PREVALENCE_FILE, delimiter=",", names=True, dtype=None, encoding="utf-8"
+)
+# Match prevalence values to the embedding row order.
+prevalence_dict = dict(zip(prevalence_table["OTU"], prevalence_table["prevalence"]))
 embedding_array = np.array(list(embedding_dict.values()))
 prev_list = [prevalence_dict[fid] for fid in embedding_dict.keys()]
 
+# Project the 100-dimensional SNE into two dimensions.
 tsne = TSNE(n_components=2, random_state=42)
 embedding_2d = tsne.fit_transform(embedding_array)
 # Create a figure with a color bar
@@ -53,6 +63,8 @@ plt.ylabel('t-SNE 2', fontsize=12)
 plt.grid(alpha=0.2, linestyle='--')
 # Adjust the layout
 plt.tight_layout()
+OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+plt.savefig(OUTPUT_FILE, dpi=300, bbox_inches="tight")
 plt.show()
 
 

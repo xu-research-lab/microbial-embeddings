@@ -6,6 +6,7 @@ library(ggplot2)
 library(ggraph)
 library(tidygraph)
 library(viridis)
+library(patchwork)
 micro_abundance <- read_biom("data/cooccurrence_metric_comparison/AGP_test.biom")
 otu <- biom_data(micro_abundance) %>% as.matrix()
 # random select sample
@@ -35,10 +36,19 @@ selected_indices <- lapply(names(samples_per_stratum), function(s) {
 
 # Extract data
 sample_data <- sample_data[selected_indices, , drop = FALSE]
-#sample_data_tss <- sample_data_tss[selected_indices, , drop = FALSE]
 sample_data_tss <- sample_data / sum(sample_data)
 
 remove(micro_abundance, otu)
+
+upper_triangle_table <- function(similarity_matrix) {
+  upper_indices <- which(upper.tri(similarity_matrix, diag = FALSE), arr.ind = TRUE)
+  data.frame(
+    micro_1 = rownames(similarity_matrix)[upper_indices[, 1]],
+    micro_2 = colnames(similarity_matrix)[upper_indices[, 2]],
+    Co_occurrence = similarity_matrix[upper_indices]
+  )
+}
+
 # Russell rao (a/n)
 cal_russell_rao_table <- function(otu_table) {
   # Convert to binary presence/absence data
@@ -53,17 +63,8 @@ cal_russell_rao_table <- function(otu_table) {
   # Calculate the Russell-Rao similarity matrix
   cooccurrence_matrix <- common_counts / total_species
   
-  # Extract upper-triangle indices without the diagonal
-  upper_indices <- which(upper.tri(cooccurrence_matrix, diag = FALSE), arr.ind = TRUE)
+  return(upper_triangle_table(cooccurrence_matrix))
   
-  # Build a three-column data frame
-  result <- data.frame(
-    micro_1 = rownames(cooccurrence_matrix)[upper_indices[, 1]],
-    micro_2 = colnames(cooccurrence_matrix)[upper_indices[, 2]],
-    Co_occurrence = cooccurrence_matrix[upper_indices]
-  )
-  
-  return(result)
 }
 Russell_rao <- cal_russell_rao_table(sample_data)
 
@@ -125,14 +126,7 @@ Russell_rao <- cal_russell_rao_table(sample_data)
       cooccurrence_Russeellrao[i, j] <- 1/(abs(i-j))
     }
   }
-  # Extract upper-triangle indices without the diagonal
-  upper_indices <- which(upper.tri(cooccurrence_Russeellrao, diag = FALSE), arr.ind = TRUE)
-  # Build a three-column data frame
-  Russell_rao_weight <- data.frame(
-    micro_1 = rownames(cooccurrence_Russeellrao)[upper_indices[, 1]],
-    micro_2 = colnames(cooccurrence_Russeellrao)[upper_indices[, 2]],
-    Co_occurrence = cooccurrence_Russeellrao[upper_indices]
-  )
+  Russell_rao_weight <- upper_triangle_table(cooccurrence_Russeellrao)
   #plot
   # Edge data
   Russell_rao_weight_edges <- as.data.frame(Russell_rao_weight)
@@ -185,15 +179,7 @@ Russell_rao <- cal_russell_rao_table(sample_data)
   # Convert to a Jaccard similarity matrix
   sim_matrix <- 1 - as.matrix(dist_binary)
   
-  # Extract upper-triangle indices without the diagonal
-  upper_indices <- which(upper.tri(sim_matrix, diag = FALSE), arr.ind = TRUE)
-  
-  # Build a three-column data frame
-  jaccard_res <- data.frame(
-    micro_1 = rownames(sim_matrix)[upper_indices[, 1]],
-    micro_2 = colnames(sim_matrix)[upper_indices[, 2]],
-    Co_occurrence = sim_matrix[upper_indices]
-  )
+  jaccard_res <- upper_triangle_table(sim_matrix)
   # plot
   # Edge data
   jaccard_edges <- as.data.frame(jaccard_res)
@@ -279,14 +265,7 @@ Russell_rao <- cal_russell_rao_table(sample_data)
       cooccurrence_braycurtis[i, j] <- min(sample_data_tss[i], sample_data_tss[j])*2/(sample_data_tss[i]+sample_data_tss[j])
     }
   }
-  # Extract upper-triangle indices without the diagonal
-  upper_indices <- which(upper.tri(cooccurrence_braycurtis, diag = FALSE), arr.ind = TRUE)
-  # Build a three-column data frame
-  braycurtis_res <- data.frame(
-    micro_1 = rownames(cooccurrence_braycurtis)[upper_indices[, 1]],
-    micro_2 = colnames(cooccurrence_braycurtis)[upper_indices[, 2]],
-    Co_occurrence = cooccurrence_braycurtis[upper_indices]
-  )
+  braycurtis_res <- upper_triangle_table(cooccurrence_braycurtis)
   
   # plot
   # Edge data
@@ -344,14 +323,7 @@ Russell_rao <- cal_russell_rao_table(sample_data)
       cooccurrence_braycurtis_pct[i, j] <- min(sample_data_pct[i], sample_data_pct[j])*2/(sample_data_pct[i]+sample_data_pct[j])
     }
   }  
-  # Extract upper-triangle indices without the diagonal
-  upper_indices <- which(upper.tri(cooccurrence_braycurtis_pct, diag = FALSE), arr.ind = TRUE)
-  # Build a three-column data frame
-  braycurtis_pct_res <- data.frame(
-    micro_1 = rownames(cooccurrence_braycurtis_pct)[upper_indices[, 1]],
-    micro_2 = colnames(cooccurrence_braycurtis_pct)[upper_indices[, 2]],
-    Co_occurrence = cooccurrence_braycurtis_pct[upper_indices]
-  )
+  braycurtis_pct_res <- upper_triangle_table(cooccurrence_braycurtis_pct)
   
   # plot
   # Edge data
@@ -401,14 +373,7 @@ Russell_rao <- cal_russell_rao_table(sample_data)
       cooccurrence_Abundance_Tss[i, j] <- min(sample_data_tss[i], sample_data_tss[j])*(1 - abs(sample_data_tss[i] - sample_data_tss[j]))
     }
   }
-  # Extract upper-triangle indices without the diagonal
-  upper_indices <- which(upper.tri(cooccurrence_Abundance_Tss, diag = FALSE), arr.ind = TRUE)
-  # Build a three-column data frame
-  Abundance_Tss_res <- data.frame(
-    micro_1 = rownames(cooccurrence_Abundance_Tss)[upper_indices[, 1]],
-    micro_2 = colnames(cooccurrence_Abundance_Tss)[upper_indices[, 2]],
-    Co_occurrence = cooccurrence_Abundance_Tss[upper_indices]
-  )
+  Abundance_Tss_res <- upper_triangle_table(cooccurrence_Abundance_Tss)
   
   # plot
   # Edge data
@@ -460,14 +425,7 @@ Russell_rao <- cal_russell_rao_table(sample_data)
       cooccurrence_Abundance_Pct[i, j] <- min(sample_data_pct[i], sample_data_pct[j])*(1 - abs(sample_data_pct[i] - sample_data_pct[j]))
     }
   }
-  # Extract upper-triangle indices without the diagonal
-  upper_indices <- which(upper.tri(cooccurrence_Abundance_Pct, diag = FALSE), arr.ind = TRUE)
-  # Build a three-column data frame
-  Abundance_Pct_res <- data.frame(
-    micro_1 = rownames(cooccurrence_Abundance_Pct)[upper_indices[, 1]],
-    micro_2 = colnames(cooccurrence_Abundance_Pct)[upper_indices[, 2]],
-    Co_occurrence = cooccurrence_Abundance_Pct[upper_indices]
-  )
+  Abundance_Pct_res <- upper_triangle_table(cooccurrence_Abundance_Pct)
   
   # plot
   # Edge data
@@ -516,12 +474,6 @@ Russell_rao <- cal_russell_rao_table(sample_data)
   
 
 # Draw circular network plots
-  library(ggplot2)
-  library(ggraph)
-  library(tidygraph)
-  library(viridis)
-  library(patchwork)
-  
   combined_plot <- ggpubr::ggarrange(
     Russell_rao_plot,
     Russell_rao_weight_plot,

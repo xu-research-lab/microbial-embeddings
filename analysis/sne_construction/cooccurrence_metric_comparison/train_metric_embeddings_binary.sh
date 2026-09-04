@@ -7,7 +7,7 @@
 #SBATCH --mem=100G
 #SBATCH -o log/%x_%a_b.out       # Slurm standard output log
 #SBATCH -e log/%x_%a_b.err       # Slurm error log
-#SBATCH --array=1-21%3           # Submit 40 tasks (5 datasets * 8 metrics)
+#SBATCH --array=1-21%3           # Submit 21 tasks
 #SBATCH --exclude=cu01
 
 # --- Global configuration ---
