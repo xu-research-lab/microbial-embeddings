@@ -1,0 +1,1 @@
+{"task": "crc_continent", "fold": "South_America", "seed": 11, "top_k": 600, "n_features": 2142, "n_train": 984, "n_test": 50, "test_auc": 0.8704}

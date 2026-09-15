@@ -1,0 +1,1 @@
+{"task": "crc_sample_efficiency", "fold": "PRJNA824020_n3_r2", "seed": 11, "top_k": 600, "n_features": 2282, "n_train": 503, "n_test": 59, "test_auc": 0.6351981351981352}

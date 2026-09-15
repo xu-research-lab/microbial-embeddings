@@ -1,0 +1,1 @@
+{"task": "crc_continent", "fold": "Europe", "seed": 11, "top_k": 600, "n_features": 2142, "n_train": 893, "n_test": 141, "test_auc": 0.9045121951219512}
