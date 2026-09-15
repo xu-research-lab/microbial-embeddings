@@ -293,6 +293,7 @@ cd tests
 
 ## Code Structure & Analysis Reproducibility
 
+
 This repository is organized to reproduce every analysis presented in our paper. The `analysis/` directory contains subfolders, each corresponding to a specific figure or analytical theme. Each subfolder contains its own `README.md` with detailed descriptions and reproduction instructions.
 
 - **`resources/`**: Scripts for building the pretraining 16S dataset and for collecting and mapping reference genomes to OTUs.
