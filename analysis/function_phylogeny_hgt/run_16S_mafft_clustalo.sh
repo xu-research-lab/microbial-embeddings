@@ -11,8 +11,8 @@ module load miniconda/4.9.2
 source activate mmseqs2_env
 
 input="../resources/genome_mapping/data/feces_seq_16S_SLIVA.fasta"
-aligned="/home/dongbiao/word_embedding_microbiome/HGT/16S/aligned.fasta"
-identity_matrix="/home/dongbiao/word_embedding_microbiome/HGT/16S/identity_matrix.txt"
+aligned="data/aligned.fasta"
+identity_matrix="data/identity_matrix.txt"
 
 mafft --auto --thread 18 ${input} > ${aligned}
 

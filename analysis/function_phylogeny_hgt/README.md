@@ -42,14 +42,14 @@ embeddings carry:
 | Phylogenetic embedding | `../../data/phylo_embed_PCA_100.txt` | phylogenetic embedding, PCA-reduced to 100 d |
 | SILVA reference tree | `../../data/SSURefNR99_1200_slv_138_2_subset.tre` | pairwise phylogenetic distances (PhyloDM) |
 | SILVA taxonomy | `../../data/taxmap_slv_ssu_ref_nr_138.2.txt` | phylum-to-genus assignments per OTU |
-| PICRUSt2 function tables | `data/picrust/bac_{KO,EC,CAZY}_predicted.tsv` | predicted function profiles per OTU |
+| PICRUSt2 function tables | `data/picrust/bac_{KO,EC,CAZY}_predicted.tsv` | predicted function profiles per OTU; KO and EC come from the Release (see [Section 7.0](#70-fetch-the-large-inputs)), CAZY is in the repository |
 | KO annotations | `data/ko_pathway.tsv`, `data/ko_names.txt` | KO id → description; the list of KOs analyzed |
 | Genome pairs | `data/genome_pairs_vsearch.txt` | pairs of genomes screened for HGT |
 | 16S identity matrix | `data/identity_matrix.txt` | pairwise 16S % identity (ClustalO) |
 | HGT pair table | `data/hgt.csv` | per pair: `id_1`, `id_2`, `identity` (16S % id), `cosine_co` (SNE cosine), `hgt` (candidate HGT count), `phy_dis` (phylogenetic distance) |
 | Binned HGT rates | `data/hgt_plot_res.csv` | `distance`, `hgt_rate`, `group` (distance-binned summary of `hgt.csv`) |
 | HGT prediction results | `data/hgt_predict_res_all.csv` | `test` (fold), `group` (feature set), `labels`, `proba` |
-| Raw co-occurrence matrix | `../../script/cooccur_otuembedding/table.co` + `feature-dict.csv` | GloVe co-occurrence counts between taxon pairs ("Cooccur" feature) |
+| Raw co-occurrence matrix | `data/cooccur_otuembedding/table.co` (Release) + `feature-dict.csv` | GloVe co-occurrence counts between taxon pairs ("Cooccur" feature) |
 
 ## 3. The analyses
 
@@ -74,6 +74,7 @@ embeddings carry:
 | [`run_HGT_predict.py`](run_HGT_predict.py) | HGT prediction: 5-fold Random Forest on four feature sets (SNE, PhyloE, Cooccur, SNE+PhyloE) → `data/hgt_predict_res_all.csv`. |
 | [`run_16S_mafft_clustalo.sh`](run_16S_mafft_clustalo.sh) | SLURM job: MAFFT alignment of the 16S sequences, then ClustalO pairwise % identity matrix → `data/identity_matrix.txt`. |
 | [`SNE_vs_phylogenetic_distacne.ipynb`](SNE_vs_phylogenetic_distacne.ipynb) | Computes per-taxon-group mean pairwise SNE cosine and phylo distance → `data/tax_group.csv`. |
+| [`download_data.sh`](download_data.sh) | Fetches the three inputs that exceed GitHub's file size limit from the GitHub Release into `data/` (see [Section 7.0](#70-fetch-the-large-inputs)). |
 
 ## 5. The main notebook, section by section
 
@@ -93,8 +94,11 @@ is organized as follows:
 ```
 Figures/                          # figures drawn directly by run_SNE_phylo_function.py
 │                                 #   Phylo_func_{KO,EC,CAZY}.pdf, SNE_func_{KO,EC,CAZY}.pdf
+download_data.sh                  # fetches the Release-hosted inputs marked (R) below
 data/
-├── picrust/                      # PICRUSt2-predicted function tables (KO, EC, CAZY)
+├── picrust/                      # PICRUSt2-predicted function tables
+│                                 #   bac_CAZY_predicted.tsv, bac_{KO,EC}_predicted.tsv (R)
+├── cooccur_otuembedding/         # feature-dict.csv, table.co (R)
 ├── tax_group.csv                 # per-taxon-group mean ± sd of SNE cosine & phylo distance
 ├── hgt.csv                       # genome-pair table: identity, SNE cosine, HGT count, phylo distance
 ├── hgt_plot_res.csv              # distance-binned HGT rates per group (Phylo, SNEsim split, SNE)
@@ -105,12 +109,29 @@ data/
 ├── genome_pairs_vsearch.txt      # genome pairs screened for HGT
 ├── identity_matrix.txt           # pairwise 16S % identity (ClustalO)
 ├── genome_id_file / genome_fid.json  # genome id mappings
+├── aligned.fasta                 # MAFFT alignment, written by run_16S_mafft_clustalo.sh
 ├── phylolm/                      # co_model_{KO}.rds, co_null_model_{KO}.rds (per KO)
 ├── adonis/                       # adonis2_{KO}.rds (per KO)
 └── blastn_results/filtered/      # {query}.fna_vs_{subject}.fna_filtered.tsv (per pair)
 ```
 
 ## 7. How to reproduce
+
+### 7.0 Fetch the large inputs
+
+Three inputs exceed GitHub's 100 MB file size limit and are published as the
+[`function-phylogeny-hgt-data-v1`](https://github.com/xu-research-lab/microbial-embeddings/releases/tag/function-phylogeny-hgt-data-v1)
+GitHub Release instead: `data/cooccur_otuembedding/table.co` (1.3 GB),
+`data/picrust/bac_KO_predicted.tsv` (388 MB) and
+`data/picrust/bac_EC_predicted.tsv` (105 MB). Fetch them before running
+anything in this directory:
+
+```bash
+bash download_data.sh
+```
+
+The script downloads, checksums and unpacks each file into `data/`. It skips
+files that are already present, so it is safe to re-run.
 
 ### 7.1 Environment
 

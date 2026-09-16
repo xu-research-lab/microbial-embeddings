@@ -36,8 +36,8 @@ def cooccur_feature(cooccur, id_1, id_2):
 
 # TODO: real paths -- .cooccur binary from cooccur_embedding.cooccur_workflow
 # and the vocab file from cooccur_embedding.get_feature_dict.
-COOCCUR_FILE = "../../script/cooccur_otuembedding/table.co"
-FEATURE_DICT = "../../script/cooccur_otuembedding/feature-dict.csv"
+COOCCUR_FILE = "data/cooccur_otuembedding/table.co"
+FEATURE_DICT = "data/cooccur_otuembedding/feature-dict.csv"
 
 co_embedding = pd.read_csv("../../data/social_niche_embedding_100.txt",
                           header=None, sep=" ", low_memory=False, index_col=0)
