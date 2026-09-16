@@ -10,7 +10,7 @@
 module load miniconda/4.9.2 
 source activate mmseqs2_env
 
-input="../resources/genome_mapping/data/feces_seq_16S_SLIVA.fasta"
+input="data/pick_otu.fasta"
 aligned="data/aligned.fasta"
 identity_matrix="data/identity_matrix.txt"
 
