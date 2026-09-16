@@ -115,6 +115,25 @@ its own run's flags exactly:
         --n-estimators 32 --report-combiner prob --no-linear-branch \\
         --run-name results_with_SNEs_ckpt --keep-ckpt
 
+NOTE (lodo): the lodo AUCs reported from
+``Data/loo_all_diseases/results_with_SNEs`` do NOT come from the command
+above. Their result.json files show ``--inner-split per_disease`` (one member
+per training disease, 12 per fold), trained as run
+``results_with_SNEs_test_remove_lowsample`` with
+``--set loss=GroupBalanced+LogitAdjusted --no-linear-branch`` (see
+run_jobs.sh). The existing ``results_with_SNEs_ckpt`` lodo checkpoints are the
+32-member ``disease_loso`` ensemble, so the lodo attributions explain a
+different ensemble from the one scored. To explain the reported one, retrain
+it with --keep-ckpt:
+
+    python run_attention_biom_with_SNEs.py --tasks lodo \\
+        --gpus 0 1 2 3 4 5 6 7 --inner-split per_disease \\
+        --set loss=GroupBalanced+LogitAdjusted --group-balance-beta 0.5 \\
+        --logit-adjust-tau 1 --no-linear-branch --report-combiner prob \\
+        --run-name results_with_SNEs_ckpt_per_disease --keep-ckpt
+
+and pass ``--run-name results_with_SNEs_ckpt_per_disease`` here.
+
 Cutting the fold list is safe: a job's ``model_seed`` is ``--ensemble-seed0``
 plus its index among its own fold's members, its ``member_seed`` is
 ``--member-seed`` plus the same index, and the members are enumerated from that

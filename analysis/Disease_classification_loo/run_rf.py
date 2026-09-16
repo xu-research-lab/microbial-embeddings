@@ -4,7 +4,7 @@
 Random Forest across all LOSO tasks — simplest possible protocol.
 
 For every fold:
-  1. normalise each table: rankdata + norm per sample, over the full
+  1. normalise each table: rankdata / max rank per sample, over the full
      feature set,
   2. select: keep only the TOP-K largest entries of each sample (the rest
      are set to zero), then drop features that are empty everywhere,
@@ -103,9 +103,9 @@ def _keep_top_k_per_sample(M, k):
 def _load_one(biom_path, top_k, renorm):
     """Step 1 + 2 for a single table.
 
-    1. normalise: rankdata + L1 norm per sample, computed on the table's
-       FULL feature set (identical to the original
-       `table.rankdata(axis='sample').norm(axis='sample')`);
+    1. normalise: rankdata per sample divided by the sample's maximum rank,
+       computed on the table's FULL feature set -- the same rank-over-max
+       scaling `membed.otu_attention.read_imdb` gives the attention model;
     2. select: keep only the top-k entries of each sample, zero the rest,
        then drop features that are empty in every sample.
 

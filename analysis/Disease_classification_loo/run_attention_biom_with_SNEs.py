@@ -147,7 +147,9 @@ TASKS = {
         meta="Data/shuffle_table_IBD_CRC/{disease}/metadata.tsv",
         fold="{disease}_{study}",
         artifact="Data/shuffle_table_IBD_CRC/",
-        results="disease.csv")
+        # Not "disease.csv": under --tasks all the two tasks share a
+        # --run-name, and the second collect() would overwrite the first.
+        results="shuffled_table.csv")
 }
 
 SAMPLE_ID_COL = "sample"
