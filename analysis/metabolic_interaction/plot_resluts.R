@@ -1,32 +1,20 @@
+# Group labels contain "≈": run in a UTF-8 locale, e.g. LC_ALL=en_US.UTF-8 Rscript plot_resluts.R
+if (!l10n_info()[["UTF-8"]]) stop("plot_resluts.R needs a UTF-8 locale (the '≈' labels are lost otherwise)")
+
 library(dplyr)
 library(ggplot2)
-library(ggpmisc)
-library(ggpubr)
-library(lemon)
-library(cowplot)
-library(reshape2)
-library(tidyverse)
-library(stringr)
-library(ggbeeswarm)
-
-library(ggdensity)
-library(ggblanket)
-library(ggsci)
-library(reshape2)
-library(gridExtra)
-library(patchwork)
 library(cowplot)
 library(aplot)
 library(ggplotify)
-
-library(RColorBrewer)  
+library(RColorBrewer)
 
 set1_colors <- brewer.pal(n = 9, name = "Set1")  
+set.seed(1)  # MIP jitter in panel b
 
 high_sim_res <- read.csv("data/high_sim_res_M11.csv")
 high_sim_res <- high_sim_res %>% filter(cosine > 0.9)
 high_sim_res$group <- rep("cosine > 0.9", nrow(high_sim_res))
-low_SNE_res <- read.csv("data/low_SNE_res.csv", row.names = 1)
+low_SNE_res <- read.csv("data/low_SNE_res.csv")
 low_SNE_res$group <- rep("cosine ≈ 0", nrow(low_SNE_res))
 high_sim_res <- high_sim_res[, colnames(low_SNE_res)]
 plot_df <- rbind(high_sim_res, low_SNE_res)
@@ -39,8 +27,8 @@ p1 <- plot_df %>% ggplot(aes(x = group, y = mro, fill = group)) +
     scale_fill_manual(values = c("cosine > 0.9" = "#E41A1C", "cosine ≈ 0" = "#377EB8")) +
     theme_bw(base_size = 14) +
     labs(fill = " ", x = NULL, y = "Competition MRO") +
-    scale_y_continuous(
-        limits = c(0.5, 1), breaks = seq(0.5, 1, by = 0.1)) +
+    scale_y_continuous(breaks = seq(0.5, 1, by = 0.1)) +
+    coord_cartesian(ylim = c(0.5, 1)) +  # zoom only; limits= would drop points before the box stats
     theme(
         text = element_text(face = "bold"),
         legend.position = "none"
@@ -54,9 +42,9 @@ p2 <- plot_df %>% ggplot(aes(x = group, y = mip, fill = group)) +
     geom_boxplot(width = 0.4, alpha = 0.5, outlier.shape = NA) +
     scale_fill_manual(values = c("cosine > 0.9" = "#E41A1C", "cosine ≈ 0" = "#377EB8")) +
     theme_bw(base_size = 14) +
-    labs(fill = " ", x = NULL, y = "Competition MIP") +
-    scale_y_continuous(
-        limits = c(0, 8), breaks = seq(0, 8, by = 2)) +
+    labs(fill = " ", x = NULL, y = "Cooperation MIP") +
+    scale_y_continuous(breaks = seq(0, 8, by = 2)) +
+    coord_cartesian(ylim = c(0, 8)) +
     theme(
         text = element_text(face = "bold"),
         legend.position = "none"
@@ -68,7 +56,7 @@ p2 <- plot_df %>% ggplot(aes(x = group, y = mip, fill = group)) +
           axis.text.x = element_text(angle = 15, hjust = 1, vjust = 1))
 
 p_all <- plot_grid(p1, p2, align="hv",
-               nrow = 1, ncol=4, plot=FALSE, rel_heights = c(1, 1))
+               nrow = 1, ncol=4, rel_heights = c(1, 1))
 
 
 high_sim_res <- read.csv("data/high_sim_res_M11.csv")
@@ -87,9 +75,9 @@ p_dotplot <- ggplot(high_sim_res_plot, aes(x = mro, y = mip_random, group = grou
     labs(x = "Competition MRO", y = "Cooperation MIP", color="") +  
     theme_bw(base_size=14) +
     scale_x_continuous(
-        limits = c(0.5, 1), breaks = seq(0.5, 1, by = 0.1)) + 
+        limits = c(0.4, 1), breaks = seq(0.4, 1, by = 0.1)) + 
     scale_y_continuous(
-        limits = c(0, 10), breaks = seq(0, 10, by = 2)) +
+        limits = c(-0.3, 10.3), breaks = seq(0, 10, by = 2)) +
     theme(legend.position = "None",
           text = element_text(face = "bold"))
 distribut_mro <- high_sim_res_plot %>%ggplot(aes(x = mro, y = group, color = group)) +
@@ -112,7 +100,7 @@ distribut_mip <- high_sim_res_plot %>% ggplot(aes(y = mip, x = group, color = gr
     theme_bw(base_size=14) +
     labs(fill = NULL, x = NULL, y = NULL) +
     scale_y_continuous(
-        limits = c(0, 10), breaks = seq(0, 10, by = 2)) +
+        limits = c(-0.3, 10.3), breaks = seq(0, 10, by = 2)) +
     theme(text = element_text(face = "bold"),
           legend.position = "None",
           axis.text = element_blank(),
@@ -131,7 +119,7 @@ p1 <- as.ggplot(p1) +
     labs(title = "cosine > 0.9") +  
     theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
 
-low_sim_res <- read.csv("results/low_SNE_res.csv", row.names = 1)
+low_sim_res <- read.csv("data/low_SNE_res.csv")
 low_sim_res <- low_sim_res %>% arrange(co_occur)
 low_sim_res_low <- low_sim_res[1:100, ]
 low_sim_res_low$group <- rep("Low co-occur", 100)
@@ -147,9 +135,9 @@ p_dotplot <- ggplot(low_sim_res_plot, aes(x = mro, y = mip_random, group = group
     labs(x = "Competition MRO", y = "Cooperation MIP", color="") +  
     theme_bw(base_size=14) +
     scale_x_continuous(
-        limits = c(0.5, 1), breaks = seq(0.5, 1, by = 0.1)) + 
+        limits = c(0.4, 1), breaks = seq(0.4, 1, by = 0.1)) + 
     scale_y_continuous(
-        limits = c(0, 10), breaks = seq(0, 10, by = 2)) +
+        limits = c(-0.3, 10.3), breaks = seq(0, 10, by = 2)) +
     theme(# legend.position = "None",
           text = element_text(face = "bold"))
 distribut_mro <- low_sim_res_plot %>%ggplot(aes(x = mro, y = group, color = group)) +
@@ -172,7 +160,7 @@ distribut_mip <- low_sim_res_plot %>% ggplot(aes(y = mip, x = group, color = gro
     theme_bw(base_size=14) +
     labs(fill = NULL, x = NULL, y = NULL) +
     scale_y_continuous(
-        limits = c(0, 10), breaks = seq(0, 10, by = 2)) +
+        limits = c(-0.3, 10.3), breaks = seq(0, 10, by = 2)) +
     theme(text = element_text(face = "bold"),
           legend.position = "None",
           axis.text = element_blank(),
@@ -192,10 +180,11 @@ p2 <- as.ggplot(p2) +
     theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
 
 p_top <- plot_grid(p1, p2, align="hv",
-               nrow = 1, ncol=2, plot=FALSE, rel_widths = c(0.64, 1))
+               nrow = 1, ncol=2, rel_widths = c(0.64, 1))
 
 p <- plot_grid(p_all, p_top,
                align="hv", labels = c('a', 'b'),
-               nrow = 2, ncol=1, plot=FALSE, rel_heights = c(1, 1))
-ggsave("data/metabolic_smetana.pdf", p, width = 20, height = 14, units = "cm")
+               nrow = 2, ncol=1, rel_heights = c(1, 1))
+ggsave("data/metabolic_smetana.pdf", p, width = 20, height = 14, units = "cm",
+       device = cairo_pdf)  # the default pdf() fonts have no "≈" glyph
 

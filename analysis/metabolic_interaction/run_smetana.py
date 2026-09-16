@@ -14,12 +14,18 @@ mediadb = "data/media_db.tsv"
 
 def maincall(i, run_file):
     
-    os.mkdir(f"{run_file}/{i}")
-    run_file = f"{run_file}/{i}"
-    genome_id = modelseed_micro_pairs.loc[i, ].values
+    genome_id = modelseed_micro_pairs.loc[i].values
     split_id = i
     metabolic_model_path = "data/OTU_metabolic_model_M3"
+    # 97 of the 14,039 OTUs have no model; a failed cp would go unnoticed below
+    missing = [g for g in genome_id if not os.path.exists(f"{metabolic_model_path}/{g}.xml")]
+    if missing:
+        print(f"skip pair {i}: no model for {', '.join(missing)}", flush=True)
+        return
+    run_file = f"{run_file}/{i}"
+    os.makedirs(run_file, exist_ok=True)
     output = "data/smetana/results"
+    os.makedirs(output, exist_ok=True)
     
     ### generate community file
     id_2 = [f"{i}_{split_id}" for i in genome_id]
@@ -32,7 +38,7 @@ def maincall(i, run_file):
     otuput_file = '_'.join(genome_id)
     
     ### model: global, detailed
-    main([f"{run_file}/*_{split_id}.xml"], mode="global", output=f"{output}/{otuput_file}_WD_output", media="M11",
+    main([f"{run_file}/*_{split_id}.xml"], mode="global", output=f"{output}/{otuput_file}_M11_output", media="M11",
         mediadb=mediadb, exclude="data/inorganic.txt", communities=f"{run_file}/communities_{split_id}.tsv", 
         use_lp=True, ignore_coupling=True)
     
