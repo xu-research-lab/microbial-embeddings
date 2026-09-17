@@ -14,6 +14,8 @@ no ties. `cooccur_workflow` multiplies every similarity by n_samples (3)
 before writing, so the stored value is the raw score times 3.
 """
 
+import os
+
 import numpy as np
 import pytest
 from numpy import testing as npt
@@ -24,6 +26,7 @@ from membed.cooccur_embedding import (
     read_biom,
     gen_even_pairs,
     cooccur_workflow,
+    _ensure_executable,
     build_x_max_file_workflow,
     get_feature_dict,
     cooccur_jaccard_dense,
@@ -299,3 +302,11 @@ def test_build_x_max_file_workflow(tmp_path):
     build_x_max_file_workflow(cooccur_file, x_max_file, percentile_num=50)
     # 50th percentile of [1, 1, 2, 2, 4, 4, 8, 8], and '.npy' is appended.
     assert np.load(f'{x_max_file}.npy') == pytest.approx(3.0)
+
+
+def test_ensure_executable_restores_exec_bit(tmp_path):
+    binary = tmp_path / 'shuffle'
+    binary.write_text('#!/bin/sh\n')
+    binary.chmod(0o644)  # what a zip download leaves behind
+    _ensure_executable(str(binary))
+    assert os.access(binary, os.X_OK)

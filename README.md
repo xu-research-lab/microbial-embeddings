@@ -43,18 +43,13 @@ We recommend using Conda to manage the environment and dependencies. Complete in
 
 **Platform requirement:** `membed glove-train` (Part 1, Step 4) shells out to the precompiled GloVe binaries bundled in `membed/glove_build/`, which are x86-64 Linux executables with no C source or build step provided. Generating SNEs therefore requires **Linux x86-64**; macOS and ARM machines cannot run the GloVe training step. Part 2 (classification with the provided pre-trained SNEs) is pure Python/PyTorch and runs on any platform.
 
-0. **Install Git LFS and clone the repository:**
-
-   The `data/` directory is stored via [Git LFS](https://git-lfs.com). If Git LFS is not installed, `git clone` checks out 134-byte text pointer files instead of the real data, and `biom.load_table()` will later fail with an uninformative parsing error. Run the following:
+0. **Clone the repository:**
 
    ```bash
-   # Install Git LFS first; otherwise data/ contains pointer files instead of real data
-   git lfs install
-   git clone https://github.com/xu-research-lab/microbial-embeddings.git
+   # GIT_LFS_SKIP_SMUDGE=1 keeps the clone from failing when Git LFS is not installed yet;
+   # the large data/ files are fetched in step 2.
+   GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/xu-research-lab/microbial-embeddings.git
    cd microbial-embeddings
-   git lfs pull
-   # Self-check: this should report approx. 171M; a 134-byte file means LFS did not take effect
-   ls -lh data/gut_pretraining.biom
    ```
 
    `.gitattributes` lists every LFS file by exact path. It carries no wildcard rules on purpose: the LFS quota is used up, so no new file may enter LFS. Large new data is published as a GitHub Release instead and fetched by a small script - see `analysis/resources/genome_mapping/download_data.sh` for the pattern.
@@ -69,14 +64,27 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    conda activate membed
    ```
 
+   The environment file pins `mkl<2024.1` and `setuptools<81`. PyTorch 1.10 does not work with newer versions of either: it fails with `undefined symbol: iJIT_NotifyEvent` or cannot import `pkg_resources`. If you install into an existing environment, apply the same pins: `conda install "mkl<2024.1" "setuptools<81"`.
+
    **GPU users:** the environment file pins only `pytorch=1.10.0`, so Conda installs the CPU build and classification silently falls back to CPU even when `--numb 0` is passed. To use a CUDA GPU, install the CUDA build into the same environment, picking the `cudatoolkit` version that matches your driver:
 
    ```bash
-   conda install -n membed pytorch=1.10.0 cudatoolkit=11.3 -c pytorch -c conda-forge
+   conda install -n membed pytorch=1.10.0 cudatoolkit=11.3 "mkl<2024.1" -c pytorch -c conda-forge
    python -c "import torch; print(torch.cuda.is_available())"   # should print True
    ```
 
-2. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
+2. **Fetch the Git LFS data:**
+
+   The `data/` directory is stored via [Git LFS](https://git-lfs.com). Until it is fetched, `data/` holds 134-byte text pointer files instead of the real data, and `biom.load_table()` fails with an uninformative parsing error. The Conda environment above already provides `git-lfs`. Without Conda, install it with your system package manager, e.g. `sudo apt install git-lfs`.
+
+   ```bash
+   git lfs install --local
+   git lfs pull
+   # Self-check: this should report approx. 171M; a 134-byte file means LFS did not take effect
+   ls -lh data/gut_pretraining.biom
+   ```
+
+3. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
 
    ```bash
    pip install -e .
@@ -88,12 +96,14 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    pip install .
    ```
 
-3. **Pip-only installation (without Conda):** If you already have Python >= 3.9 and do not want a Conda environment:
+4. **Pip-only installation (without Conda):** If you already have Python >= 3.9 and do not want a Conda environment:
 
    ```bash
    pip install -r requirements.txt
    pip install .
    ```
+
+   You still need `git-lfs` for step 2.
 
    The `requirements.txt` file lists the runtime dependencies (with lower bounds matching `requirements_dev.yml`); the Conda file additionally pins dev/analysis tools.
 
@@ -279,7 +289,7 @@ To test the GloVe embedding generation pipeline:
 
 ```bash
 cd tests
-./run_glove.sh
+bash run_glove.sh
 ```
 
 **Expected output:** The script will generate embeddings in `tests/glove_output/` directory with detailed timing logs.
@@ -298,10 +308,10 @@ To test the attention-based classification module:
 
 ```bash
 cd tests
-./run_classification.sh
+bash run_classification.sh
 ```
 
-**Device selection:** the script passes `--numb 0` (zero-based CUDA device index) by default and falls back to CPU automatically when no CUDA device is available. Override it via the `NUMB` environment variable, e.g. `NUMB=-1 ./run_classification.sh` to force CPU, or `NUMB=2 ./run_classification.sh` to use `cuda:2`.
+**Device selection:** the script passes `--numb 0` (zero-based CUDA device index) by default and falls back to CPU automatically when no CUDA device is available. Override it via the `NUMB` environment variable, e.g. `NUMB=-1 bash run_classification.sh` to force CPU, or `NUMB=2 bash run_classification.sh` to use `cuda:2`.
 
 **Expected output:** The script will train a classification model and save results in `tests/classification_output/` directory.
 

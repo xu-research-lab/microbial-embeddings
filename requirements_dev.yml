@@ -6,6 +6,9 @@ channels:
 dependencies:
   - python=3.9.20
   - pytorch=1.10.0
+  - mkl<2024.1        # mkl>=2024.1 dropped iJIT_NotifyEvent, which torch 1.10 links against
+  - setuptools<81     # torch 1.10 imports pkg_resources, removed in setuptools 81
+  - git-lfs           # data/ is stored in Git LFS
 
   - numpy=1.22.4 
   - scipy=1.8.1

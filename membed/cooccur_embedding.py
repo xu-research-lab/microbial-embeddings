@@ -435,6 +435,17 @@ def cooccur_workflow(biom_file,
     temp.tofile(cooccur_file)
 
 
+def _ensure_executable(path):
+    """Restore the exec bit that zip downloads and plain copies drop."""
+    if os.access(path, os.X_OK):
+        return
+    try:
+        os.chmod(path, os.stat(path).st_mode | 0o111)
+    except OSError as e:
+        raise PermissionError(f'{path} is not executable and chmod failed ({e}); '
+                              f'run: chmod +x {os.path.dirname(path)}/*') from e
+
+
 def train_glove_model(cooccur_file,
                       x_max_file,
                       feature_dict,
@@ -479,6 +490,8 @@ def train_glove_model(cooccur_file,
     """
     x_max = float(np.load(_x_max_path(x_max_file)))
     glove_dir = os.path.dirname(__file__)
+    for binary in ('shuffle', 'glove'):
+        _ensure_executable(os.path.join(glove_dir, 'glove_build', binary))
 
     os.makedirs(result, exist_ok=True)
     result = os.path.join(result, 'embeddings')
