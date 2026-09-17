@@ -27,7 +27,7 @@ def process_n(n, table_path, data_dir):
 
         prevalence = agsub.nonzero_counts(axis='observation')
         fid = agsub.ids(axis='observation')
-        keep = fid[prevalence >= 100]   # relative prevalence threshold
+        keep = fid[prevalence >= 100]   # absolute threshold: present in >= 100 samples of the subset
         agsub.filter(keep, axis='observation', inplace=True)
         agsub.remove_empty()
 
@@ -38,7 +38,7 @@ def process_n(n, table_path, data_dir):
         print(f"[rep {n}] {label}: {agsub.shape[1]} samples x {agsub.shape[0]} features")
 
 if __name__ == '__main__':
-    data_dir = "Data/pretraining_datasize/subset/"
+    data_dir = "Data/pretraining_datasize/trainning_data/"   # data_<rep>/subset_table_<size>.biom
     table_path = "../../data/gut_pretraining.biom"
     Parallel(n_jobs=5)(
         delayed(process_n)(n, table_path, data_dir) for n in range(1, 6)

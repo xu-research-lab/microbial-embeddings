@@ -35,9 +35,9 @@ Gut microbiome studies are notoriously hard to generalize across cohorts
 
 | Resource | Path | Description |
 |---|---|---|
-| Pretraining BIOM table | `../../data/gut_pretraining.biom` | ~210,090 samples x 14,093 SILVA taxa, used to pretrain the SNEs |
+| Pretraining BIOM table | `../../data/gut_pretraining.biom` | 202,558 samples x 14,093 SILVA taxa (the full 210,090-sample compendium minus every disease-benchmark sample), used to pretrain the SNEs |
 | SNE embedding (main) | `../../data/social_niche_embedding_removing_disease_samples_100.txt` | 100-d SNE vectors (disease samples removed during pretraining) |
-| Shuffled SNE (control) | `../../data/social_niche_embedding_removing_disease_samples_100_shuffled.txt` | column-wise shuffled SNE matrix |
+| Shuffled SNE (control) | `../../data/social_niche_embedding_removing_disease_samples_100_shuffled.txt` | each of the 100 dimensions permuted independently across taxa (`SNEs_shuffle.py`, seed 5) |
 | Phylogenetic embedding | `../../data/phylo_embed_PCA_100.txt` | phylogenetic embedding, PCA-reduced to 100 d |
 | DNABERT2 embedding | `../../data/dnabert2_16s_embedding_reduced_100.txt` | DNABERT2 16S embedding, reduced to 100 d |
 | Sample metadata | `../../data/metadata_disease_classification.tsv` | study, disease (`disease_name_ab`), control/case (`group`), etc. |
@@ -71,16 +71,28 @@ A cohort is kept only if it has >= 25 samples per group and contains both classe
 | `lodo` | `run_leave_one_disease_out.tsv` | one whole disease | `Data/loo_all_diseases/` |
 | `loso_all` | `run_leave_one_study_out.tsv` | one study in the pooled all-disease table | `Data/loo_all_studies/` |
 | `shuffled_table` | `run_shuffled_table.tsv` | like `disease`, but on globally shuffled BIOM tables | `Data/shuffle_table_IBD_CRC/` |
+| `crc_continent` | written by the runner (`Data/disease_data/CRC_continent/folds.tsv`) | one continent of the merged CRC table | `Data/disease_data/CRC_continent/` |
+| `crc_sample_efficiency` | written by the runner (`Data/disease_data/CRC_sample_efficiency/folds.tsv`) | one CRC study, trained on 2–5 randomly drawn CRC studies (5 draws per size, or every combination when there are fewer) | `Data/disease_data/CRC_sample_efficiency/` |
+
+Each fold is an ensemble. Under `--inner-split loso` (single-disease tasks) a fold
+trains one member per training study, each early-stopped on the study it holds
+out; under `--inner-split per_disease` (`lodo`, `loso_all`) it trains one member
+per training disease, each early-stopped on one study of that disease. The
+fold's prediction is the mean of the members' probabilities (`--report-combiner prob`).
 
 ## 4. Scripts
 
 | Script | Purpose |
 |---|---|
 | [`run_attention_biom_with_SNEs.py`](run_attention_biom_with_SNEs.py) | **Main trainer.** Runs the Attention model for all tasks. |
-| [`run_rf.py`](run_rf.py) | Random Forest baseline: rank-normalize. |
+| [`run_rf.py`](run_rf.py) | Random Forest baseline: per-sample rank / max rank, keep each sample's 600 most abundant taxa, union feature space, 200 trees, seed 11. |
 | [`run_svm.py`](run_svm.py) | SVM baseline with the same preprocessing. |
 | [`explain_attention.py`](explain_attention.py) | **Model interpretation.** Per-taxon attributions for every fold: attention readout (`attn`, reported as enrichment) and integrated gradients (`ig`). |
-| [`get_subdatasets.py`](get_subdatasets.py) | Subsamples the pretraining table (1k–160k samples, 5 replicates) for the scaling experiment. |
+| [`run_attention_biom_CRC_continent.py`](run_attention_biom_CRC_continent.py) | Leave-one-continent-out CRC; builds the folds, then reuses the main trainer. |
+| [`run_attention_biom_CRC_sample_efficiency.py`](run_attention_biom_CRC_sample_efficiency.py) | CRC with the training side cut to 2–5 studies; builds the folds, then reuses the main trainer. |
+| [`run_rf_CRC_continent.py`](run_rf_CRC_continent.py), [`run_rf_CRC_sample_efficiency.py`](run_rf_CRC_sample_efficiency.py) | RF arm of the two CRC experiments (run after the attention scripts, which write the folds). |
+| [`get_subdatasets.py`](get_subdatasets.py) | Subsamples the pretraining table (1k–160k samples, 5 nested replicates; taxa kept if present in >= 100 samples of the subset) for the scaling experiment. |
+| [`run_cooccur_SNEs.sh`](run_cooccur_SNEs.sh) | SLURM array (one task per replicate): co-occurrence + GloVe on every subset -> `subset_table_{size}_100.txt`. |
 | [`SNEs_shuffle.py`](SNEs_shuffle.py) | Shuffles each embedding column independently (row labels kept) -> shuffled-SNE control. |
 | [`biom_table_shuffle.py`](biom_table_shuffle.py) | Globally permutes all values of a BIOM table -> shuffled-abundance control. |
 | [`run_jobs.sh`](run_jobs.sh) | **Master script** with the exact commands used for every experiment in the study (see reproduction below). |
@@ -109,7 +121,15 @@ follows:
 | S2 | **Attention heatmap** | Samples x pooling-dimension heatmaps of the pooled encoder representation, hierarchically clustered, checked for fold-driven (batch) splits. |
 | S3 | **MDS** | MDS of biomarker groups per disease. |
 | S4 | **IBD subtype** | 12-panel ROC grid (UC/CD/CCD/ICD x feces/biopsy/feces_to_biopsy), SNEs vs RF. |
-| S5 | **ROC: SNEs vs RF, other diseases** | ROC grids for the remaining 11 diseases (AS, ASD, BD, CAD, GD, IBS, MS, OB, PD, SZ, T2DM). |
+| S5 | **ROC: SNEs vs RF, other diseases** | ROC grids for the remaining 11 diseases (AS, ASD, BD, CAD, GD, IBS, MS, OB, PD, SZ, T2DM), and a paired SNEs-vs-RF test across all 13 diseases. |
+| S6 | **Leave one continent for CRC** | Per-continent AUC, RF vs Att_SNEs. |
+| S7 | **Sample efficiency** | CRC test AUC against the number of training studies, RF vs Att_SNEs. |
+
+Two sections still read results produced by the earlier single-model pipeline
+(`results/attention_loo.pt`), not by `run_attention_biom_with_SNEs.py`:
+section 3 (`Data/pretraining_datasize/result/`) and S4
+(`Data/IBD_subtype_data/{subtype}/{study}/results/attention_scores.csv` and
+`RF/RF_Scores.csv`). The `ibd_subtype` command in section 8.2 has not been run.
 
 ## 6. Companion notebooks
 
@@ -127,29 +147,36 @@ Data/
 │   ├── {disease}/                #   e.g. CRC/
 │   │   ├── {study}/              #     PRJEB6070/
 │   │   │   ├── train_loo.biom / test_loo.biom
-│   │   │   ├── results/          # attention_scores.csv, roc_curve.csv,
-│   │   │   │                     # auc_loo.png, loss_loo.png, attention_loo.pt
-│   │   │   └── RF/               # RF_Scores.csv, RF_ROC.csv
+│   │   │   ├── results/          # earlier single-model pipeline (not read by the notebook)
+│   │   │   └── RF/               # earlier RF pipeline (not read by the notebook)
 │   │   └── metadata.tsv
 │   ├── results_with_SNEs/        # one dir per fold, members/*/pred_test.csv
-│   ├── results_with_shuffled_SNEs/
+│   ├── results_with_SNEs_ckpt/   # CRC/IBD folds retrained with --keep-ckpt (for explain_attention.py)
+│   ├── results_with_shuffled_SNEs/   # CRC/IBD folds only
 │   ├── results_with_phylo_embed_PCA/
 │   ├── results_with_dnabert2/
 │   ├── _results_with_rf/         # rf/pred_test.csv per fold
 │   ├── _results_with_svm/        # svm/pred_test.csv per fold
 │   ├── results_with_rf_embed/    # RF on SNE features
-│   └── results_with_rf_PCA/      # RF on phylo-PCA features
-├── loo_all_studies/              # 'loso_all' task (results_with_SNEs, _results_with_rf)
-├── loo_all_diseases/             # 'lodo' task (pooled all-disease table + results)
-├── IBD_subtype_data/             # 'ibd_subtype' task
+│   ├── results_with_rf_PCA/      # RF on phylo-PCA features
+│   ├── CRC_continent/            # CRC_all.biom, folds.tsv, {continent}/{train,test}_loo.biom,
+│   │                             #   {continent}/rf/, crc_geo/ (attention members)
+│   └── CRC_sample_efficiency/    # folds.tsv, {study}_n{k}_r{i}/train_loo.biom + rf/, crc_se/
+├── disease_data_raw/             # per-study BIOM tables and metadata the folds were cut from
+├── loo_all_studies/              # 'loso_all': data/{study}/, results_with_SNEs, _results_with_rf
+├── loo_all_diseases/             # 'lodo': data/{disease}/, results_with_SNEs, _results_with_rf,
+│                                 #   results_with_SNEs_ckpt (for explain_attention.py)
+├── IBD_subtype_data/             # 'ibd_subtype' task; figures read {subtype}/{study}/results, RF
 ├── IBD_CRC_model/                # LinDA differential-abundance results per disease
 │                                 #   (linda_res_study.csv, model-independent markers)
 ├── shuffle_table_IBD_CRC/        # 'shuffled_table' task
 ├── pretraining_datasize/         # scaling experiment
-│   ├── subset/                   #   subsampled tables (get_subdatasets.py)
-│   ├── embedding/                #   SNEs re-trained per size (run_cooccur_SNEs.sh)
-│   ├── trainning_data/           #   LOSO folds per size
-│   └── result/                   #   summary_ROC_results_datasize_{IBD,CRC}.csv
+│   ├── trainning_data/           #   data_{rep}/subset_table_{size}.biom (get_subdatasets.py)
+│   ├── embedding/                #   datasize_result_{rep}/subset_table_{size}_100.txt (run_cooccur_SNEs.sh);
+│   │                             #   only these *_100.txt files are tracked
+│   └── result/                   #   {IBD,CRC}/datasize_result_{rep}/subset_table_{size}/{study}/,
+│                                 #   summary_ROC_results_datasize_{IBD,CRC}.csv
+├── biomark_perm/                 # permutation-SHAP check on one CRC fold
 └── biomark/                      # explain_attention.py outputs
     ├── attn_summary_{task}.csv          # fold -> disease, attention readout
     ├── shap_grad_{task}_{fold}.csv      # per-sample per-taxon attributions
@@ -196,15 +223,18 @@ python run_attention_biom_with_SNEs.py --tasks ibd_subtype --gpus 0 1 2 3 4 5 6 
     --inner-split loso --run-name results_with_SNEs \
     --linear-branch --report-combiner prob
 
-# Leave-one-disease-out and leave-one-study-out (pooled table)
+# Leave-one-disease-out and leave-one-study-out (pooled table): one member per
+# training disease, loss reweighted by disease size (beta 0.5) and adjusted for
+# each disease's case/control ratio (tau 1)
 python run_attention_biom_with_SNEs.py --tasks lodo --gpus 0 1 2 3 4 5 6 7 \
-    --inner-split per_disease --set loss=GroupBalanced --group-balance-beta 0.5 \
-    --logit-adjust-tau 1 --no-linear-branch \
+    --inner-split per_disease --set loss=GroupBalanced+LogitAdjusted \
+    --group-balance-beta 0.5 --logit-adjust-tau 1 --no-linear-branch \
     --report-combiner prob --run-name results_with_SNEs
 
 python run_attention_biom_with_SNEs.py --tasks loso_all --gpus 0 1 2 3 4 5 6 7 \
-    --inner-split per_disease --set loss=LogitAdjusted --logit-adjust-tau 1 \
-    --report-combiner prob --run-name results_with_SNEs --no-linear-branch
+    --inner-split per_disease --set loss=GroupBalanced+LogitAdjusted \
+    --group-balance-beta 0.5 --logit-adjust-tau 1 --no-linear-branch \
+    --report-combiner prob --run-name results_with_SNEs
 
 # Alternative embeddings and controls (same task, different --glove-embedding)
 python run_attention_biom_with_SNEs.py --tasks disease --gpus 0 1 2 3 4 5 6 7 \
@@ -216,7 +246,10 @@ python run_attention_biom_with_SNEs.py --tasks disease --gpus 0 1 2 3 4 5 6 7 \
     --run-name results_with_phylo_embed_PCA --linear-branch --report-combiner prob \
     --inner-split loso --glove-embedding ../../data/phylo_embed_PCA_100.txt
 
+# shuffled SNEs: CRC and IBD folds only
+python SNEs_shuffle.py --seed 5
 python run_attention_biom_with_SNEs.py --tasks disease --gpus 0 1 2 3 4 5 6 7 \
+    --run-tsv run_shuffled_table.tsv \
     --run-name results_with_shuffled_SNEs --linear-branch --report-combiner prob \
     --inner-split loso \
     --glove-embedding ../../data/social_niche_embedding_removing_disease_samples_100_shuffled.txt
@@ -228,18 +261,47 @@ python run_attention_biom_with_SNEs.py --tasks shuffled_table --gpus 0 1 2 3 4 5
     --inner-split loso \
     --glove-embedding ../../data/social_niche_embedding_removing_disease_samples_100_shuffled.txt
 
-# Baselines
-python run_rf.py  --tasks all
-python run_svm.py --tasks all
+# CRC: leave one continent out, and sample efficiency
+python run_attention_biom_CRC_continent.py --gpus 0 1 2 3 4 5 6 7 \
+    --run-name crc_geo --linear-branch --report-combiner prob
+python run_attention_biom_CRC_sample_efficiency.py --gpus 0 1 2 3 4 5 6 7 \
+    --run-name crc_se --linear-branch --report-combiner prob
+
+# Baselines (the run name is appended as "_<name>", giving _results_with_rf/)
+python run_rf.py  --tasks disease lodo loso_all --run-name results_with_rf
+python run_svm.py --tasks disease --run-name results_with_svm
+python run_rf_CRC_continent.py
+python run_rf_CRC_sample_efficiency.py
+
+# Pretraining-size scaling: subsample, then re-train SNEs per subset (SLURM)
+python get_subdatasets.py
+sbatch run_cooccur_SNEs.sh
 ```
+
+The pooled-task results on disk were produced under other run names
+(`results_with_SNEs_test_remove_lowsample` for `lodo`,
+`results_with_SNEs_per_disease` for `loso_all`, `results_with_SNE_shuffle_seed5`
+for the shuffled SNEs) and the directories renamed afterwards; the flags above
+are the ones those runs recorded.
 
 ### 8.3 Model interpretation
 
+The training runs above delete their weights, so the folds to explain are first
+retrained with `--keep-ckpt` under the run name `results_with_SNEs_ckpt` (commands
+in `run_jobs.sh`, section 6). The CRC/IBD retrain reproduces the reported
+members exactly. The `lodo` checkpoints are a 32-member `disease_loso` ensemble,
+not the `per_disease` ensemble scored in section 8.2.
+
 ```bash
-# IBD & CRC attention / gradients / SHAP
+# IBD & CRC attention / gradients / pooled representation
 python explain_attention.py --task disease --run-name results_with_SNEs_ckpt \
     --run-tsv run_leave_one_study_out_explain.tsv \
-    --diseases CRC IBD --gpus 0 1 2 3 4 5 6 7
+    --diseases CRC IBD --gpus 0 1 2 3 4 5 6 7 --dump-pooled
+
+# Permutation-SHAP check of the gradient method on one fold
+python explain_attention.py --task disease --run-name results_with_SNEs_ckpt \
+    --run-tsv run_leave_one_study_out_explain.tsv --diseases CRC \
+    --gpus 0 --perm-per-disease 1 --perm-max-folds 1 --out-dir Data/biomark_perm
 
 # Leave-one-disease-out attributions
 python explain_attention.py --task lodo --run-name results_with_SNEs_ckpt \
@@ -250,11 +312,16 @@ python explain_attention.py --task lodo --run-name results_with_SNEs_ckpt \
 - `attn` — mean attention distribution ("which microbes does the model attend
   to"), reported as enrichment where 1.0 = an average taxon; also records the
   attention-vs-abundance Spearman correlation per fold;
-- `ig` — integrated gradients;
+- `shap_grad` — integrated gradients on the abundances, for up to 300 held-out
+  samples per fold;
+- `shap_perm` — the permutation SHAP explainer, on the folds selected by
+  `--perm-per-disease`/`--perm-folds`, used to check the gradient ranking
+  (`shap_method_agreement_{task}.csv`).
 
 ### 8.4 Produce the figures
 
 Run [`disease_classification.ipynb`](disease_classification.ipynb) from top to
 bottom (jupyter/lab, `membed` environment). It only reads the result files above
 — no training happens in the notebook. Figures are written to `Figures/` and
-`Data/biomark/`.
+`Data/biomark/`. [`Biomarker_analysis.ipynb`](Biomarker_analysis.ipynb) repeats
+the biomarker part in more detail.

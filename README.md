@@ -8,10 +8,29 @@
 
 ## Human gut microbiome resource
 
-* **Pre-training Microbiome Biom Table:** [gut_pretraining.biom](./data/gut_pretraining.biom)
+* **Pre-training Microbiome Biom Table:** [table_gut_all.biom](./data/table_gut_all.biom)
   * **Description:** This BIOM-format file contains **210,090 samples** and **14,093 microbial taxa** mapped to the SILVA SSU rRNA reference, representing one of the most comprehensive human gut microbiome datasets available.
 * **SNEs (100-dimensional):** [social_niche_embedding_100.txt](./data/social_niche_embedding_100.txt)
   * **Description:** This Social Niche Embedding file provides 100-dimensional vectors encoding "social niche" for all 14,093 SILVA sequences representing human gut microbes, pretrained from the BIOM table described above.
+
+
+## The `data/` directory
+
+`data/` holds every input file the analyses read. Nothing in it is produced on
+the fly: each file was either downloaded from a public database or built by the
+pipelines in [`analysis/resources/`](./analysis/resources/). It contains:
+
+* the two BIOM abundance tables - the full 210,090-sample gut compendium and the
+  202,558-sample pre-training subset;
+* the sample metadata for those tables, including the disease-benchmark labels;
+* the pre-trained embeddings: the SNEs used in the paper, one SNE per
+  co-occurrence metric, and the baseline embeddings (phylogeny-PCA, DNABERT-2)
+  they are compared against;
+* the SILVA 138.2 reference taxonomy and tree;
+* `projects/`, the per-study ASV tables the compendium was assembled from.
+
+See [data/README.md](./data/README.md) for a file-by-file description and for
+how to load each format.
 
 
 ## Usage
@@ -24,18 +43,13 @@ We recommend using Conda to manage the environment and dependencies. Complete in
 
 **Platform requirement:** `membed glove-train` (Part 1, Step 4) shells out to the precompiled GloVe binaries bundled in `membed/glove_build/`, which are x86-64 Linux executables with no C source or build step provided. Generating SNEs therefore requires **Linux x86-64**; macOS and ARM machines cannot run the GloVe training step. Part 2 (classification with the provided pre-trained SNEs) is pure Python/PyTorch and runs on any platform.
 
-0. **Install Git LFS and clone the repository:**
-
-   The `data/` directory is stored via [Git LFS](https://git-lfs.com). If Git LFS is not installed, `git clone` checks out 134-byte text pointer files instead of the real data, and `biom.load_table()` will later fail with an uninformative parsing error. Run the following:
+0. **Clone the repository:**
 
    ```bash
-   # Install Git LFS first; otherwise data/ contains pointer files instead of real data
-   git lfs install
-   git clone https://github.com/xu-research-lab/microbial-embeddings.git
+   # GIT_LFS_SKIP_SMUDGE=1 keeps the clone from failing when Git LFS is not installed yet;
+   # the large data/ files are fetched in step 2.
+   GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/xu-research-lab/microbial-embeddings.git
    cd microbial-embeddings
-   git lfs pull
-   # Self-check: this should report approx. 171M; a 134-byte file means LFS did not take effect
-   ls -lh data/gut_pretraining.biom
    ```
 
 1. **Create or Update Conda Environment:** Use the provided file to create a new, clean environment:
@@ -46,14 +60,46 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    conda activate membed
    ```
 
+   The environment file pins `mkl<2024.1` and `setuptools<81`. PyTorch 1.10 does not work with newer versions of either: it fails with `undefined symbol: iJIT_NotifyEvent` or cannot import `pkg_resources`. If you install into an existing environment, apply the same pins: `conda install "mkl<2024.1" "setuptools<81"`.
+
    **GPU users:** the environment file pins only `pytorch=1.10.0`, so Conda installs the CPU build and classification silently falls back to CPU even when `--numb 0` is passed. To use a CUDA GPU, install the CUDA build into the same environment, picking the `cudatoolkit` version that matches your driver:
 
    ```bash
-   conda install -n membed pytorch=1.10.0 cudatoolkit=11.3 -c pytorch -c conda-forge
+   conda install -n membed pytorch=1.10.0 cudatoolkit=11.3 "mkl<2024.1" -c pytorch -c conda-forge
    python -c "import torch; print(torch.cuda.is_available())"   # should print True
    ```
 
-2. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
+2. **Fetch the Git LFS data:**
+
+   The `data/` directory is stored via [Git LFS](https://git-lfs.com). Until it is fetched, `data/` holds 134-byte text pointer files instead of the real data, and `biom.load_table()` fails with an uninformative parsing error. The Conda environment above already provides `git-lfs`. Without Conda, install it with your system package manager, e.g. `sudo apt install git-lfs`.
+
+   ```bash
+   git lfs install --local
+   git lfs pull
+   # Self-check: this should report approx. 171M; a 134-byte file means LFS did not take effect
+   ls -lh data/gut_pretraining.biom
+   ```
+
+   `.gitattributes` lists every LFS file by exact path. It carries no wildcard rules on purpose: the LFS quota is used up, so no new file may enter LFS. Large new data is published as a GitHub Release instead and added to `download_release_data.sh` (step 3).
+
+3. **Fetch the Release-hosted analysis inputs (only needed to reproduce the analyses):**
+
+   Some inputs under `analysis/` exceed GitHub's file size limits and are published as GitHub Releases. `git clone` never downloads Release files, so fetch them with one command from the repository root:
+
+   ```bash
+   bash download_release_data.sh                  # everything, ~5.7 GB download
+   bash download_release_data.sh genome_mapping   # or only the groups you need
+   ```
+
+   | Group | Release | Files placed under `analysis/` |
+   | --- | --- | --- |
+   | `genome_mapping` | [genome-mapping-data-v1](https://github.com/xu-research-lab/microbial-embeddings/releases/tag/genome-mapping-data-v1) | `resources/genome_mapping/data/`: `bac120_metadata_r220.tsv.gz`, `barrnap.fna` |
+   | `function_phylogeny_hgt` | [function-phylogeny-hgt-data-v1](https://github.com/xu-research-lab/microbial-embeddings/releases/tag/function-phylogeny-hgt-data-v1) | `function_phylogeny_hgt/data/`: `cooccur_otuembedding/table.co`, `picrust/bac_{KO,EC}_predicted.tsv` |
+   | `metabolic_interaction` | [metabolic-interaction-data-v1](https://github.com/xu-research-lab/microbial-embeddings/releases/tag/metabolic-interaction-data-v1) | `metabolic_interaction/data/`: four `*.tsv` tables, `blast_output_bigg/`, `OTU_metabolic_model_M3/` |
+
+   The script verifies each download by SHA-256, unpacks it into place and skips files that already exist, so it is safe to re-run. Without access to github.com, download an asset from the Release page by hand and put it in its target directory; the script then uses it. The unit and pipeline tests below do not need any of these files. The genome_mapping notebooks and `run_vsearch.sh` call the script for their own group automatically.
+
+4. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
 
    ```bash
    pip install -e .
@@ -65,12 +111,14 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    pip install .
    ```
 
-3. **Pip-only installation (without Conda):** If you already have Python >= 3.9 and do not want a Conda environment:
+5. **Pip-only installation (without Conda):** If you already have Python >= 3.9 and do not want a Conda environment:
 
    ```bash
    pip install -r requirements.txt
    pip install .
    ```
+
+   You still need `git-lfs` for step 2.
 
    The `requirements.txt` file lists the runtime dependencies (with lower bounds matching `requirements_dev.yml`); the Conda file additionally pins dev/analysis tools.
 
@@ -256,7 +304,7 @@ To test the GloVe embedding generation pipeline:
 
 ```bash
 cd tests
-./run_glove.sh
+bash run_glove.sh
 ```
 
 **Expected output:** The script will generate embeddings in `tests/glove_output/` directory with detailed timing logs.
@@ -275,10 +323,10 @@ To test the attention-based classification module:
 
 ```bash
 cd tests
-./run_classification.sh
+bash run_classification.sh
 ```
 
-**Device selection:** the script passes `--numb 0` (zero-based CUDA device index) by default and falls back to CPU automatically when no CUDA device is available. Override it via the `NUMB` environment variable, e.g. `NUMB=-1 ./run_classification.sh` to force CPU, or `NUMB=2 ./run_classification.sh` to use `cuda:2`.
+**Device selection:** the script passes `--numb 0` (zero-based CUDA device index) by default and falls back to CPU automatically when no CUDA device is available. Override it via the `NUMB` environment variable, e.g. `NUMB=-1 bash run_classification.sh` to force CPU, or `NUMB=2 bash run_classification.sh` to use `cuda:2`.
 
 **Expected output:** The script will train a classification model and save results in `tests/classification_output/` directory.
 

@@ -141,7 +141,7 @@ g.ax_joint.set_facecolor('#f0f0f0')
 g.ax_joint.grid(True, linestyle='--', alpha=0.3)
 
 plt.subplots_adjust(right=0.9)
-plt.savefig(f'results/figures/Phylo_func_{type}.pdf', format='pdf', dpi=300, bbox_inches='tight', pad_inches=0.1)
+plt.savefig(f'Figures/Phylo_func_{type}.pdf', format='pdf', dpi=300, bbox_inches='tight', pad_inches=0.1)
 
 
 x = plot_df['sne_dist']
@@ -199,4 +199,4 @@ g.ax_joint.set_facecolor('#f0f0f0')
 g.ax_joint.grid(True, linestyle='--', alpha=0.3)
 
 plt.subplots_adjust(right=0.9)
-plt.savefig(f'results/figures/SNE_func_{type}.pdf', format='pdf', dpi=300, bbox_inches='tight', pad_inches=0.1)
+plt.savefig(f'Figures/SNE_func_{type}.pdf', format='pdf', dpi=300, bbox_inches='tight', pad_inches=0.1)

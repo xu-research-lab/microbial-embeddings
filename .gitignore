@@ -108,3 +108,23 @@ ENV/
 
 # Local pretrained model weights
 /models/
+
+# Large genome_mapping inputs, served from the genome-mapping-data-v1 GitHub Release
+analysis/resources/genome_mapping/data/bac120_metadata_r220.tsv.gz
+analysis/resources/genome_mapping/data/barrnap.fna
+
+# Large function_phylogeny_hgt inputs, served from the function-phylogeny-hgt-data-v1 GitHub Release
+analysis/function_phylogeny_hgt/data/cooccur_otuembedding/table.co
+analysis/function_phylogeny_hgt/data/picrust/bac_EC_predicted.tsv
+analysis/function_phylogeny_hgt/data/picrust/bac_KO_predicted.tsv
+
+# Large metabolic_interaction inputs, served from the metabolic-interaction-data-v1 GitHub Release
+analysis/metabolic_interaction/data/*.tar.gz
+analysis/metabolic_interaction/data/*.tar.gz.part*
+analysis/metabolic_interaction/data/blast_output_bigg/
+analysis/metabolic_interaction/data/OTU_metabolic_model_M3/
+analysis/metabolic_interaction/data/mapping_bigg_gene_table.tsv
+analysis/metabolic_interaction/data/mapping_scores_table.tsv
+analysis/metabolic_interaction/data/bigg_gene_predicted.tsv
+analysis/metabolic_interaction/data/scores_predicted.tsv
+analysis/metabolic_interaction/data/smetana/

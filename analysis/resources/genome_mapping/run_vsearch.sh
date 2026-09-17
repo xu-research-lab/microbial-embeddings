@@ -20,5 +20,6 @@ barrnap --quiet --threads 4 --outseq dir/16S_${genome_id}.fasta ${genome_id}.fas
 cat dir/16S_${genome_id}.fasta > barrnap.fna
 
 ### vsearch global research for mapping the OTUs to genome by similarity 16S sequence
+bash ../../../download_release_data.sh genome_mapping  # fetch data/barrnap.fna from the GitHub Release if missing
 database="data/barrnap.fna" 
 vsearch --usearch_global ${queries} --db ${database} --id 0.99 --blast6out data/vsearch_blast.out

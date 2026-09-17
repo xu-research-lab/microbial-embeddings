@@ -1,6 +1,6 @@
 """Run CarveMe's DIAMOND step on genome proteomes and dump per-genome BiGG gene scores.
 
-One CSV per genome, in the PICRUSt2 trait-table row format:
+One CSV per genome, with the query_gene,BiGG_gene,score columns CarveMe reads:
 
     query_gene,BiGG_gene,score
     gene_0,STM_v1_0.STM0047,58

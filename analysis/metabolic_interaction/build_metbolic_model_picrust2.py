@@ -173,6 +173,7 @@ def main(i):
     model_id = i
     inputfile = f"data/OTU_bigg_gene/{model_id}.tsv"
     outputfile = f"data/OTU_metabolic_model_M3/{model_id}.xml"
+    os.makedirs("data/OTU_metabolic_model_M3", exist_ok=True)
     universe = fid_gram.get(model_id)
     mediadb = "data/media_db.tsv"
     maincall(inputfile=inputfile, outputfile=outputfile, model_id=model_id,
