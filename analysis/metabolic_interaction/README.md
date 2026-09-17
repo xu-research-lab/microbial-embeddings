@@ -70,10 +70,10 @@ GitHub Release instead:
 | `OTU_metabolic_model_M3/` | 3.4 GB packed | step 4 |
 
 ```bash
-bash download_data.sh
+bash ../../download_release_data.sh metabolic_interaction
 ```
 
-The script downloads, checksums and unpacks everything into `data/`. The model
+The script (at the repository root) downloads, checksums and unpacks everything into `data/`. The model
 archive is split into two parts to fit the Release size limit; the script joins
 them. Finished files are skipped, so it is safe to re-run. Step 5 (the figure)
 needs none of these files.

@@ -52,10 +52,6 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    cd microbial-embeddings
    ```
 
-   `.gitattributes` lists every LFS file by exact path. It carries no wildcard rules on purpose: the LFS quota is used up, so no new file may enter LFS. Large new data is published as a GitHub Release instead and fetched by a small script - see `analysis/resources/genome_mapping/download_data.sh` for the pattern.
-
-   Two genome-mapping inputs exceed GitHub's file size limit and are distributed as a [GitHub Release](https://github.com/xu-research-lab/microbial-embeddings/releases/tag/genome-mapping-data-v1) instead. The notebooks in `analysis/resources/genome_mapping/` fetch them automatically on first run.
-
 1. **Create or Update Conda Environment:** Use the provided file to create a new, clean environment:
 
    ```bash
@@ -84,7 +80,26 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    ls -lh data/gut_pretraining.biom
    ```
 
-3. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
+   `.gitattributes` lists every LFS file by exact path. It carries no wildcard rules on purpose: the LFS quota is used up, so no new file may enter LFS. Large new data is published as a GitHub Release instead and added to `download_release_data.sh` (step 3).
+
+3. **Fetch the Release-hosted analysis inputs (only needed to reproduce the analyses):**
+
+   Some inputs under `analysis/` exceed GitHub's file size limits and are published as GitHub Releases. `git clone` never downloads Release files, so fetch them with one command from the repository root:
+
+   ```bash
+   bash download_release_data.sh                  # everything, ~5.7 GB download
+   bash download_release_data.sh genome_mapping   # or only the groups you need
+   ```
+
+   | Group | Release | Files placed under `analysis/` |
+   | --- | --- | --- |
+   | `genome_mapping` | [genome-mapping-data-v1](https://github.com/xu-research-lab/microbial-embeddings/releases/tag/genome-mapping-data-v1) | `resources/genome_mapping/data/`: `bac120_metadata_r220.tsv.gz`, `barrnap.fna` |
+   | `function_phylogeny_hgt` | [function-phylogeny-hgt-data-v1](https://github.com/xu-research-lab/microbial-embeddings/releases/tag/function-phylogeny-hgt-data-v1) | `function_phylogeny_hgt/data/`: `cooccur_otuembedding/table.co`, `picrust/bac_{KO,EC}_predicted.tsv` |
+   | `metabolic_interaction` | [metabolic-interaction-data-v1](https://github.com/xu-research-lab/microbial-embeddings/releases/tag/metabolic-interaction-data-v1) | `metabolic_interaction/data/`: four `*.tsv` tables, `blast_output_bigg/`, `OTU_metabolic_model_M3/` |
+
+   The script verifies each download by SHA-256, unpacks it into place and skips files that already exist, so it is safe to re-run. Without access to github.com, download an asset from the Release page by hand and put it in its target directory; the script then uses it. The unit and pipeline tests below do not need any of these files. The genome_mapping notebooks and `run_vsearch.sh` call the script for their own group automatically.
+
+4. **Install the `membed` package:** Install in editable mode using pip (recommended for development):
 
    ```bash
    pip install -e .
@@ -96,7 +111,7 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    pip install .
    ```
 
-4. **Pip-only installation (without Conda):** If you already have Python >= 3.9 and do not want a Conda environment:
+5. **Pip-only installation (without Conda):** If you already have Python >= 3.9 and do not want a Conda environment:
 
    ```bash
    pip install -r requirements.txt

@@ -74,7 +74,6 @@ embeddings carry:
 | [`run_HGT_predict.py`](run_HGT_predict.py) | HGT prediction: 5-fold Random Forest on four feature sets (SNE, PhyloE, Cooccur, SNE+PhyloE) → `data/hgt_predict_res_all.csv`. |
 | [`run_16S_mafft_clustalo.sh`](run_16S_mafft_clustalo.sh) | SLURM job: MAFFT alignment of the 16S sequences, then ClustalO pairwise % identity matrix → `data/identity_matrix.txt`. |
 | [`SNE_vs_phylogenetic_distacne.ipynb`](SNE_vs_phylogenetic_distacne.ipynb) | Computes per-taxon-group mean pairwise SNE cosine and phylo distance → `data/tax_group.csv`. |
-| [`download_data.sh`](download_data.sh) | Fetches the three inputs that exceed GitHub's file size limit from the GitHub Release into `data/` (see [Section 7.0](#70-fetch-the-large-inputs)). |
 
 ## 5. The main notebook, section by section
 
@@ -94,7 +93,6 @@ is organized as follows:
 ```
 Figures/                          # figures drawn directly by run_SNE_phylo_function.py
 │                                 #   Phylo_func_{KO,EC,CAZY}.pdf, SNE_func_{KO,EC,CAZY}.pdf
-download_data.sh                  # fetches the Release-hosted inputs marked (R) below
 data/
 ├── picrust/                      # PICRUSt2-predicted function tables
 │                                 #   bac_CAZY_predicted.tsv, bac_{KO,EC}_predicted.tsv (R)
@@ -127,10 +125,11 @@ GitHub Release instead: `data/cooccur_otuembedding/table.co` (1.3 GB),
 anything in this directory:
 
 ```bash
-bash download_data.sh
+bash ../../download_release_data.sh function_phylogeny_hgt
 ```
 
-The script downloads, checksums and unpacks each file into `data/`. It skips
+The script (at the repository root) downloads, checksums and unpacks each file
+into `data/`; files marked (R) below come from it. It skips
 files that are already present, so it is safe to re-run.
 
 ### 7.1 Environment

@@ -7,8 +7,8 @@
 #
 # There are deliberately NO wildcard patterns: the LFS storage quota is
 # exhausted, so no NEW file may enter LFS. A large new file belongs in a GitHub
-# Release instead - see analysis/resources/genome_mapping/download_data.sh for
-# the pattern. Do not run `git lfs track`; it would append a wildcard rule here.
+# Release instead - add it to download_release_data.sh at the
+# repository root. Do not run `git lfs track`; it would append a wildcard rule here.
 analysis/Disease_classification_loo/Data/IBD_subtype_data/CCD/metadata.tsv filter=lfs diff=lfs merge=lfs -text
 analysis/Disease_classification_loo/Data/IBD_subtype_data/CD/metadata.tsv filter=lfs diff=lfs merge=lfs -text
 analysis/Disease_classification_loo/Data/IBD_subtype_data/CD_feces/metadata.tsv filter=lfs diff=lfs merge=lfs -text
