@@ -260,6 +260,30 @@ def survey_training_table(train_biom, meta_path, study_col, drop_studies=()):
     return md.loc[sids, study_col].unique()
 
 
+def survey_class_counts(train_biom, meta_path, study_col, drop_studies=()):
+    """(cases, controls) in a fold's training table."""
+    sids = np.asarray(biom.load_table(train_biom).ids(axis="sample"))
+    md = pd.read_csv(meta_path, sep="\t", index_col=SAMPLE_ID_COL,
+                     dtype={SAMPLE_ID_COL: str}, low_memory=False)
+    sids = sids[drop_study_mask(sids, md, study_col, drop_studies)]
+    lab = pd.to_numeric(md.loc[sids, LABELS_COL], errors="coerce")
+    return int((lab == 1).sum()), int((lab == 0).sum())
+
+
+def _cv_mask(job, lab, in_study):
+    """Validation part ``job['cv_fold']`` of a stratified ``job['cv_k']``-way
+    cut of the samples in `in_study`; across the k members every one of them is
+    validated on exactly once."""
+    from sklearn.model_selection import StratifiedKFold
+    idx = np.flatnonzero(in_study)
+    skf = StratifiedKFold(n_splits=int(job["cv_k"]), shuffle=True,
+                          random_state=job["split_seed"])
+    _, val_local = list(skf.split(idx, lab[idx]))[int(job["cv_fold"])]
+    mask = np.zeros(len(in_study), dtype=bool)
+    mask[idx[val_local]] = True
+    return mask
+
+
 def _valid_mask(job, sids, lab, md):
     """Boolean mask over `sids` (True = validation), plus a strategy label."""
     mode = job["inner_mode"]
@@ -290,7 +314,18 @@ def _valid_mask(job, sids, lab, md):
     # that transfers across studies rather than within one.
     g = md.loc[sids, job["study_col"]].astype(str).to_numpy()
     valid_studies = [str(s) for s in job["valid_studies"]]
-    return np.isin(g, valid_studies), "loso"
+    in_study = np.isin(g, valid_studies)
+    if job.get("cv_fold") is not None:
+        # The fold's only training cohort: holding it out whole would leave
+        # nothing to train on, so this member validates on one part of it.
+        mask = _cv_mask(job, lab, in_study)
+        print(f"[loso ] {job['fold']}/{job['valid_unit']}: only training "
+              f"cohort {', '.join(valid_studies)} cut {job['cv_k']} ways -- "
+              f"validating on part {int(job['cv_fold']) + 1} "
+              f"({int(mask.sum())} samples), training on the other "
+              f"{int(in_study.sum()) - int(mask.sum())}")
+        return mask, "loso_cv"
+    return in_study, "loso"
 
 
 def _column(md, sids, col, what):
@@ -368,14 +403,8 @@ def _same_disease_mask(job, sids, lab, md):
         # Cut the study k ways instead and let this member validate on one
         # part: the other 80% stays in training, and across the k members
         # every sample is validated on exactly once.
-        from sklearn.model_selection import StratifiedKFold
-        idx = np.flatnonzero(in_study)
         k = int(job["cv_k"])
-        skf = StratifiedKFold(n_splits=k, shuffle=True,
-                              random_state=job["split_seed"])
-        _, val_local = list(skf.split(idx, lab[idx]))[int(job["cv_fold"])]
-        mask = np.zeros(len(sids), dtype=bool)
-        mask[idx[val_local]] = True
+        mask = _cv_mask(job, lab, in_study)
         print(f"[sdis] {tag}: {', '.join(sorted(set(dis[in_study])))} has only "
               f"{', '.join(valid_studies)}, so it is cut {k} ways -- this "
               f"member validates on part {int(job['cv_fold']) + 1}/{k} "
@@ -970,7 +999,26 @@ def build_jobs(task, args):
             cohorts = sorted(str(x) for x in
                              survey_training_table(train, meta, args.inner_group,
                                                    drop_studies=drop))
-            if args.loso_k is None:
+            if args.loso_k is None and len(cohorts) == 1:
+                # One training cohort (CCD/ICD have two studies in all): loso
+                # would validate on all of it and train on nothing. Cut it k
+                # ways instead, as same_disease does for a disease down to one
+                # study; k is capped by the smaller class.
+                only = cohorts[0]
+                n_pos, n_neg = survey_class_counts(train, meta, args.inner_group,
+                                                   drop_studies=drop)
+                k = min(args.cv_folds, n_pos, n_neg)
+                if k < 2:
+                    raise SystemExit(
+                        f"{task}/{fold}: the only training cohort {only} has "
+                        f"{n_pos} case/{n_neg} control, too few to cut up")
+                units = [f"{only}_cv{i}" for i in range(k)]
+                for i, u in enumerate(units):
+                    group_studies[u] = [only]
+                    cv_folds[u] = (i, k)
+                print(f"[info] {task}/{fold}: 1 cohort ({only}, {n_pos} case/"
+                      f"{n_neg} control) -> {k}-fold split of it, {k} members")
+            elif args.loso_k is None:
                 # One member per training cohort. The member count is the
                 # fold's -- a fold whose training table spans eight cohorts
                 # trains eight members and one spanning four trains four --
@@ -1472,8 +1520,10 @@ def main():
                          "cross-study step the test cohort asks for. "
                          "--n-estimators does not apply; loso_all only")
     ap.add_argument("--cv-folds", type=int, default=5,
-                    help="under --inner-split same_disease, how many ways to "
-                         "cut a disease that has a single study left in the "
+                    help="how many ways to cut a single remaining study: "
+                         "under --inner-split loso, a fold whose training "
+                         "table holds one cohort; under same_disease, a "
+                         "disease that has a single study left in the "
                          "training pool (default 5, i.e. 20%% validation per "
                          "member). Holding that one study out whole would "
                          "leave the model with none of the disease it is "
@@ -1482,8 +1532,8 @@ def main():
                          "disease. Capped by the smaller class, and a study "
                          "with fewer than two of either is held out whole")
     ap.add_argument("--split-seed", type=int, default=11,
-                    help="seed for the --cv-folds cut a single-study disease "
-                         "gets under --inner-split same_disease")
+                    help="seed for the --cv-folds cut (loso and "
+                         "same_disease)")
     ap.add_argument("--inner-group", default="study",
                     help="metadata column naming the cohort, used by every "
                          "--inner-split to decide what is held out")

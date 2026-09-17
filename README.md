@@ -8,10 +8,29 @@
 
 ## Human gut microbiome resource
 
-* **Pre-training Microbiome Biom Table:** [gut_pretraining.biom](./data/gut_pretraining.biom)
+* **Pre-training Microbiome Biom Table:** [table_gut_all.biom](./data/table_gut_all.biom)
   * **Description:** This BIOM-format file contains **210,090 samples** and **14,093 microbial taxa** mapped to the SILVA SSU rRNA reference, representing one of the most comprehensive human gut microbiome datasets available.
 * **SNEs (100-dimensional):** [social_niche_embedding_100.txt](./data/social_niche_embedding_100.txt)
   * **Description:** This Social Niche Embedding file provides 100-dimensional vectors encoding "social niche" for all 14,093 SILVA sequences representing human gut microbes, pretrained from the BIOM table described above.
+
+
+## The `data/` directory
+
+`data/` holds every input file the analyses read. Nothing in it is produced on
+the fly: each file was either downloaded from a public database or built by the
+pipelines in [`analysis/resources/`](./analysis/resources/). It contains:
+
+* the two BIOM abundance tables - the full 210,090-sample gut compendium and the
+  202,558-sample pre-training subset;
+* the sample metadata for those tables, including the disease-benchmark labels;
+* the pre-trained embeddings: the SNEs used in the paper, one SNE per
+  co-occurrence metric, and the baseline embeddings (phylogeny-PCA, DNABERT-2)
+  they are compared against;
+* the SILVA 138.2 reference taxonomy and tree;
+* `projects/`, the per-study ASV tables the compendium was assembled from.
+
+See [data/README.md](./data/README.md) for a file-by-file description and for
+how to load each format.
 
 
 ## Usage
@@ -37,6 +56,10 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    # Self-check: this should report approx. 171M; a 134-byte file means LFS did not take effect
    ls -lh data/gut_pretraining.biom
    ```
+
+   `.gitattributes` lists every LFS file by exact path. It carries no wildcard rules on purpose: the LFS quota is used up, so no new file may enter LFS. Large new data is published as a GitHub Release instead and fetched by a small script - see `analysis/resources/genome_mapping/download_data.sh` for the pattern.
+
+   Two genome-mapping inputs exceed GitHub's file size limit and are distributed as a [GitHub Release](https://github.com/xu-research-lab/microbial-embeddings/releases/tag/genome-mapping-data-v1) instead. The notebooks in `analysis/resources/genome_mapping/` fetch them automatically on first run.
 
 1. **Create or Update Conda Environment:** Use the provided file to create a new, clean environment:
 
