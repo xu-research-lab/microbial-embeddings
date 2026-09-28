@@ -19,9 +19,9 @@ which files it reads, and what it writes.
 
 ## 1. Scientific questions
 
-1. **Analogy (Fig. 2A)** — Does the embedding satisfy the vector relation
-   "facultatively anaerobic − aerobic ≈ anaerobic" (the same kind of arithmetic
-   as "king − man + woman ≈ queen")?
+1. **Analogy (Fig. 2A)** — Does the difference between a facultative anaerobe
+   and an obligate anaerobe form a consistent "oxygen direction" in the
+   embedding (the same kind of arithmetic as "king − man + woman ≈ queen")?
 2. **Trait structure beyond phylogeny (Fig. 2B, Ext. Fig. 5)** — Do taxa with
    the same trait cluster in SNE space? PLS-DA separates trait classes, and
    significance is judged against a *phylogenetic* null model (999 Brownian-motion
@@ -43,8 +43,8 @@ on a single annotation pipeline:
 
 | Source | Kind of annotation | Raw output | Curated table used downstream |
 |---|---|---|---|
-| BugBase | Precalculated traits mapped from 16S sequences | `data/traits_bugbase.csv` |
-| Traitar | Traits predicted from genomes | `data/trait_predcit.csv` |
+| BugBase | Precalculated traits mapped from 16S sequences | `traits_annotation/traits_predict_Bugbase.txt` | `data/traits_bugbase.csv` |
+| Traitar | Traits predicted from genomes | `traits_annotation/traits_predict_Traitar.csv` | `data/trait_predcit.csv` |
 | BacDive | Curated database records | — | `data/bacDive.csv` |
 
 Cellular traits (Gram status, oxygen preference, cell shape, spore formation,
@@ -88,7 +88,7 @@ in BacDive) come from Traitar and BacDive.
 
 | Panel | Title | What it shows | Data read |
 |---|---|---|---|
-| **A** | "facultatively − aerobic ≈ anaerobic" | Per-taxon cosine similarity between the embedding vector `v(facultatively) − v(aerobic)` and `v(anaerobic)` (Traitar labels), violin plots per group, with p values from a **phylogenetic regression** (`phylolm`, Pagel's λ) against aerobic and facultatively anaerobes. | `data/Traitar_Facultatively_Anaerobic_Anaerobic_Aerobic_all_co.csv`, `../../data/SSURefNR99_1200_slv_138_2_subset.tre` |
+| **A** | The oxygen direction in SNE space | Per-taxon mean cosine similarity to the 110,695 difference vectors `v(facultative) − v(obligate anaerobe)` (169 × 655 Traitar-labelled pairs), violin plots per oxygen group, with p values from a **phylogenetic regression** (`phylolm`, Pagel's λ) for aerobic and facultative taxa against obligate anaerobes. | `data/Traitar_Facultatively_Anaerobic_Anaerobic_Aerobic_all_co.csv` (adopted as source data; no script in this repository writes it), `../../data/SSURefNR99_1200_slv_138_2_subset.tre` |
 | **B** | R2 vs Q2 of PLS-DA | One point per metabolic trait: Traitar "Growth: Sugar" + BacDive "assimilation" / "builds acid from". Points colored red when the phylogenetic permutation pQ2 ≤ 0.05; traits on the resolution floor are ranked by z(Q2). | `data/{traitar,bacdive}/phyloperm_*.rds`, `data/traits.tsv` (Traitar accession → name map), `data/trait_predcit.csv`, `data/agg_bac.csv` |
 | **C** | Trait prediction across embeddings | AUC per trait and phylum (points) with mean ± SD per embedding, for SNE (red), DNABERT-2 (blue) and Phylo-PCA (green); cellular traits block on top, sugar block shaded below. | `data/auc_res.csv` (repeat 1 at 210,000 samples), `data/predict_metabolics_res.csv` |
 | **D** | Pretraining data size | AUC of the 4 cellular traits as a function of SNE pretraining corpus size (80k / 160k / 210k samples), faceted per trait, phylum as shape. | `data/auc_res.csv` (social_niche rows) |

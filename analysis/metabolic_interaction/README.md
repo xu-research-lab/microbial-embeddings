@@ -175,8 +175,8 @@ one of the 97 OTUs without a model are skipped with a message. Results go to
 `data/smetana/results/{otu1}_{otu2}_M11_output_global.tsv`.
 
 The pair tables, and the script that reduced the SMETANA results to the two
-tables used for the figure, are not in this repository. The two tables are the
-adopted source data:
+tables used for the figure, are not in this repository. The two tables are
+provided as-is:
 
 | File | Pairs | Columns |
 | --- | --- | --- |
@@ -235,6 +235,6 @@ its "100 lowest" pairs are simply the first 100 of those rows in file order.
 Pair definitions and SNE similarities come from
 [SNE construction](../sne_construction/README.md): the `cosine` and
 `co_occur` columns in the result tables are SNE embedding cosine similarity
-and ecological co-occurrence, respectively. The retained pair tables are the
-adopted source data for the figure; their deterministic regeneration from
-the upstream SNE and co-occurrence artifacts is not re-evidenced here.
+and ecological co-occurrence, respectively. The pair tables are provided
+as-is: the scripts that generated them from the upstream SNE and
+co-occurrence outputs are not part of this repository.

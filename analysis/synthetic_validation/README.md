@@ -15,8 +15,8 @@ from `embedding_validation` because it reads and writes that directory's
 - `data/datasize_embeddings/`: five 100-dimensional embedding replicates for
   each training-set size.
 - `data/datasize_bioms/datasize_bioms/`: five tracked BIOM subsets for each
-  training-set size. Moving the local HDF5 copies is deferred and is not part
-  of this pull request.
+  training-set size. The local HDF5 copies of these tables are not tracked in
+  the repository.
 - `embedding_validation/results/plot_ratios/plot_csvs/`: retained ratio tables.
   Filename suffixes encode the high and low similarity thresholds, not versions.
 
@@ -46,7 +46,6 @@ Rscript ../visualization/box_plot_log.R
 `embedding_dimension_ablation/results/`; ratio plots are written to
 `embedding_validation/results/plot_ratios/`.
 
-The retained repository does not include the embedding-dimension training logs
-or the raw `table.co` and `feature-dict.csv` files required by
-`analysis_embedding.ipynb`. The notebook expects the latter two files under
-`data/cooccurrence/`.
+This repository does not include the embedding-dimension training logs or the
+raw `table.co` and `feature-dict.csv` files that `analysis_embedding.ipynb`
+expects under `data/cooccurrence/`.

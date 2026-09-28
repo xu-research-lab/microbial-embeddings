@@ -76,7 +76,7 @@ We recommend using Conda to manage the environment and dependencies. Complete in
    ```bash
    git lfs install --local
    git lfs pull
-   # Self-check: this should report approx. 171M; a 134-byte file means LFS did not take effect
+   # Self-check: this should report approx. 164M; a 134-byte file means LFS did not take effect
    ls -lh data/gut_pretraining.biom
    ```
 
@@ -346,7 +346,7 @@ This repository is organized to reproduce every analysis presented in our paper.
 
 - **`resources/`**: Scripts for building the pretraining 16S dataset and for collecting and mapping reference genomes to OTUs.
 - **`sne_construction/`**: Co-occurrence metric comparison, SNE training, and embedding overview (t-SNE and tree visualizations). The reusable implementation lives in the `membed/` package; this folder retains the analysis wrappers and notebooks.
-- **`synthetic_validation/`**: Validation of the SNE framework on synthetic CRM (consumer-resource model) communities (Fig. 1B-C, Extended Data Fig. 3, Supplementary Fig. S3), including data-size and embedding-dimension ablations.
+- **`synthetic_validation/`**: Validation of the SNE framework on synthetic CRM (consumer-resource model) communities (Fig. 1B-C, Extended Data Fig. 3), including data-size and embedding-dimension ablations.
 - **`traits/`**: Trait analyses (Figure 2, Extended Data Fig. 5): trait annotation from BugBase, Traitar, and BacDive; PLS-DA against a phylogenetic null model; cross-database trait prediction; pretraining-size scaling.
 - **`metabolic_interaction/`**: Pairwise metabolic interaction analysis (Fig. 3A-B): predicts BiGG gene profiles per OTU, builds CarveMe metabolic models, and scores pairs with SMETANA (MIP/MRO).
 - **`function_phylogeny_hgt/`**: Ecological characterization of SNEs: agreement with phylogenetic distance and PICRUSt2-predicted function profiles, and prediction of horizontal gene transfer (HGT) between genome pairs.
