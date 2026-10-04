@@ -1,0 +1,1 @@
+{"task": "loso_all", "fold": "PRJNA799831", "seed": 11, "top_k": 600, "n_features": 14008, "n_train": 10245, "n_test": 113, "test_auc": 0.7165032679738562}

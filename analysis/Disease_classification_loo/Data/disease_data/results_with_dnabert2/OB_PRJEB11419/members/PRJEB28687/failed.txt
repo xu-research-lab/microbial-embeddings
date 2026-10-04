@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "/home/dongbiao/word_embedding_microbiome/microbial-embeddings/analysis/Disease_classification_loo/run_attention_biom_with_SNEs.py", line 526, in run_job
-    train_part, valid_part, strategy = member_split(job)
-  File "/home/dongbiao/word_embedding_microbiome/microbial-embeddings/analysis/Disease_classification_loo/run_attention_biom_with_SNEs.py", line 386, in member_split
-    raise ValueError(f"the {name} part of {job['valid_unit']} is empty "
-ValueError: the training part of PRJEB28687 is empty under --inner-split loso

@@ -128,3 +128,6 @@ analysis/metabolic_interaction/data/mapping_scores_table.tsv
 analysis/metabolic_interaction/data/bigg_gene_predicted.tsv
 analysis/metabolic_interaction/data/scores_predicted.tsv
 analysis/metabolic_interaction/data/smetana/
+
+# >100 MB, rejected by GitHub; LFS quota is exhausted. Regenerate with explain_attention.py
+analysis/Disease_classification_loo/Data/biomark/attn_lodo_IBD.csv

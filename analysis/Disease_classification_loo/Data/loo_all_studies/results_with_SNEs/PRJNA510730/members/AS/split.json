@@ -1,1 +1,1 @@
-{"strategy": "per_disease", "n_train": 9991, "n_valid": 84, "dropped_studies": []}
+{"strategy": "per_disease", "cv_split": null, "n_train": 10073, "n_valid": 84, "dropped_studies": []}
