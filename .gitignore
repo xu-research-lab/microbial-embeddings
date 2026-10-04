@@ -131,3 +131,10 @@ analysis/metabolic_interaction/data/smetana/
 
 # >100 MB, rejected by GitHub; LFS quota is exhausted. Regenerate with explain_attention.py
 analysis/Disease_classification_loo/Data/biomark/attn_lodo_IBD.csv
+
+# Model-explanation checkpoints (run_jobs.sh section 6): recomputable intermediates,
+# kept on disk only. results_with_SNEs_ckpt is the pre-2026-10-04 32-member
+# disease_loso lodo ensemble; results_with_SNEs_ckpt_per_disease is the current one,
+# which reproduces lodo.results_with_SNEs.csv exactly.
+analysis/Disease_classification_loo/Data/loo_all_diseases/results_with_SNEs_ckpt/
+analysis/Disease_classification_loo/Data/loo_all_diseases/results_with_SNEs_ckpt_per_disease/
