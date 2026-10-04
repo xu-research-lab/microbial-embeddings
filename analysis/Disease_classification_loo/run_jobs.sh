@@ -133,12 +133,26 @@ python run_attention_biom_with_SNEs.py --tasks disease \
     --run-tsv run_leave_one_study_out_explain.tsv \
     --run-name results_with_SNEs_ckpt --keep-ckpt
 
-# The existing lodo checkpoints are this 32-member disease_loso ensemble, NOT
-# the per_disease ensemble scored in section 2 -- see explain_attention.py.
-python run_attention_biom_with_SNEs.py --tasks lodo \
-    --gpus 0 1 2 3 4 5 6 7 --inner-split disease_loso --valid-auc macro \
-    --n-estimators 32 --report-combiner prob --no-linear-branch \
-    --run-name results_with_SNEs_ckpt --keep-ckpt
+# lodo, RERUN 2026-10-04 21:22-21:35 (gpu01, ~/tmp_claude/lodo_explain.sh, log
+# lodo_explain.log). The files it replaced dated from 09-01 and covered 13 folds
+# including ASD, on data rebuilt 10-03 22:21 -- Figure 5 panel I was drawn from
+# models that no longer exist. Old biomark files: ~/tmp_claude/backup_biomark_lodo_20261004/
+# (its asd_leftovers/ holds the ASD ones).
+#
+# The flags below are section 2's lodo command plus --keep-ckpt, NOT the
+# 32-member --inner-split disease_loso command used until 10-04: that one
+# explained a different ensemble from the one reported, which
+# explain_attention.py's own docstring flags and gives this command for.
+# Verified: all 12 folds reproduce lodo.results_with_SNEs.csv to 0.000000
+# (mean 0.6380) and explain_attention reports pred_diff ~1e-16 per fold.
+# The 09-01 32-member checkpoints are still in results_with_SNEs_ckpt/ and are
+# now stale for lodo; Data/disease_data/results_with_SNEs_ckpt/ (CRC+IBD) is not.
+python run_attention_biom_with_SNEs.py --tasks lodo --gpus 0 1 2 3 4 5 6 7 \
+    --patience 2 \
+    --inner-split per_disease --report-combiner prob \
+    --set loss=GroupBalanced+LogitAdjusted --group-balance-beta 0.5 --logit-adjust-tau 1 \
+    --no-linear-branch \
+    --run-name results_with_SNEs_ckpt_per_disease --keep-ckpt
 
 ## IBD, CRC
 python explain_attention.py --task disease --run-name results_with_SNEs_ckpt \
@@ -150,6 +164,6 @@ python explain_attention.py --task disease --run-name results_with_SNEs_ckpt \
     --run-tsv run_leave_one_study_out_explain.tsv --diseases CRC \
     --gpus 0 --perm-per-disease 1 --perm-max-folds 1 --out-dir Data/biomark_perm
 
-## lodo
-python explain_attention.py --task lodo --run-name results_with_SNEs_ckpt \
+## lodo (run-name follows the retrain above)
+python explain_attention.py --task lodo --run-name results_with_SNEs_ckpt_per_disease \
     --gpus 0 1 2 3 4 5 6 7 --perm-per-disease 0
