@@ -2,18 +2,38 @@
 # Every flag below matches what the result.json / split.json files on disk
 # record; where a run was later renamed, the original name is noted.
 
+### >>> CURRENT STATE, 2026-10-05. The dated blocks below are the record of how the
+### data got here; where one of them disagrees with this block, this block is right. <<<
+###
+### 12 diseases -- AS BD CAD CRC GD IBD IBS MS OB PD SZ T2DM -- 58 cohorts, 10,358 samples
+### (4,326 control / 6,032 case). ASD was removed entirely on 2026-10-03.
+###   disease  : 58 folds (run_leave_one_study_out_each_diease_list.tsv), 326 members
+###   loso_all : 56 folds (run_leave_one_study_out.tsv),                  671 members
+###   lodo     : 12 folds (run_leave_one_disease_out.tsv),                132 members
+###
+### Mean over folds of each fold's test AUC, single seed:
+###   disease  SNEs 0.7070  RF 0.6601  phylo-PCA 0.6946  DNABERT2 0.6730  SVM 0.6318
+###   loso_all SNEs 0.6831  RF 0.6344
+###   lodo     SNEs 0.6380  RF 0.5856
+###
+### The two pooled tasks run with --patience 2, the single-disease task with the default
+### 15; the note above the loso_all command in section 2 says why.
+
 ### >>> 2026-10-03: PRJNA578223 (ASD) DROPPED -- its ASD and control groups were sequenced
 ### with different primers (338F/806R + barcodes vs 341F/805R). ASD = 2 studies; disease task
 ### 63 folds, loso_all 61 folds, lodo 13; 10,518 samples. Every run below was redone on this
 ### data on 2026-10-03 07:46-10:03 (gpu01 ~/tmp_claude/drop578223_runs.sh: RF/SVM --overwrite;
 ### disease SNEs/dnabert2/phylo with --resume = only the ASD folds; lodo and loso_all in full).
-### Backup: ~/tmp_claude/backup_drop578223_20261003/  <<<
+### Backup: ~/tmp_claude/backup_drop578223_20261003/
+### SUPERSEDED later the same day: ASD was dropped entirely rather than one study of it,
+### and T2DM lost 3 date-/drug-confounded cohorts, which is how 63/61/13 became the
+### 58/56/12 folds in the CURRENT STATE block above.  <<<
 ###
 ### >>> 2026-10-02 data update: (a)-(d) below were RUN on 2026-10-02 16:22-19:01 <<<
 ### (gpu01 chain ~/tmp_claude/snes_rerun_20261002.sh, --workers-per-gpu 2; SVM on cu01).
 ### (e) was not run. The mkdir/mv/svm lines are commented out: rerunning them would move
 ### the new results away.
-# Data now: disease task 64 folds (GD = 4 studies, PRJNA1250469 dropped; IBS = 7 public
+# Data then (2026-10-02): disease task 64 folds (GD = 4 studies, PRJNA1250469 dropped; IBS = 7 public
 # cohorts, DADA2 reads truncated to 150 bp, PRJEB44533 121 bp). lodo (13 folds) and
 # loso_all (62 folds: +7 IBS, -PRJNA1250469, -PRJNA268708) were rebuilt from the disease
 # task as union profiles, test features NOT aligned to the training axis;
@@ -30,8 +50,10 @@
 #    Data/disease_data/_results_with_svm ~/tmp_claude/backup_disease_embed_20261002/
 # (d) section 5 SVM (CPU) has the same gaps; after the move above:
 # python run_svm.py --tasks disease --run-name results_with_svm
-# (e) only if the lodo attention figures are used: section 6 lodo checkpoint run, then
-#     explain_attention.py --task lodo (the lodo data changed).
+# (e) DONE 2026-10-04, and corrected while doing it: section 6's lodo checkpoint run plus
+#     explain_attention.py --task lodo. It now runs under results_with_SNEs_ckpt_per_disease
+#     with section 2's own flags, so the attributions explain the ensemble that is scored;
+#     the old 32-member disease_loso checkpoints are stale for lodo.
 # Up to date, no rerun: section 1 (disease SNEs and RF), ibd_subtype, the CRC/IBD-only
 # runs in sections 3 and 6, section 4, RF for disease/lodo/loso_all.
 
@@ -43,8 +65,8 @@ python biom_table_shuffle.py         # -> Data/shuffle_table_IBD_CRC/
 python get_subdatasets.py            # -> Data/pretraining_datasize/trainning_data/
 sbatch run_cooccur_SNEs.sh           # -> Data/pretraining_datasize/embedding/
 
-### 1. single-disease LOSO (Data/disease_data/results_with_SNEs, 63 folds since 2026-10-03;
-###    GD rerun 2026-10-01, IBS 2026-10-02, ASD 2026-10-03)
+### 1. single-disease LOSO (Data/disease_data/results_with_SNEs, 58 folds / 326 members;
+###    GD rerun 2026-10-01, IBS 2026-10-02, ASD removed and T2DM cleaned 2026-10-03)
 python run_attention_biom_with_SNEs.py --tasks disease --gpus 0 1 2 3 4 5 6 7 --inner-split loso \
        --run-name results_with_SNEs --report-combiner prob
 
@@ -55,18 +77,19 @@ python run_attention_biom_with_SNEs.py --tasks ibd_subtype --gpus 0 1 2 3 4 5 6 
        --run-name results_with_SNEs --report-combiner prob
 
 ### 2. all diseases pooled
-# leave-one-disease-out (Data/loo_all_diseases/results_with_SNEs, 13 x 12 members;
-# originally run as results_with_SNEs_test_remove_lowsample). Data since 2026-10-02:
-# union profiles, test features not aligned to the training axis.
+# leave-one-disease-out (Data/loo_all_diseases/results_with_SNEs, 12 folds x 11 members
+# = 132; one member per training disease, originally run as
+# results_with_SNEs_test_remove_lowsample). Data since 2026-10-02: union profiles, test
+# features not aligned to the training axis.
 python run_attention_biom_with_SNEs.py --tasks lodo --gpus 0 1 2 3 4 5 6 7 \
     --patience 2 \
     --inner-split per_disease --report-combiner prob \
     --set loss=GroupBalanced+LogitAdjusted --group-balance-beta 0.5 --logit-adjust-tau 1 \
     --run-name results_with_SNEs --no-linear-branch 
 
-# leave-one-study-out (Data/loo_all_studies/results_with_SNEs; 701 members on the old
-# 56 folds, originally run as results_with_SNEs_per_disease). Data since 2026-10-03:
-# 61 folds, built like lodo (not aligned).
+# leave-one-study-out (Data/loo_all_studies/results_with_SNEs; 56 folds, 671 members,
+# originally run as results_with_SNEs_per_disease). Built from the disease task like
+# lodo: union profiles, test features not aligned to the training axis.
 # --patience 2 (default 15): POOLED TASKS ONLY (lodo above and loso_all below). Adopted 2026-10-04.
 # A pooled fold trains on ~10,000 samples drawn from twelve diseases, and its members overfit: the ones
 # that stopped latest and reached the highest training AUC transferred worst. Cutting patience raised
