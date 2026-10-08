@@ -18,9 +18,9 @@ PERCENTILE_FOR_XMAX=80           # Percentile used by 'build-x-max-file'
 
 # --- Activate environment ---
 echo "Loading Conda environment..."
-source /home/cjj/miniconda3/etc/profile.d/conda.sh
-conda activate microbiome_deep || {
-  echo "Error: Could not activate Conda environment 'microbiome_deep'"
+eval "$(conda shell.bash hook)"   # conda must be on PATH; CONDA_ENV overrides the environment
+conda activate "${CONDA_ENV:-membed}" || {
+  echo "Error: Could not activate Conda environment '${CONDA_ENV:-membed}'"
   exit 1
 }
 echo "Python environment: $(which python)"

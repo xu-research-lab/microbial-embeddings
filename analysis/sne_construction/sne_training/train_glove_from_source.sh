@@ -13,8 +13,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 
 # Activate the Conda environment
-source /home/cjj/miniconda3/etc/profile.d/conda.sh
-conda activate microbiome_deep || {
+eval "$(conda shell.bash hook)"   # conda must be on PATH; CONDA_ENV overrides the environment
+conda activate "${CONDA_ENV:-membed}" || {
   echo "Could not activate the Conda environment"
   exit 1
 }
