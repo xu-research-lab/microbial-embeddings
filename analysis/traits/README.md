@@ -67,13 +67,14 @@ in BacDive) come from Traitar and BacDive.
 |---|---|---|---|
 | [`run_vsearch.sh`](traits_annotation/run_vsearch.sh) | Global-aligns the 16S query sequences against the BugBase reference database (Greengenes 99% OTU representatives) with `vsearch --usearch_global --id 0.99`. | `../data/feces_seq_16S_silva.fasta` (queries), `../data/99_otus.fasta` (database) | `../data/vsearch.out` (blast6out format) |
 | [`Bugbase_predict.py`](traits_annotation/Bugbase_predict.py) | Transfers BugBase phenotype predictions onto the query sequences: keeps only vsearch hits that are **exact full-length matches** (query start = 1, 100% coverage, 100% identity) and relabels the BugBase trait table with the query IDs. Unmatched queries are dropped. | `../data/vsearch.out`, `Bugbase_database.txt` (BugBase trait table indexed by reference sequence ID), query FASTA for sequence lengths | `traits_predict_Bugbase.txt` (copy: `../data/traits_precalculated.txt`) |
-| [`traitar_predict.sh`](traits_annotation/traitar_predict.sh) | SLURM job running `traitar phenotype` to predict phenotypes from genomes (Pfam 33.1 database, `from_nucleotides` mode, 28 CPUs). | `samples.txt` (genome list), Pfam database, genome files | `traits_predict_Traitar.csv` |
+| [`traitar_predict.sh`](traits_annotation/traitar_predict.sh) | SLURM job running `traitar phenotype` to predict phenotypes from genomes (Pfam 33.1 database, `from_nucleotides` mode, 28 CPUs). Set `PFAM_DIR` and `GENOME_DIR` (and `CONDA_ENV` for an environment with Traitar). | `samples.txt` (genome list), Pfam database, genome files | `traits_predict_Traitar.csv` |
 
 
 ### 4.2 Trait–embedding analyses
 
 | Script | Purpose | Reads | Writes |
 |---|---|---|---|
+| [`oxygen_vector.py`](oxygen_vector.py) | **The oxygen direction (Fig. 2A).** Groups the Traitar-annotated taxa by oxygen phenotype (exactly one of `Anaerobe`, `Aerobe`, `Facultative` called by both Traitar classifiers: 655 / 144 / 169 taxa) and scores every taxon by its mean cosine to the 169 x 655 SNE differences facultative - obligate anaerobe. `--check` compares with the committed table (it reproduces it to 3e-15). | `../../data/social_niche_embedding_100.txt`, `data/trait_predcit.csv` | `data/Traitar_Facultatively_Anaerobic_Anaerobic_Aerobic_all_co.csv` |
 | [`run_plsda.R`](run_plsda.R) | **PLS-DA + permutation test.** For every trait of every source, fits a PLS-DA (`ropls`, 2 predictive components, 5-fold CV) on the SNE embedding, using every taxon that has both a trait label and an embedding, and tests the observed Q2/R2Y against 999 label shufflings, p = (1 + b) / (1 + m) with b = shufflings reaching the observed value (Phipson & Smyth 2010; `ropls`' own pQ2 divides by m). Traits with fewer than 20 labelled taxa or a single class are skipped. Stores the observed scores and statistics per trait. | `../../data/social_niche_embedding_100.txt`, `data/traits_bugbase.csv`, `data/trait_predcit.csv`, `data/bacDive.csv`, `data/agg_bac.csv` | `data/{bugbase,traitar,bacdive}/plsda_<trait>.rds` (scores, Q2, R2Y, pQ2/pR2Y, class counts) |
 | [`traits_predict.ipynb`](traits_predict.ipynb) | **Cross-database, cross-phylum trait prediction.** Trains a random forest on **Traitar** labels and evaluates it on **BacDive** labels, holding out one focal phylum at a time — so the model must generalize to taxa it never saw. Covers cellular traits (Oxygen_Preference, Gram_Status, Motility, Spore_Formation) for SNE (6 pretraining sizes × 5 replicates), DNABERT2 and Phylo-PCA (full size), and 8 sugar traits ("builds acid from" in BacDive vs Traitar metabolic columns) for all three embeddings. Cellular and sugar traits use the same random forest (1000 trees, balanced class weights). AUC is reported per trait × phylum × embedding. | `data/embedding/subset_table_*_100_*.txt`, `../../data/social_niche_embedding_100.txt`, `../../data/dnabert2_16s_embedding_reduced_100.txt`, `../../data/phylo_embed_PCA_100.txt`, `../../data/taxmap_slv_ssu_ref_nr_138.2.txt`, `data/trait_predcit.csv`, `data/bacDive.csv`, `data/agg_bac.csv` | `data/auc_res.csv` (cellular traits), `data/predict_metabolics_res.csv` (sugar traits) |
 | [`traits_results.ipynb`](traits_results.ipynb) | **Main notebook** — assembles Figure 2 and Extended Data Fig. 5 from the files above (see next section). | everything listed in Section 5 | `results/*.pdf` |
@@ -84,7 +85,7 @@ in BacDive) come from Traitar and BacDive.
 
 | Panel | Title | What it shows | Data read |
 |---|---|---|---|
-| **A** | The oxygen direction in SNE space | Per-taxon mean cosine similarity to the 110,695 difference vectors `v(facultative) − v(obligate anaerobe)` (169 × 655 Traitar-labelled pairs), violin plots per oxygen group, with p values from an **unpaired Welch t-test** (`rstatix::t_test`) for aerobic and facultative taxa against obligate anaerobes. | `data/Traitar_Facultatively_Anaerobic_Anaerobic_Aerobic_all_co.csv` (adopted as source data; no script in this repository writes it) |
+| **A** | The oxygen direction in SNE space | Per-taxon mean cosine similarity to the 110,695 difference vectors `v(facultative) − v(obligate anaerobe)` (169 × 655 Traitar-labelled pairs), violin plots per oxygen group, with p values from an **unpaired Welch t-test** (`rstatix::t_test`) for aerobic and facultative taxa against obligate anaerobes. | `data/Traitar_Facultatively_Anaerobic_Anaerobic_Aerobic_all_co.csv`, written by [`oxygen_vector.py`](oxygen_vector.py) |
 | **B** | R2 vs Q2 of PLS-DA | One point per trait: metabolic traits (Traitar "Growth: Sugar" + BacDive "assimilation" / "builds acid from") plus the 5 cellular traits of each source (oxygen preference, Gram status, cell shape, spore formation, motility; diamonds). Points and labels colored red when the permutation pQ2 ≤ 0.05. | `data/{traitar,bacdive}/plsda_*.rds`, `data/traits.tsv` (Traitar accession → name map), `data/trait_predcit.csv`, `data/agg_bac.csv` |
 | **C** | Trait prediction across embeddings | One row per trait, one bar per embedding (SNE, PhyloE, DNABERT-2): bar = mean AUC over the held-out phyla, drawn from chance (0.5), so a bar pointing left is worse than chance; grey symbols = AUC of each held-out phylum (shape = phylum). Grey background = the 4 environmental-adaptation traits, white = the 8 metabolic traits; the bottom row averages every trait × phylum test. | `data/auc_res.csv` (repeat 1 at 210,000 samples), `data/predict_metabolics_res.csv` |
 | **D** | Pretraining data size | AUC of the 4 cellular traits as a function of SNE pretraining corpus size (80k / 160k / 210k samples), faceted per trait, phylum as shape. | `data/auc_res.csv` (social_niche rows) |
@@ -139,13 +140,14 @@ traits/
 │   ├── predict_metabolics_res.csv# sugar-trait prediction AUCs (Fig. 2C)
 │   ├── fig2b_phylo_perm.csv      # phylogenetic-null PLS-DA summary (legacy)
 │   ├── metabolic_res.csv         # flattened Traitar sugar summary (legacy)
-│   ├── Traitar_..._all_co.csv    # analogy cosines (Fig. 2A)
+│   ├── Traitar_..._all_co.csv    # analogy cosines (Fig. 2A, oxygen_vector.py)
 │   ├── *_..._all_phy.csv         # analogy intermediates (legacy)
 │   ├── pruned_tree.tre, tree_14k.nwk         # tree intermediates (legacy)
 │   └── bac_KO_predicted.tsv, bac_marker_predicted_and_nsti.tsv,
 │       KO_phyloglm.csv, trait_16s_output_pick.tsv   # KO/marker analyses
 │                                     # from earlier iterations (not used by
 │                                     # the current notebooks)
+├── oxygen_vector.py              # Step 2a: Fig. 2A oxygen-direction scores
 ├── run_plsda.R                   # Step 2: PLS-DA + permutation test
 ├── traits_predict.ipynb          # Step 3: cross-database trait prediction
 ├── traits_results.ipynb          # Step 4: Figure 2 + Extended Data Fig. 5
@@ -169,7 +171,13 @@ The curated downstream tables (`data/traits_bugbase.csv`, `data/trait_predcit.cs
 `data/bacDive.csv`) are already in place; regenerate them from the raw outputs
 only if the annotations change.
 
-### 7.2 PLS-DA
+### 7.2 Oxygen direction (Fig. 2A)
+
+```bash
+python oxygen_vector.py           # -> data/Traitar_Facultatively_Anaerobic_Anaerobic_Aerobic_all_co.csv
+```
+
+### 7.3 PLS-DA
 
 ```bash
 Rscript run_plsda.R
@@ -179,14 +187,14 @@ Writes one `data/<source>/plsda_<trait>.rds` per trait for BugBase, Traitar
 and BacDive. Parallelized over traits with `doParallel` on `N_CORES` (10)
 workers; a trait that fails is reported as a `FAILED` line on stderr.
 
-### 7.3 Cross-database trait prediction
+### 7.4 Cross-database trait prediction
 
 Run [`traits_predict.ipynb`](traits_predict.ipynb) top to bottom (Python,
 `scikit-learn`). This writes `data/auc_res.csv` and
 `data/predict_metabolics_res.csv`. The subsample embeddings in
 `data/embedding/` must exist for the scaling part.
 
-### 7.4 Figures
+### 7.5 Figures
 
 Run [`traits_results.ipynb`](traits_results.ipynb) top to bottom (R with
 `tidyverse`, `rstatix`, `RColorBrewer`, `ggrepel`, `patchwork`, `gtable`). It only reads the result files above — no model fitting happens
