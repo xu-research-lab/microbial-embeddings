@@ -270,26 +270,120 @@ def survey_class_counts(train_biom, meta_path, study_col, drop_studies=()):
     return int((lab == 1).sum()), int((lab == 0).sum())
 
 
-def _cv_mask(job, lab, in_study):
-    """Validation part ``job['cv_fold']`` of a stratified ``job['cv_k']``-way
-    cut of the samples in `in_study`; across the k members every one of them is
-    validated on exactly once."""
+def _model_input(table, ids, num_steps):
+    """The abundances the model sees for `ids`, one row per sample.
+
+    Within-sample rank over the sample's maximum rank, as membed's
+    ``read_imdb``, then each sample's `num_steps` largest kept by the same
+    argsort ``load_data_imdb.truncate_pad`` uses, so ties break identically.
+    """
+    sub = table.filter(ids, axis="sample", inplace=False)
+    ranked = sub.rankdata(axis="sample", inplace=False)
+    X = ranked.matrix_data.multiply(1 / ranked.max(axis="sample")).toarray().T
+    X = X[pd.Index(sub.ids(axis="sample")).get_indexer(ids)]
+    for row in X:
+        if np.count_nonzero(row) >= num_steps:
+            row[np.argsort(row)[::-1][num_steps:]] = 0
+    return X
+
+
+def _otu_coverage(P, v):
+    """Share of the OTUs present in samples `v` that some other sample has.
+
+    `P` is sample x OTU presence and `v` a boolean row mask: the fraction of
+    the validation part's OTUs its training part has seen too.
+    """
+    seen = P[v].any(0)
+    return (seen & P[~v].any(0)).sum() / seen.sum()
+
+
+def _coverage_parts(P, y, k):
+    """Cut samples into k parts whose OTUs the other parts cover least.
+
+    An OTU in part j goes uncovered exactly when every sample carrying it sits
+    in j, so a part's coverage depends on its own members alone. Parts take
+    turns adding the unassigned sample, of a class they still have room for,
+    that leaves their coverage lowest; that groups the samples sharing OTUs
+    the rest of the study lacks. Per-class and total part sizes are those of a
+    StratifiedKFold (within one of each other), so every part has both classes
+    whenever k is at most the smaller class, as build_jobs caps it.
+    Deterministic, so the k members of a fold, each computing this on its own,
+    agree on the partition.
+    """
+    P = P[:, P.any(0)].astype(np.int32)
+    total = P.sum(0)
+    classes = np.unique(y)
+    yi = np.searchsorted(classes, y)
+    room, off = np.zeros((k, len(classes)), dtype=int), 0
+    for ci in range(len(classes)):
+        # a class's remainder goes to the parts after the previous class's,
+        # which keeps the part totals within one of each other
+        n_c = int((yi == ci).sum())
+        room[:, ci] = n_c // k
+        room[(off + np.arange(n_c % k)) % k, ci] += 1
+        off += n_c % k
+    count = np.zeros((k, P.shape[1]), dtype=np.int32)
+    part = np.full(len(y), -1)
+    step = 0
+    while (part < 0).any():
+        j = step % k
+        step += 1
+        cand = np.flatnonzero((part < 0) & (room[j, yi] > 0))
+        if not len(cand):
+            continue
+        c = count[j] + P[cand]
+        cov = 1 - (c == total).sum(1) / (c > 0).sum(1)
+        s = cand[np.argmin(cov)]
+        part[s] = j
+        count[j] += P[s]
+        room[j, yi[s]] -= 1
+    return part
+
+
+def _cv_mask(job, lab, in_study, table, sids):
+    """Validation part ``job['cv_fold']`` of a ``job['cv_k']``-way cut of the
+    samples in `in_study`; across the k members every one of them is validated
+    on exactly once.
+
+    ``job['cv_split']`` picks the cut. 'coverage' groups the samples so that
+    each part's OTUs are as little present in the rest of the study as they
+    can be (:func:`_coverage_parts`), OTU presence taken from the model's own
+    input (:func:`_model_input`): a member then selects its epoch on samples
+    carrying taxa its training part has not seen -- the nearest a single
+    cohort gets to the cross-study step the test asks for. 'stratified' is a
+    random StratifiedKFold seeded by ``job['split_seed']``. Both keep the
+    per-part class counts of a stratified cut.
+    """
     from sklearn.model_selection import StratifiedKFold
     idx = np.flatnonzero(in_study)
-    skf = StratifiedKFold(n_splits=int(job["cv_k"]), shuffle=True,
+    k, fold, y = int(job["cv_k"]), int(job["cv_fold"]), lab[idx]
+    skf = StratifiedKFold(n_splits=k, shuffle=True,
                           random_state=job["split_seed"])
-    _, val_local = list(skf.split(idx, lab[idx]))[int(job["cv_fold"])]
+    val_local = list(skf.split(idx, y))[fold][1]
+    if job.get("cv_split", "stratified") == "coverage":
+        num_steps = int(job["override"].get("num_steps", CFG["num_steps"]))
+        P = _model_input(table, sids[idx], num_steps) > 0
+        v_rand = np.zeros(len(idx), dtype=bool)
+        v_rand[val_local] = True
+        val_local = np.flatnonzero(_coverage_parts(P, y, k) == fold)
+        v = np.zeros(len(idx), dtype=bool)
+        v[val_local] = True
+        print(f"[cvcov] {job['fold']}/{job['valid_unit']}: part {fold + 1}/{k}"
+              f", {int((y[v] == 1).sum())} case/{int((y[v] == 0).sum())} "
+              f"control; OTU coverage by the training part "
+              f"{_otu_coverage(P, v):.3f} (a random stratified part: "
+              f"{_otu_coverage(P, v_rand):.3f})")
     mask = np.zeros(len(in_study), dtype=bool)
     mask[idx[val_local]] = True
     return mask
 
 
-def _valid_mask(job, sids, lab, md):
+def _valid_mask(job, sids, lab, md, table):
     """Boolean mask over `sids` (True = validation), plus a strategy label."""
     mode = job["inner_mode"]
 
     if mode == "same_disease":
-        return _same_disease_mask(job, sids, lab, md)
+        return _same_disease_mask(job, sids, lab, md, table)
 
     if mode == "per_disease":
         # One member per disease, validating on one drawn study of that disease
@@ -318,7 +412,7 @@ def _valid_mask(job, sids, lab, md):
     if job.get("cv_fold") is not None:
         # The fold's only training cohort: holding it out whole would leave
         # nothing to train on, so this member validates on one part of it.
-        mask = _cv_mask(job, lab, in_study)
+        mask = _cv_mask(job, lab, in_study, table, sids)
         print(f"[loso ] {job['fold']}/{job['valid_unit']}: only training "
               f"cohort {', '.join(valid_studies)} cut {job['cv_k']} ways -- "
               f"validating on part {int(job['cv_fold']) + 1} "
@@ -350,7 +444,7 @@ def _column(md, sids, col, what):
     return v.astype(str).to_numpy()
 
 
-def _same_disease_mask(job, sids, lab, md):
+def _same_disease_mask(job, sids, lab, md, table):
     """Hold out one study of the test study's disease; keep the rest training.
 
     Leave-one-study-out confined to the disease under test. The fold holds out
@@ -401,10 +495,10 @@ def _same_disease_mask(job, sids, lab, md):
         # The disease has this one study, so holding all of it out would leave
         # the model with none of the disease it is about to be tested on.
         # Cut the study k ways instead and let this member validate on one
-        # part: the other 80% stays in training, and across the k members
+        # part: the other k-1 parts stay in training, and across the k members
         # every sample is validated on exactly once.
         k = int(job["cv_k"])
-        mask = _cv_mask(job, lab, in_study)
+        mask = _cv_mask(job, lab, in_study, table, sids)
         print(f"[sdis] {tag}: {', '.join(sorted(set(dis[in_study])))} has only "
               f"{', '.join(valid_studies)}, so it is cut {k} ways -- this "
               f"member validates on part {int(job['cv_fold']) + 1}/{k} "
@@ -705,10 +799,15 @@ def member_split(job):
     info_path = os.path.join(split_dir, "split.json")
     md = pd.read_csv(job["meta"], sep="\t", index_col=SAMPLE_ID_COL,
                      dtype={SAMPLE_ID_COL: str}, low_memory=False)
+    cv_split = job.get("cv_split") if job.get("cv_fold") is not None else None
     if all(os.path.exists(x) for x in (train_part, valid_part, info_path)):
         with open(info_path) as f:
+            info = json.load(f)
+        # A split cut the other --cv-split way is stale: recut rather than
+        # let a --resume mix the two methods within one fold.
+        if info.get("cv_split") == cv_split:
             return (train_part, valid_part, _filtered_test_table(job, md),
-                    json.load(f)["strategy"])
+                    info["strategy"])
     os.makedirs(split_dir, exist_ok=True)
 
     table = biom.load_table(job["train"])
@@ -739,7 +838,7 @@ def member_split(job):
         raise ValueError(f"non-numeric labels in {LABELS_COL!r}: {bad}")
     lab = lab.to_numpy().astype(int)
 
-    is_v, strategy = _valid_mask(job, sids, lab, md)
+    is_v, strategy = _valid_mask(job, sids, lab, md, table)
 
     # Nothing in a leave-one-cohort-out draw guarantees both classes land on
     # both sides. A part that lost a class cannot be trained on or
@@ -765,8 +864,8 @@ def member_split(job):
     _write_table(table.filter(sids[is_v], axis="sample", inplace=False),
                  valid_part)
     with open(info_path, "w") as f:
-        json.dump(dict(strategy=strategy, n_train=int((~is_v).sum()),
-                       n_valid=int(is_v.sum()),
+        json.dump(dict(strategy=strategy, cv_split=cv_split,
+                       n_train=int((~is_v).sum()), n_valid=int(is_v.sum()),
                        dropped_studies=list(job.get("drop_studies") or [])), f)
     return train_part, valid_part, _filtered_test_table(job, md), strategy
 
@@ -806,7 +905,9 @@ def _build_kwargs(job, train_biom, valid_biom, test_biom=None):
         logit_adjust_tau=job["logit_adjust_tau"],
         group_balance_beta=job["group_balance_beta"],
         group_balance_max_ratio=job["group_balance_max_ratio"],
-        disease_col=job["disease_col"],
+        # The library groups by this column for GroupBalanced/LogitAdjusted
+        # (and --valid-auc macro); the splits above keep using disease_col.
+        disease_col=job.get("balance_col") or job["disease_col"],
         **CFG,
     )
     if job["head_hidden"] is not None:
@@ -1017,7 +1118,8 @@ def build_jobs(task, args):
                     group_studies[u] = [only]
                     cv_folds[u] = (i, k)
                 print(f"[info] {task}/{fold}: 1 cohort ({only}, {n_pos} case/"
-                      f"{n_neg} control) -> {k}-fold split of it, {k} members")
+                      f"{n_neg} control) -> {k}-fold {args.cv_split} split of "
+                      f"it, {k} members")
             elif args.loso_k is None:
                 # One member per training cohort. The member count is the
                 # fold's -- a fold whose training table spans eight cohorts
@@ -1146,9 +1248,9 @@ def build_jobs(task, args):
                         cv_folds[u] = (i, k)
                     print(f"[info] {task}/{fold}: {', '.join(test_dis)} has "
                           f"only {only} ({n_pos} case/{n_neg} control) -> "
-                          f"{k}-fold split of it, {k} member(s), each "
-                          f"validating on {100 / k:.0f}% and training on the "
-                          f"rest")
+                          f"{k}-fold {args.cv_split} split of it, {k} "
+                          f"member(s), each validating on {100 / k:.0f}% and "
+                          f"training on the rest")
         else:
             units = [f"m{i}" for i in range(args.n_estimators)]
         folds.append(dict(task=task, fold=fold, artifact=t["artifact"],
@@ -1173,7 +1275,7 @@ def build_jobs(task, args):
                 cv_fold=cv_folds.get(u, (None, None))[0],
                 cv_k=cv_folds.get(u, (None, None))[1],
                 study_col=args.inner_group,
-                split_seed=args.split_seed,
+                split_seed=args.split_seed, cv_split=args.cv_split,
                 drop_studies=drop,
                 out_dir=out_dir, train=train, test=test, meta=meta,
                 head_hidden=args.head_hidden,
@@ -1187,6 +1289,7 @@ def build_jobs(task, args):
                 group_balance_beta=args.group_balance_beta,
                 group_balance_max_ratio=args.group_balance_max_ratio,
                 disease_col=args.disease_col,
+                balance_col=args.balance_col or args.disease_col,
                 member_seed=args.member_seed + i,
                 keep_ckpt=args.keep_ckpt, keep_tables=args.keep_tables,
                 overwrite=args.overwrite,
@@ -1524,16 +1627,27 @@ def main():
                          "under --inner-split loso, a fold whose training "
                          "table holds one cohort; under same_disease, a "
                          "disease that has a single study left in the "
-                         "training pool (default 5, i.e. 20%% validation per "
-                         "member). Holding that one study out whole would "
+                         "training pool (default 5, i.e. 20%% validation "
+                         "per member). Holding that one study out whole would "
                          "leave the model with none of the disease it is "
                          "about to be tested on; cutting it keeps 1-1/k of it "
                          "in training and still validates on the same "
                          "disease. Capped by the smaller class, and a study "
                          "with fewer than two of either is held out whole")
+    ap.add_argument("--cv-split", default="coverage",
+                    choices=["coverage", "stratified"],
+                    help="how --cv-folds cuts a single study. 'coverage' "
+                         "(default) groups its samples into k parts whose "
+                         "OTUs the rest of the study covers least (OTU "
+                         "presence on the model's own input: within-sample "
+                         "rank, each sample's num_steps largest), so every "
+                         "member validates on taxa its training part has "
+                         "barely seen. 'stratified' is the earlier random "
+                         "StratifiedKFold (--split-seed). Both keep a "
+                         "stratified cut's class counts per part")
     ap.add_argument("--split-seed", type=int, default=11,
-                    help="seed for the --cv-folds cut (loso and "
-                         "same_disease)")
+                    help="seed for the --cv-folds cut under --cv-split "
+                         "stratified (loso and same_disease)")
     ap.add_argument("--inner-group", default="study",
                     help="metadata column naming the cohort, used by every "
                          "--inner-split to decide what is held out")
@@ -1721,6 +1835,16 @@ def main():
                          "removes each disease's base rate, and under "
                          "--inner-split disease_loso, which holds out one "
                          "study per disease")
+    ap.add_argument("--balance-col", default=None,
+                    help="metadata column whose groups --set loss=GroupBalanced "
+                         "evens out (and LogitAdjusted and --valid-auc macro "
+                         "read); default --disease-col. 'study' balances the "
+                         "training studies against each other, so a large "
+                         "cohort does not dominate the loss -- this works on "
+                         "single-disease tasks too, e.g. --set "
+                         "loss=GroupBalanced --balance-col study. A member "
+                         "whose training part is one study has one group, "
+                         "and the weights are then all 1")
     ap.add_argument("--patience", type=int, default=15,
                     help="stop this many epochs after the best validation "
                          f"metric. Capped by num_epochs={CFG['num_epochs']}")
@@ -1816,38 +1940,38 @@ def main():
     # so an exact == would let it slip past both guards below and then print a
     # warning saying tau was ignored when it was not.
     _loss_name = parse_set(args.set_cfg).get("loss", CFG["loss"])
+    balance_col = args.balance_col or args.disease_col
     _la = _loss_name in ("LogitAdjusted", "GroupBalanced+LogitAdjusted")
     _gb = _loss_name in ("GroupBalanced", "GroupBalanced+LogitAdjusted")
     if _la:
-        bad = [t for t in tasks if t not in ("lodo", "loso_all")]
+        bad = ([t for t in tasks if t not in ("lodo", "loso_all")]
+               if balance_col == args.disease_col else [])
         if bad:
-            raise SystemExit(
-                f"loss={_loss_name} needs a training table spanning several "
-                f"diseases, and {bad} is single-disease (its metadata is one "
-                f"file per disease), where the per-disease base rate collapses "
-                f"to one global number. Use --tasks lodo and/or loso_all")
+            # Not an error: with one disease the offset is a single global
+            # case/control base rate, i.e. plain logit adjustment.
+            print(f"[warn] loss={_loss_name} on {bad}: those tasks are "
+                  f"single-disease, so the per-disease base rate collapses to "
+                  f"one global case/control offset (plain logit adjustment)")
         if args.logit_adjust_tau < 0:
             raise SystemExit(f"--logit-adjust-tau must be >= 0, got "
                              f"{args.logit_adjust_tau}")
         print(f"[cfg] loss={_loss_name} tau={args.logit_adjust_tau:g}: each "
-              f"disease's case/control base rate is removed from the training "
-              f"logits (column {args.disease_col!r}); validation and test see "
+              f"group's case/control base rate is removed from the training "
+              f"logits (column {balance_col!r}); validation and test see "
               f"raw logits")
     elif args.logit_adjust_tau != 1.0:
         print("[warn] --logit-adjust-tau only applies with "
               "--set loss=LogitAdjusted or "
               "--set loss=GroupBalanced+LogitAdjusted; ignored")
     if _gb:
-        bad = [t for t in tasks if t not in ("lodo", "loso_all")]
+        bad = ([t for t in tasks if t not in ("lodo", "loso_all")]
+               if balance_col == args.disease_col else [])
         if bad:
             # One disease means one group, so every sample's weight is the
             # same number and the reweighting is an expensive no-op.
-            raise SystemExit(
-                f"loss={_loss_name} evens out how much each disease "
-                f"contributes to the loss, and {bad} is single-disease (its "
-                f"metadata is one file per disease), where every sample falls "
-                f"in one group and every weight comes out 1. Use --tasks lodo "
-                f"and/or loso_all")
+            print(f"[warn] loss={_loss_name} on {bad}: those tasks are "
+                  f"single-disease, so every sample falls in one group and "
+                  f"every group-balance weight comes out 1 (a no-op there)")
         if not 0 <= args.group_balance_beta <= 1:
             raise SystemExit(
                 f"--group-balance-beta must lie in [0, 1], got "
@@ -1872,8 +1996,8 @@ def main():
                   "epoch would be chosen on a quantity training is not "
                   "optimising. Prefer --select-by auc (the default)")
         print(f"[cfg] loss={_loss_name} beta={args.group_balance_beta:g}: each "
-              f"disease's share of the training loss is rescaled by n^-beta "
-              f"(column {args.disease_col!r}), normalised to mean 1"
+              f"group's share of the training loss is rescaled by n^-beta "
+              f"(column {balance_col!r}), normalised to mean 1"
               + (f", capped at {args.group_balance_max_ratio:g}x"
                  if args.group_balance_max_ratio is not None else ""))
         # Only worth suggesting where validation actually spans several

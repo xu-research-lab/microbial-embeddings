@@ -1,1 +1,1 @@
-{"task": "lodo", "fold": "CAD", "seed": 11, "top_k": 600, "n_features": 13191, "n_train": 10161, "n_test": 115, "test_auc": 0.5098306110102844}
+{"task": "lodo", "fold": "CAD", "seed": 11, "top_k": 600, "n_features": 14008, "n_train": 10243, "n_test": 115, "test_auc": 0.4688445251058681}

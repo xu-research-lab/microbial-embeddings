@@ -2,6 +2,61 @@
 # Every flag below matches what the result.json / split.json files on disk
 # record; where a run was later renamed, the original name is noted.
 
+### >>> CURRENT STATE, 2026-10-05. The dated blocks below are the record of how the
+### data got here; where one of them disagrees with this block, this block is right. <<<
+###
+### 12 diseases -- AS BD CAD CRC GD IBD IBS MS OB PD SZ T2DM -- 58 cohorts, 10,358 samples
+### (4,326 control / 6,032 case). ASD was removed entirely on 2026-10-03.
+###   disease  : 58 folds (run_leave_one_study_out_each_diease_list.tsv), 326 members
+###   loso_all : 56 folds (run_leave_one_study_out.tsv),                  671 members
+###   lodo     : 12 folds (run_leave_one_disease_out.tsv),                132 members
+###
+### Mean over folds of each fold's test AUC, single seed:
+###   disease  SNEs 0.7070  RF 0.6601  phylo-PCA 0.6946  DNABERT2 0.6730  SVM 0.6318
+###   loso_all SNEs 0.6831  RF 0.6344
+###   lodo     SNEs 0.6380  RF 0.5856
+###
+### The two pooled tasks run with --patience 2, the single-disease task with the default
+### 15; the note above the loso_all command in section 2 says why.
+
+### >>> 2026-10-03: PRJNA578223 (ASD) DROPPED -- its ASD and control groups were sequenced
+### with different primers (338F/806R + barcodes vs 341F/805R). ASD = 2 studies; disease task
+### 63 folds, loso_all 61 folds, lodo 13; 10,518 samples. Every run below was redone on this
+### data on 2026-10-03 07:46-10:03 (gpu01 ~/tmp_claude/drop578223_runs.sh: RF/SVM --overwrite;
+### disease SNEs/dnabert2/phylo with --resume = only the ASD folds; lodo and loso_all in full).
+### Backup: ~/tmp_claude/backup_drop578223_20261003/
+### SUPERSEDED later the same day: ASD was dropped entirely rather than one study of it,
+### and T2DM lost 3 date-/drug-confounded cohorts, which is how 63/61/13 became the
+### 58/56/12 folds in the CURRENT STATE block above.  <<<
+###
+### >>> 2026-10-02 data update: (a)-(d) below were RUN on 2026-10-02 16:22-19:01 <<<
+### (gpu01 chain ~/tmp_claude/snes_rerun_20261002.sh, --workers-per-gpu 2; SVM on cu01).
+### (e) was not run. The mkdir/mv/svm lines are commented out: rerunning them would move
+### the new results away.
+# Data then (2026-10-02): disease task 64 folds (GD = 4 studies, PRJNA1250469 dropped; IBS = 7 public
+# cohorts, DADA2 reads truncated to 150 bp, PRJEB44533 121 bp). lodo (13 folds) and
+# loso_all (62 folds: +7 IBS, -PRJNA1250469, -PRJNA268708) were rebuilt from the disease
+# task as union profiles, test features NOT aligned to the training axis;
+# run_leave_one_study_out.tsv has 62 rows. Old data/results:
+# ~/tmp_claude/backup_unaligned_switch_20261002/
+# (a) lodo, all 13 folds:      section 2 command, unchanged
+# (b) loso_all, all 62 folds:  section 2 command, unchanged
+# (c) section 3, results_with_dnabert2 and results_with_phylo_embed_PCA date from 08-25:
+#     they lack the 7 IBS folds and GD_PRJNA450230/GD_PRJNA799831, and their GD, SZ and
+#     T2DM folds are stale (data changed 09-30). Move them aside, then run both section-3
+#     commands (all 64 folds):
+# mkdir -p ~/tmp_claude/backup_disease_embed_20261002
+# mv Data/disease_data/results_with_dnabert2 Data/disease_data/results_with_phylo_embed_PCA \
+#    Data/disease_data/_results_with_svm ~/tmp_claude/backup_disease_embed_20261002/
+# (d) section 5 SVM (CPU) has the same gaps; after the move above:
+# python run_svm.py --tasks disease --run-name results_with_svm
+# (e) DONE 2026-10-04, and corrected while doing it: section 6's lodo checkpoint run plus
+#     explain_attention.py --task lodo. It now runs under results_with_SNEs_ckpt_per_disease
+#     with section 2's own flags, so the attributions explain the ensemble that is scored;
+#     the old 32-member disease_loso checkpoints are stale for lodo.
+# Up to date, no rerun: section 1 (disease SNEs and RF), ibd_subtype, the CRC/IBD-only
+# runs in sections 3 and 6, section 4, RF for disease/lodo/loso_all.
+
 python run_attention_biom_with_SNEs.py --tasks all --dry-run
 
 ### 0. controls and data prep
@@ -10,27 +65,46 @@ python biom_table_shuffle.py         # -> Data/shuffle_table_IBD_CRC/
 python get_subdatasets.py            # -> Data/pretraining_datasize/trainning_data/
 sbatch run_cooccur_SNEs.sh           # -> Data/pretraining_datasize/embedding/
 
-### 1. single-disease LOSO (Data/disease_data/results_with_SNEs, 314 members)
+### 1. single-disease LOSO (Data/disease_data/results_with_SNEs, 58 folds / 326 members;
+###    GD rerun 2026-10-01, IBS 2026-10-02, ASD removed and T2DM cleaned 2026-10-03)
 python run_attention_biom_with_SNEs.py --tasks disease --gpus 0 1 2 3 4 5 6 7 --inner-split loso \
-       --run-name results_with_SNEs --linear-branch --report-combiner prob
+       --run-name results_with_SNEs --report-combiner prob
 
 # NOTE: Extended Data Fig. 7 (IBD subtypes) still reads the older single-model
 # results in Data/IBD_subtype_data/<disease>/<study>/results/; this run has
 # not been made yet (Data/IBD_subtype_data/results_with_SNEs does not exist).
 python run_attention_biom_with_SNEs.py --tasks ibd_subtype --gpus 0 1 2 3 4 5 6 7 --inner-split loso \
-       --run-name results_with_SNEs --linear-branch --report-combiner prob
+       --run-name results_with_SNEs --report-combiner prob
 
 ### 2. all diseases pooled
-# leave-one-disease-out (Data/loo_all_diseases/results_with_SNEs, 13 x 12 members;
-# originally run as results_with_SNEs_test_remove_lowsample)
+# leave-one-disease-out (Data/loo_all_diseases/results_with_SNEs, 12 folds x 11 members
+# = 132; one member per training disease, originally run as
+# results_with_SNEs_test_remove_lowsample). Data since 2026-10-02: union profiles, test
+# features not aligned to the training axis.
 python run_attention_biom_with_SNEs.py --tasks lodo --gpus 0 1 2 3 4 5 6 7 \
+    --patience 2 \
     --inner-split per_disease --report-combiner prob \
     --set loss=GroupBalanced+LogitAdjusted --group-balance-beta 0.5 --logit-adjust-tau 1 \
-    --no-linear-branch --run-name results_with_SNEs
+    --run-name results_with_SNEs --no-linear-branch 
 
-# leave-one-study-out (Data/loo_all_studies/results_with_SNEs, 701 members;
-# originally run as results_with_SNEs_per_disease)
+# leave-one-study-out (Data/loo_all_studies/results_with_SNEs; 56 folds, 671 members,
+# originally run as results_with_SNEs_per_disease). Built from the disease task like
+# lodo: union profiles, test features not aligned to the training axis.
+# --patience 2 (default 15): POOLED TASKS ONLY (lodo above and loso_all below). Adopted 2026-10-04.
+# A pooled fold trains on ~10,000 samples drawn from twelve diseases, and its members overfit: the ones
+# that stopped latest and reached the highest training AUC transferred worst. Cutting patience raised
+# loso_all 0.677 -> 0.683 (34 folds better / 21 worse, Wilcoxon P=0.039) and lodo 0.635 -> 0.638, while
+# the loso member mean AUC ROSE 0.664 -> 0.673 and the longest run fell from 65 epochs to 14.
+# The single-disease task keeps the default patience 15 on purpose: its folds train on 50-250 samples,
+# where patience 2 underfits -- it cost 0.707 -> 0.696 overall and far more on the folds with one training
+# cohort (AS -0.074, SZ -0.066, CAD -0.035), and it erased the SNEs advantage over phylo-PCA (P 0.055 ->
+# 0.474) while leaving the dnabert2/phylo baselines unchanged. Measurements: ~/tmp_claude/pat2_compare.tsv
+# and the backups backup_pat15_allsnes_20261004/ (patience-15 disease results, restored) and
+# backup_disease_pat2_20261004/ (the patience-2 disease run, parked).
+# NOT touched: the shuffled-embedding control (section 3, last run 2026-09-17) and ibd_subtype, both of
+# which predate the current data.
 python run_attention_biom_with_SNEs.py --tasks loso_all --gpus 0 1 2 3 4 5 6 7 \
+    --patience 2 \
     --inner-split per_disease \
     --set loss=GroupBalanced+LogitAdjusted --group-balance-beta 0.5 --logit-adjust-tau 1 \
     --n-estimators 1 --report-combiner prob \
@@ -70,7 +144,7 @@ python run_attention_biom_CRC_sample_efficiency.py --gpus 0 1 2 3 4 5 6 7 \
        --run-name crc_se --linear-branch --report-combiner prob
 
 ### 5. baselines (run_rf.py writes to Data/<task>/_<run-name>/)
-python run_rf.py  --tasks disease lodo loso_all --run-name results_with_rf
+python run_rf.py  --tasks disease lodo loso_all --run-name results_with_rf   # current: lodo/loso_all rerun 2026-10-02 (--overwrite)
 python run_svm.py --tasks disease --run-name results_with_svm
 python run_rf_CRC_continent.py
 python run_rf_CRC_sample_efficiency.py
@@ -82,12 +156,26 @@ python run_attention_biom_with_SNEs.py --tasks disease \
     --run-tsv run_leave_one_study_out_explain.tsv \
     --run-name results_with_SNEs_ckpt --keep-ckpt
 
-# The existing lodo checkpoints are this 32-member disease_loso ensemble, NOT
-# the per_disease ensemble scored in section 2 -- see explain_attention.py.
-python run_attention_biom_with_SNEs.py --tasks lodo \
-    --gpus 0 1 2 3 4 5 6 7 --inner-split disease_loso --valid-auc macro \
-    --n-estimators 32 --report-combiner prob --no-linear-branch \
-    --run-name results_with_SNEs_ckpt --keep-ckpt
+# lodo, RERUN 2026-10-04 21:22-21:35 (gpu01, ~/tmp_claude/lodo_explain.sh, log
+# lodo_explain.log). The files it replaced dated from 09-01 and covered 13 folds
+# including ASD, on data rebuilt 10-03 22:21 -- Figure 5 panel I was drawn from
+# models that no longer exist. Old biomark files: ~/tmp_claude/backup_biomark_lodo_20261004/
+# (its asd_leftovers/ holds the ASD ones).
+#
+# The flags below are section 2's lodo command plus --keep-ckpt, NOT the
+# 32-member --inner-split disease_loso command used until 10-04: that one
+# explained a different ensemble from the one reported, which
+# explain_attention.py's own docstring flags and gives this command for.
+# Verified: all 12 folds reproduce lodo.results_with_SNEs.csv to 0.000000
+# (mean 0.6380) and explain_attention reports pred_diff ~1e-16 per fold.
+# The 09-01 32-member checkpoints are still in results_with_SNEs_ckpt/ and are
+# now stale for lodo; Data/disease_data/results_with_SNEs_ckpt/ (CRC+IBD) is not.
+python run_attention_biom_with_SNEs.py --tasks lodo --gpus 0 1 2 3 4 5 6 7 \
+    --patience 2 \
+    --inner-split per_disease --report-combiner prob \
+    --set loss=GroupBalanced+LogitAdjusted --group-balance-beta 0.5 --logit-adjust-tau 1 \
+    --no-linear-branch \
+    --run-name results_with_SNEs_ckpt_per_disease --keep-ckpt
 
 ## IBD, CRC
 python explain_attention.py --task disease --run-name results_with_SNEs_ckpt \
@@ -99,6 +187,6 @@ python explain_attention.py --task disease --run-name results_with_SNEs_ckpt \
     --run-tsv run_leave_one_study_out_explain.tsv --diseases CRC \
     --gpus 0 --perm-per-disease 1 --perm-max-folds 1 --out-dir Data/biomark_perm
 
-## lodo
-python explain_attention.py --task lodo --run-name results_with_SNEs_ckpt \
+## lodo (run-name follows the retrain above)
+python explain_attention.py --task lodo --run-name results_with_SNEs_ckpt_per_disease \
     --gpus 0 1 2 3 4 5 6 7 --perm-per-disease 0

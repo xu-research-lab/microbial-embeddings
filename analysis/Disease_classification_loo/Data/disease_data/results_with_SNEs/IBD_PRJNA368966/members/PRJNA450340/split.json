@@ -1,1 +1,1 @@
-{"strategy": "loso", "n_train": 2323, "n_valid": 127}
+{"strategy": "loso", "cv_split": null, "n_train": 2323, "n_valid": 127, "dropped_studies": []}

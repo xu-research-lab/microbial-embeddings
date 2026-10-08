@@ -1,0 +1,1 @@
+{"strategy": "loso_cv", "cv_split": "coverage", "n_train": 559, "n_valid": 140, "dropped_studies": []}

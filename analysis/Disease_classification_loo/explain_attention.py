@@ -938,13 +938,18 @@ def attention_profile(fold, feats, abund, mask, device, batch_size=32):
 
 
 def pooled_embedding(fold, feats, abund, mask, device, batch_size=32):
-    """The sample representation the output head reads, meaned over members.
+    """The output head's feed-forward hidden layer, meaned over members.
 
-    ``forward(..., encoder=True)`` returns the mean, over the unmasked
-    positions, of the encoder stack's output -- so after the attention *and*
-    the feed-forward sub-layer, and before the head. That ``d_model``-wide
-    vector is what the classifier actually sees of a sample, and it is what a
-    samples-by-dimensions heatmap is a picture of.
+    ``GELU(Linear(pooled))``: the pooled encoder output taken one layer further
+    into the head, i.e. the ``head_hidden``-wide vector the final linear layer
+    turns into the logit. It is the "attention pooling" the heatmap draws.
+
+    The members' heads are trained independently, so their hidden units are
+    not index-aligned: unit k of one member correlates with unit k of another
+    at 0.01-0.16 over the held-out samples (IBD and CRC folds). Each member's
+    units are therefore sorted by their output weight before the mean, so
+    ``dim_0`` is the unit that pushes hardest towards control and the last dim
+    the one that pushes hardest towards case, in every member and every fold.
 
     One forward per sample per member, no backward, like the attention
     readout; nothing here needs the integration.
@@ -955,14 +960,20 @@ def pooled_embedding(fold, feats, abund, mask, device, batch_size=32):
     acc = None
     with torch.no_grad():
         for net in fold["nets"]:
+            if len(net.mlp) == 1:
+                raise ValueError("the output head has no hidden layer "
+                                 "(head_hidden=0); there is no feed-forward "
+                                 "output to dump")
             net.to(device)
             out = []
             for i in range(0, n, batch_size):
                 sl = slice(i, i + batch_size)
                 _, emb = net(feats[sl].to(device), abund[sl].to(device),
                              mask[sl].to(device), encoder=True)
-                out.append(emb.cpu().numpy().astype(np.float64))
-            e = np.concatenate(out)
+                h = net.mlp[1](net.mlp[0](emb))
+                out.append(h.cpu().numpy().astype(np.float64))
+            order = np.argsort(net.mlp[-1].weight.detach().cpu().numpy().ravel())
+            e = np.concatenate(out)[:, order]
             acc = e if acc is None else acc + e
     return acc / len(fold["nets"])
 
@@ -1616,13 +1627,13 @@ def main():
                          "the checkpoint, and getting it wrong changes what "
                          "the abundance does without changing any shape")
     ap.add_argument("--dump-pooled", action="store_true",
-                    help="also write pool_{task}_{fold}.csv: the pooled "
-                         "encoder output per held-out sample, meaned over the "
-                         "members, with the sample's label in the first "
-                         "column. That is the d_model-wide vector the output "
-                         "head reads -- after the attention and the "
-                         "feed-forward sub-layer -- and what a "
-                         "samples-by-dimensions heatmap is drawn from")
+                    help="also write pool_{task}_{fold}.csv: the output "
+                         "head's feed-forward hidden layer per held-out "
+                         "sample, units sorted by output weight and meaned "
+                         "over the members, with the sample's label in the "
+                         "first column. That is what the samples-by-"
+                         "dimensions 'attention pooling' heatmap is drawn "
+                         "from")
     ap.add_argument("--skip-ig", action="store_true",
                     help="stop after the attention readout and --dump-pooled, "
                          "skipping the integration and everything that "

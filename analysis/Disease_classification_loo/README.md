@@ -42,11 +42,22 @@ Gut microbiome studies are notoriously hard to generalize across cohorts
 | DNABERT2 embedding | `../../data/dnabert2_16s_embedding_reduced_100.txt` | DNABERT2 16S embedding, reduced to 100 d |
 | Sample metadata | `../../data/metadata_disease_classification.tsv` | study, disease (`disease_name_ab`), control/case (`group`), etc. |
 
-Thirteen diseases are analyzed: **AS, ASD, BD, CAD, CRC, GD, IBD, IBS, MS, OB, PD, SZ, T2DM**
-(57 disease–study cohorts in total, see
-[`run_leave_one_study_out_each_diease_list.tsv`](run_leave_one_study_out_each_diease_list.tsv)).
-A cohort is kept only if it has >= 25 samples per group and contains both classes
-(notebook cells 6–7).
+Twelve diseases are analyzed: **AS, BD, CAD, CRC, GD, IBD, IBS, MS, OB, PD, SZ, T2DM** —
+58 disease–study cohorts, 10,358 samples (4,326 control, 6,032 case), listed in
+[`run_leave_one_study_out_each_diease_list.tsv`](run_leave_one_study_out_each_diease_list.tsv).
+Per disease: AS 2 cohorts / 143 samples, BD 3 / 237, CAD 2 / 115, CRC 7 / 1,034,
+GD 4 / 418, IBD 8 / 2,514, IBS 7 / 1,334, MS 3 / 331, OB 2 / 1,208, PD 6 / 1,495,
+SZ 4 / 431, T2DM 10 / 1,098.
+
+ASD was dropped: its cases and controls were sequenced with different primers, so
+group was confounded with protocol. Two IBS cohorts were replaced by seven
+clinical ones, three date- or drug-confounded T2DM cohorts were removed, and GD
+was rebuilt with every sample of its four studies.
+
+That TSV *is* the fold list — nothing filters it further, and it does include small
+cohorts (T2DM PRJNA668251 is 7 vs 7). The >= 25-per-group, both-classes filter in
+notebook cell 7 builds a separate table, `final`, which only some panels use; that
+is why the leave-one-dataset-out panel shows 45 of the 56 pooled studies.
 
 ## 3. The models
 
@@ -79,6 +90,28 @@ trains one member per training study, each early-stopped on the study it holds
 out; under `--inner-split per_disease` (`lodo`, `loso_all`) it trains one member
 per training disease, each early-stopped on one study of that disease. The
 fold's prediction is the mean of the members' probabilities (`--report-combiner prob`).
+
+The two pooled tasks also pass `--patience 2` instead of the default 15: their
+folds train on ~10,000 samples drawn from twelve diseases and the members that
+stop latest transfer worst, so cutting patience raised `loso_all` 0.677 -> 0.683
+and `lodo` 0.635 -> 0.638 while the member mean AUC *rose*. The single-disease
+task keeps 15 on purpose — its folds train on 50–250 samples, where patience 2
+underfits and cost 0.707 -> 0.696. `run_jobs.sh` section 2 records the
+measurements.
+
+### Where the benchmark stands
+
+Mean over folds of each fold's test AUC, single seed:
+
+| Task | Folds | SNEs | RF | SVM | phylo-PCA | DNABERT2 |
+|---|---|---|---|---|---|---|
+| `disease` | 58 | **0.7070** | 0.6601 | 0.6318 | 0.6946 | 0.6730 |
+| `loso_all` | 56 | **0.6831** | 0.6344 | — | — | — |
+| `lodo` | 12 | **0.6380** | 0.5856 | — | — | — |
+
+Read from the `*.results_*.csv` summaries in this directory. The notebook
+recomputes the same AUCs from the per-fold `pred_test.csv` files rather than
+reading these CSVs, and reports the paired tests.
 
 ## 4. Scripts
 
@@ -121,7 +154,7 @@ follows:
 | S2 | **Attention heatmap** | Samples x pooling-dimension heatmaps of the pooled encoder representation, hierarchically clustered, checked for fold-driven (batch) splits. |
 | S3 | **MDS** | MDS of biomarker groups per disease. |
 | S4 | **IBD subtype** | 12-panel ROC grid (UC/CD/CCD/ICD x feces/biopsy/feces_to_biopsy), SNEs vs RF. |
-| S5 | **ROC: SNEs vs RF, other diseases** | ROC grids for the remaining 11 diseases (AS, ASD, BD, CAD, GD, IBS, MS, OB, PD, SZ, T2DM), and a paired SNEs-vs-RF test across all 13 diseases. |
+| S5 | **ROC: SNEs vs RF, other diseases** | ROC grids for the remaining 10 diseases (AS, BD, CAD, GD, IBS, MS, OB, PD, SZ, T2DM), and a paired SNEs-vs-RF test across all 12 diseases. |
 | S6 | **Leave one continent for CRC** | Per-continent AUC, RF vs Att_SNEs. |
 | S7 | **Sample efficiency** | CRC test AUC against the number of training studies, RF vs Att_SNEs. |
 
@@ -162,10 +195,9 @@ Data/
 │   ├── CRC_continent/            # CRC_all.biom, folds.tsv, {continent}/{train,test}_loo.biom,
 │   │                             #   {continent}/rf/, crc_geo/ (attention members)
 │   └── CRC_sample_efficiency/    # folds.tsv, {study}_n{k}_r{i}/train_loo.biom + rf/, crc_se/
-├── disease_data_raw/             # per-study BIOM tables and metadata the folds were cut from
 ├── loo_all_studies/              # 'loso_all': data/{study}/, results_with_SNEs, _results_with_rf
 ├── loo_all_diseases/             # 'lodo': data/{disease}/, results_with_SNEs, _results_with_rf,
-│                                 #   results_with_SNEs_ckpt (for explain_attention.py)
+│                                 #   results_with_SNEs_ckpt_per_disease (for explain_attention.py)
 ├── IBD_subtype_data/             # 'ibd_subtype' task; figures read {subtype}/{study}/results, RF
 ├── IBD_CRC_model/                # LinDA differential-abundance results per disease
 │                                 #   (linda_res_study.csv, model-independent markers)
@@ -176,7 +208,6 @@ Data/
 │   │                             #   only these *_100.txt files are tracked
 │   └── result/                   #   {IBD,CRC}/datasize_result_{rep}/subset_table_{size}/{study}/,
 │                                 #   summary_ROC_results_datasize_{IBD,CRC}.csv
-├── biomark_perm/                 # permutation-SHAP check on one CRC fold
 └── biomark/                      # explain_attention.py outputs
     ├── attn_summary_{task}.csv          # fold -> disease, attention readout
     ├── shap_grad_{task}_{fold}.csv      # per-sample per-taxon attributions
@@ -189,6 +220,11 @@ Data/
 Per-fold prediction files (`pred_test.csv`) contain `sample_id`, `true_label`,
 `prob`; ensemble members live in `members/*/pred_test.csv` and are averaged by
 the notebook's `load_prediction()`.
+
+The `results_with_SNEs_ckpt*` directories are **not tracked by git** — they are
+model weights, regenerated from the commands in `run_jobs.sh` section 6. The
+`lodo` one is reproducible exactly: `lodo.results_with_SNEs_ckpt_per_disease.csv`
+is byte-for-byte identical to `lodo.results_with_SNEs.csv`.
 
 ## 8. How to reproduce
 
@@ -227,14 +263,16 @@ python run_attention_biom_with_SNEs.py --tasks ibd_subtype --gpus 0 1 2 3 4 5 6 
 # training disease, loss reweighted by disease size (beta 0.5) and adjusted for
 # each disease's case/control ratio (tau 1)
 python run_attention_biom_with_SNEs.py --tasks lodo --gpus 0 1 2 3 4 5 6 7 \
+    --patience 2 \
     --inner-split per_disease --set loss=GroupBalanced+LogitAdjusted \
     --group-balance-beta 0.5 --logit-adjust-tau 1 --no-linear-branch \
     --report-combiner prob --run-name results_with_SNEs
 
 python run_attention_biom_with_SNEs.py --tasks loso_all --gpus 0 1 2 3 4 5 6 7 \
+    --patience 2 \
     --inner-split per_disease --set loss=GroupBalanced+LogitAdjusted \
-    --group-balance-beta 0.5 --logit-adjust-tau 1 --no-linear-branch \
-    --report-combiner prob --run-name results_with_SNEs
+    --group-balance-beta 0.5 --logit-adjust-tau 1 --n-estimators 1 \
+    --no-linear-branch --report-combiner prob --run-name results_with_SNEs
 
 # Alternative embeddings and controls (same task, different --glove-embedding)
 python run_attention_biom_with_SNEs.py --tasks disease --gpus 0 1 2 3 4 5 6 7 \
@@ -287,10 +325,15 @@ are the ones those runs recorded.
 ### 8.3 Model interpretation
 
 The training runs above delete their weights, so the folds to explain are first
-retrained with `--keep-ckpt` under the run name `results_with_SNEs_ckpt` (commands
-in `run_jobs.sh`, section 6). The CRC/IBD retrain reproduces the reported
-members exactly. The `lodo` checkpoints are a 32-member `disease_loso` ensemble,
-not the `per_disease` ensemble scored in section 8.2.
+retrained with `--keep-ckpt` (commands in `run_jobs.sh`, section 6). Both
+retrains reproduce the reported members exactly.
+
+`lodo` is retrained under its own run name, `results_with_SNEs_ckpt_per_disease`,
+with section 8.2's flags. Until 2026-10-04 it was retrained as a 32-member
+`--inner-split disease_loso` ensemble under `results_with_SNEs_ckpt`, which meant
+the attributions explained a different model from the one scored; that directory
+is now stale for `lodo`. The CRC/IBD retrain still uses `results_with_SNEs_ckpt`
+and is unaffected.
 
 ```bash
 # IBD & CRC attention / gradients / pooled representation
@@ -304,7 +347,7 @@ python explain_attention.py --task disease --run-name results_with_SNEs_ckpt \
     --gpus 0 --perm-per-disease 1 --perm-max-folds 1 --out-dir Data/biomark_perm
 
 # Leave-one-disease-out attributions
-python explain_attention.py --task lodo --run-name results_with_SNEs_ckpt \
+python explain_attention.py --task lodo --run-name results_with_SNEs_ckpt_per_disease \
     --gpus 0 1 2 3 4 5 6 7 --perm-per-disease 0
 ```
 
