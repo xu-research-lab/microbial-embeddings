@@ -138,3 +138,7 @@ analysis/Disease_classification_loo/Data/biomark/attn_lodo_IBD.csv
 # which reproduces lodo.results_with_SNEs.csv exactly.
 analysis/Disease_classification_loo/Data/loo_all_diseases/results_with_SNEs_ckpt/
 analysis/Disease_classification_loo/Data/loo_all_diseases/results_with_SNEs_ckpt_per_disease/
+
+# Written by tests/run_glove.sh and tests/run_classification.sh
+tests/glove_output/
+tests/classification_output/

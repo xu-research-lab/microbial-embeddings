@@ -28,10 +28,10 @@ cd analysis/synthetic_validation
 Rscript crm_generation/run_CRM.r
 
 mkdir -p results
-conda run -n microbiome_deep python data_size_ablation/datasize.py
+conda run -n membed python data_size_ablation/datasize.py
 
 cd embedding_dimension_ablation
-conda run -n microbiome_deep python embedding_dim_iter.py
+conda run -n membed python embedding_dim_iter.py
 cd ..
 
 jupyter lab embedding_validation/
@@ -39,6 +39,9 @@ jupyter lab embedding_validation/
 cd embedding_validation
 Rscript ../visualization/box_plot_log.R
 ```
+
+`run_CRM.r` needs the R package `miaSim` (v1.14.0 was used). `membed` is the
+environment from the [main README](../../README.md).
 
 `run_CRM.r` writes `data/E_global.csv` and
 `data/final_abundance_table.csv`. Data-size summaries and figures are written to

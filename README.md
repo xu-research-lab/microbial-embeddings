@@ -1,4 +1,7 @@
-# SNEs: Microbial Social Niches Learned from >210,000 Human Gut Microbiomes to Improve Deep Learning-based Disease Classification
+# Ecological embeddings reveal microbial social niches that generalize across diseases
+
+Code and data for the paper above. The social niche embeddings (SNEs) are learned
+from >210,000 human gut microbiomes by the `membed` package in this repository.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
@@ -39,7 +42,7 @@ how to load each format.
 
 ### Installation
 
-We recommend using Conda to manage the environment and dependencies. Complete installation on a machine with 8 threads and 32GB of RAM usually takes around 45 minutes to download the repository (approx. 32GB total size) + 10 minutes for environment setup.
+We recommend using Conda to manage the environment and dependencies. Complete installation on a machine with 8 threads and 32GB of RAM usually takes around 45 minutes to download the repository (approx. 32GB total size) + 10 minutes for environment setup. Use a conda with the libmamba solver (conda >= 23.10, where it is the default) or mamba/micromamba: conda's older classic solver can spend well over half an hour and ~20 GB of RAM on this environment.
 
 **Platform requirement:** `membed glove-train` (Part 1, Step 4) shells out to the precompiled GloVe binaries bundled in `membed/glove_build/`, which are x86-64 Linux executables with no C source or build step provided. Generating SNEs therefore requires **Linux x86-64**; macOS and ARM machines cannot run the GloVe training step. Part 2 (classification with the provided pre-trained SNEs) is pure Python/PyTorch and runs on any platform.
 
@@ -307,7 +310,7 @@ cd tests
 bash run_glove.sh
 ```
 
-**Expected output:** The script will generate embeddings in `tests/glove_output/` directory with detailed timing logs.
+**Expected output:** The script will generate embeddings in `tests/glove_output/` directory with detailed timing logs. Both test scripts write into `tests/glove_output/` and `tests/classification_output/`, which git ignores.
 
 **Test results (on a machine with 32GB RAM, 8 CPU cores):**
 - Total execution time: 00:04:24 (hh:mm:ss)
@@ -351,3 +354,40 @@ This repository is organized to reproduce every analysis presented in our paper.
 - **`metabolic_interaction/`**: Pairwise metabolic interaction analysis (Fig. 3A-B): predicts BiGG gene profiles per OTU, builds CarveMe metabolic models, and scores pairs with SMETANA (MIP/MRO).
 - **`function_phylogeny_hgt/`**: Ecological characterization of SNEs: agreement with phylogenetic distance and PICRUSt2-predicted function profiles, and prediction of horizontal gene transfer (HGT) between genome pairs.
 - **`Disease_classification_loo/`**: Disease classification benchmark with leave-one-study-out / leave-one-disease-out validation: the SNE attention model vs. RF/SVM baselines, shuffled controls, alternative embeddings (phylo-PCA, DNABERT2), and model interpretation.
+
+### Where each figure comes from
+
+The Python notebooks need Jupyter, which `requirements_dev.yml` leaves out
+(`conda install -n membed -c conda-forge jupyterlab`); the R notebooks need an R
+kernel (IRkernel) with the packages listed in each directory's README.
+
+Paths are under `analysis/`. "Yes" in the last column means the entry point was
+executed end to end on a clean checkout of this repository and redrew the figure
+from the result tables shipped here (and in the Releases), with no model training.
+
+| Paper figure | Code | Redrawn from shipped results |
+| --- | --- | --- |
+| Fig. 1C | `synthetic_validation/data_size_ablation/datasize.py` | yes |
+| Fig. 1B; Extended Data Fig. 3G-H | `synthetic_validation/embedding_validation/analysis_embedding.ipynb` | not as shipped: the notebook also reads `data/cooccurrence/table.co`, which is not included (see its README) |
+| Extended Data Fig. 1B | `synthetic_validation/embedding_validation/analysis_distance_metrics.ipynb` | yes |
+| Extended Data Fig. 3B | `synthetic_validation/visualization/box_plot_log.R` | yes |
+| Fig. 2A-D; Extended Data Fig. 5 | `traits/traits_results.ipynb` (R); the Fig. 2A input comes from `traits/oxygen_vector.py` | yes |
+| Fig. 3A-B | `metabolic_interaction/plot_resluts.R` | yes |
+| Fig. 4A, 4D-G | `function_phylogeny_hgt/function_phylogeny_hgt_SNes_results.ipynb` (R) | yes |
+| Fig. 4B-C | `function_phylogeny_hgt/run_SNE_phylo_function.py` | yes (KO and EC need the Release data) |
+| Fig. 5A-I; Extended Data Figs. 7-9 | `Disease_classification_loo/disease_classification.ipynb` | yes |
+| Extended Data Fig. 1A | `sne_construction/cooccurrence_metric_comparison/plot_metric_networks.R` | not tested |
+| Extended Data Fig. 1C | `sne_construction/cooccurrence_metric_comparison/plot_mantel_heatmap.ipynb` | yes |
+| Extended Data Fig. 3D | `sne_construction/sne_training/train_glove_embedding_size.sh` | trains the embeddings; no plotting script |
+| Extended Data Fig. 4 | `sne_construction/embedding_overview/SNE_tree_overview.R` | yes |
+| Extended Data Figs. 2, 3E-F, 6 | - | plotting code not included |
+
+Fig. 1A and Extended Data Figs. 3A, 3C and 7A are schematics.
+
+The compendium itself (`data/table_gut_all.biom`) is assembled from the
+per-study tables in `data/projects/`; the per-study pipeline is in
+`resources/16S_database/`, but the final merge and the compendium-level filters
+described in the Methods are not scripted in this repository: studies keeping
+under 90% of reads after closed-reference mapping, or with more than 25% chimeric
+reads in more than 30% of their samples, were dropped, and samples with more than
+5,000 reads and OTUs present in more than 100 samples were kept.

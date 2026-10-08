@@ -191,7 +191,9 @@ LC_ALL=en_US.UTF-8 Rscript plot_resluts.R
 
 The script writes `data/metabolic_smetana.pdf`. The group labels contain "≈", so it
 needs a UTF-8 locale (it stops with a message otherwise) and an R build with
-cairo support (`capabilities("cairo")`).
+cairo support (`capabilities("cairo")`). Warnings of the form
+`conversion failure on 'cosine ≈ 0' in 'mbcsToSbcs'` come from laying out the
+panels and are harmless: the PDF, written with `cairo_pdf`, has the glyph.
 
 - Panel a: MRO and MIP of the cosine > 0.9 group versus the cosine ≈ 0 group,
   with Welch t-test p-values. The y-axes are zoomed; no points are dropped
