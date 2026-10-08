@@ -14,8 +14,9 @@
 
 set -euo pipefail
 
-source /home/dongbiao/miniconda3/etc/profile.d/conda.sh
-conda activate membed
+# conda must be on PATH; CONDA_ENV overrides the environment. Activation hooks
+# may read unset variables, hence the set +u around it.
+set +u; eval "$(conda shell.bash hook)"; conda activate "${CONDA_ENV:-membed}"; set -u
 
 rep=${SLURM_ARRAY_TASK_ID}
 

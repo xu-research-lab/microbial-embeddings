@@ -341,7 +341,7 @@ python explain_attention.py --task disease --run-name results_with_SNEs_ckpt \
     --run-tsv run_leave_one_study_out_explain.tsv \
     --diseases CRC IBD --gpus 0 1 2 3 4 5 6 7 --dump-pooled
 
-# Permutation-SHAP check of the gradient method on one fold
+# Permutation-SHAP check of the gradient method on one fold (needs `pip install shap`)
 python explain_attention.py --task disease --run-name results_with_SNEs_ckpt \
     --run-tsv run_leave_one_study_out_explain.tsv --diseases CRC \
     --gpus 0 --perm-per-disease 1 --perm-max-folds 1 --out-dir Data/biomark_perm

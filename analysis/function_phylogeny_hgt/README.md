@@ -109,7 +109,8 @@ data/
 ├── genome_id_file / genome_fid.json  # genome id mappings
 ├── aligned.fasta                 # MAFFT alignment, written by run_16S_mafft_clustalo.sh
 ├── phylolm/                      # co_model_{KO}.rds, co_null_model_{KO}.rds (per KO)
-├── adonis/                       # adonis2_{KO}.rds (per KO)
+├── adonis/                       # adonis2_results.tar.gz: adonis2_{KO}.rds per KO,
+│                                 #   unpacked by notebook §4 on first run
 └── blastn_results/filtered/      # {query}.fna_vs_{subject}.fna_filtered.tsv (per pair)
 ```
 
@@ -171,9 +172,10 @@ barplots.
 ### 7.4 HGT
 
 ```bash
-# 1. Pairwise 16S identity (MAFFT + ClustalO) and per-pair BLASTN (SLURM templates)
-sbatch run_16S_mafft_clustalo.sh   # -> data/identity_matrix.txt
-sbatch run_blastn.sh               # -> data/blastn_results/filtered/
+# 1. Pairwise 16S identity (MAFFT + ClustalO) and per-pair BLASTN (SLURM templates;
+#    `bash` runs them too). CONDA_ENV names an environment providing the tools.
+sbatch run_16S_mafft_clustalo.sh                    # -> data/identity_matrix.txt
+GENOME_DIR=/path/to/genomes sbatch run_blastn.sh    # -> data/blastn_results/filtered/
 
 # 2. Assemble the pair table
 python get_HGT_result.py           # -> data/hgt.csv
@@ -181,6 +183,10 @@ python get_HGT_result.py           # -> data/hgt.csv
 # 3. Predict HGT from embeddings (5-fold Random Forest)
 python run_HGT_predict.py          # -> data/hgt_predict_res_all.csv
 ```
+
+`run_blastn.sh` needs the 1,112 representative genomes, which are not in the
+repository: one nucleotide FASTA per genome, named `<id>.fna` for each `<id>` in
+`data/genome_id_file` (the NCBI assembly accession followed by `_genomic`).
 
 Notebook §2 reads `data/hgt_plot_res.csv` (a distance-binned summary of
 `data/hgt.csv`), and §3/§5 read `data/hgt_predict_res_all.csv`.

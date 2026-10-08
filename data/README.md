@@ -69,7 +69,7 @@ df = table.to_dataframe(dense=True)
 |---|---|---|
 | `metadata_gut_all.tsv` | 17M | One row per sample of `table_gut_all.biom` (210,090 rows). Columns: `sample_id`, `project`, `instrument`, `geo_loc_name`, `region`, `seq_region` (the 16S variable region), `sample_type`. |
 | `metadata_gut_all.txt` | 17M | Byte-identical copy of the file above, kept for older scripts. |
-| `metadata_disease_classification.tsv` | 1.6M | The 10,276 samples of the disease benchmark, from 54 case-control studies covering 13 diseases (IBD, PD, OB, T2DM, IBS, CRC, SZ, MS, BD, ASD, GD, AS, CAD). Main columns: `sample` (the sample ID), `study`, `group` (the 0/1 label the classifier trains on), `diagnosis`, `disease_name_ab`, plus host and sequencing details. The ID column is named `sample`, not `sample_id`, so pass `--sample-id-col sample`. |
+| `metadata_disease_classification.tsv` | 1.8M | The 10,358 samples of the disease benchmark: 58 disease-cohort pairs from 56 case-control studies covering 12 diseases (AS, BD, CAD, CRC, GD, IBD, IBS, MS, OB, PD, SZ, T2DM; PRJEB11419 contributes to BD, OB and T2DM). Extended Data Table 2 lists them. Main columns: `sample` (the sample ID), `study`, `group` (the 0/1 label the classifier trains on), `diagnosis`, `disease_name_ab`, plus host and sequencing details. The ID column is named `sample`, not `sample_id`, so pass `--sample-id-col sample`. |
 
 ### Embeddings from the paper
 
@@ -86,7 +86,7 @@ Alternative ways to represent the same taxa, used to show what the SNEs add.
 | File | Size | What it is |
 |---|---|---|
 | `phylo_embed_PCA_100.txt` | 28M | Phylogeny instead of ecology: pairwise distances on the SILVA tree, reduced to 100 PCA dimensions. |
-| `dnabert2_16s_embedding.txt` | 137M | Raw DNABERT-2 output, 768 dimensions per 16S sequence, computed from the sequence alone. |
+| `dnabert2_16s_embedding.txt` | 137M | Raw DNABERT-2 output, 768 dimensions per 16S sequence, computed from the sequence alone. **Not included in the repository**; `other_embedding.ipynb` regenerates it (it needs `transformers` and the DNABERT-2 model, which are not in `requirements_dev.yml`). |
 | `dnabert2_16s_embedding_reduced_100.txt` | 27M | The file above reduced to 100 PCA dimensions, so it can be dropped in wherever the SNEs are used. |
 | `other_embedding.ipynb` | 24K | The notebook that produced the three files above. |
 

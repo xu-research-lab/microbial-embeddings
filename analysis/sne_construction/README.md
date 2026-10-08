@@ -16,6 +16,12 @@ training.
 
 Run scripts and notebooks from the repository root.
 
+The training wrappers are SLURM job scripts: the `#SBATCH` lines describe our
+cluster and can be edited or ignored (`bash <script>` runs them directly). They
+activate the `membed` environment from the [main README](../../README.md)
+(set `CONDA_ENV` to use another), and read their input from `INPUT_BIOM`
+(default `data/gut_pretraining.biom`) and write under `BASE_DIR`.
+
 ## 2. Data
 
 | Resource | Path | Used by |
@@ -49,9 +55,17 @@ The wrappers write intermediates, embeddings, and logs to
 |---|---|
 | `cooccurrence_metric_comparison/train_metric_embeddings.sh` | Reads each BIOM path and metric from `param_matrix.txt` and trains one 100-dimensional embedding per study/metric pair. |
 | `cooccurrence_metric_comparison/train_metric_embeddings_binary.sh` | Runs the same array using the binary-input parameter list in `param_matrix_binary.txt`. |
+
+`param_matrix.txt` and `param_matrix_binary.txt` are not in the repository.
+Each line is one array task, `<path to a BIOM table> <metric>`, e.g.
+`../data/cooccurrence_metric_comparison/difference_study_training/data/table_1.biom abundance_percentile`;
+set `#SBATCH --array=1-N` to the number of lines. `table_1.biom` ...
+`table_10.biom` are the ten large studies of Extended Data Fig. 1C, and
+`embeding_list/<metric>_<k>_100.txt` is the embedding trained on `table_<k>.biom`
+(`<metric>_100.txt` on the full corpus).
 | `cooccurrence_metric_comparison/compute_similarity_matrices.py` | Converts each embedding file into an OTU-by-OTU cosine-similarity matrix. |
 | `cooccurrence_metric_comparison/run_mantel_tests.py` | Groups matrices by metric, compares every study matrix with the metric baseline, and writes Mantel R and permutation P-values. |
-| `cooccurrence_metric_comparison/plot_mantel_heatmap.ipynb` | Converts the Mantel result table into the metric-by-study heatmap. |
+| `cooccurrence_metric_comparison/plot_mantel_heatmap.ipynb` | Converts the Mantel result table into the metric-by-study heatmap. Its cells 3-4 first cut the ten study tables out of the compendium; they are already committed, and cell 4 needs `data/pretraining_table_rarefaction.biom`, which is not included, so run the plotting cells (5 onward) on their own. |
 | `cooccurrence_metric_comparison/plot_metric_networks.R` | Samples 20 OTUs from one AGP sample, calculates eight metric-specific edge weights, and displays the network comparison. |
 
 ### Embedding overview
